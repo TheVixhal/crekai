@@ -26,7 +26,7 @@ export default async function Home() {
 
       {/* Hero Section */}
       <div className="flex-1 flex flex-col">
-        <div className="flex-1 grid md:grid-cols-3 gap-4 p-6 max-w-7xl mx-auto w-full">
+        <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
           {/* Main Featured Article */}
           <div className>
             <div className="bg-white border-4 border-black h-full flex flex-col">
