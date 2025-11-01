@@ -8,9 +8,13 @@ print("x size: ", x.size)      # size of elements
 print("x dtype: ", x.dtype)    # data type
 ```
 x:  6
+
 x ndim:  0
+
 x shape: ()
+
 x size:  1
+
 x dtype:  int64
 
 ---
@@ -24,9 +28,13 @@ print("x size: ", x.size)
 print("x dtype: ", x.dtype)    # notice the float datatype
 ```
 x:  [1.3 2.2 1.7]
+
 x ndim:  1
+
 x shape: (3,)
+
 x size:  3
+
 x dtype:  float64
 
 ---
@@ -40,11 +48,17 @@ print("x size: ", x.size)
 print("x dtype: ", x.dtype)
 ```
 x:
+
  [[1 2]
+ 
  [3 4]]
+ 
 x ndim:  2
+
 x shape: (2, 2)
+
 x size:  4
+
 x dtype:  int64
 
 ---
@@ -58,14 +72,21 @@ print("x size: ", x.size)
 print("x dtype: ", x.dtype)
 ```
 x:
+
  [[[1 2]
+ 
   [3 4]]
 
  [[5 6]
+ 
   [7 8]]]
+  
 x ndim:  3
+
 x shape: (2, 2, 2)
+
 x size:  8
+
 x dtype:  int64
 
 ---
@@ -77,13 +98,21 @@ print("np.eye((2)):\n", np.eye(2))                # identity matrix
 print("np.random.random((2,2)):\n", np.random.random((2, 2)))
 ```
 np.zeros((2,2)):
+
  [[0. 0.]
+ 
  [0. 0.]]
+ 
 np.ones((2,2)):
+
  [[1. 1.]
+ 
  [1. 1.]]
+ 
 np.eye((2)):
+
  [[1. 0.]
+ 
  [0. 1.]]
 np.random.random((2,2)):
  [[0.19151945 0.62210877]
