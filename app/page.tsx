@@ -62,14 +62,18 @@ export default async function Home() {
                 </div>
                 <Link href="/auth/sign-up">
                   <button className="w-full px-8 py-4 bg-white text-black font-serif text-lg font-bold border-3 border-black hover:bg-gray-50 transition">
-                    Create Your Account
+                    Try Now
+                  </button>
+                  <Link href="/auth/login">
+                  <button className="w-full px-8 py-4 bg-white text-black font-serif text-lg font-bold border-3 border-black hover:bg-gray-50 transition">
+                    Log In
                   </button>
                 </Link>
               </div>
             </div>
           </div>
 
-          {/* Sidebar */}
+          /* {/* Sidebar */}
           <div className="space-y-4">
             {/* Why CrekAI */}
             <div className="bg-white border-2 border-black p-6">
@@ -102,7 +106,7 @@ export default async function Home() {
               </button>
             </Link>
           </div>
-        </div>
+        </div> */
 
         {/* Bottom Section - Learning Paths Preview */}
         <div className="border-t-4 border-black bg-white mt-6">
