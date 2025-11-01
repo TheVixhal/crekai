@@ -16,19 +16,19 @@ export default async function Home() {
     <div className="min-h-screen flex flex-col bg-amber-50">
       {/* Main Masthead */}
       <div className="border-b-4 border-black py-12 px-6 text-center bg-white">
-        <h1 className="text-7xl md:text-8xl font-bold text-black font-serif tracking-wider mb-4">CrekAI</h1>
+        <h1 className="text-7xl md:text-8xl font-bold text-black font-serif tracking-wider mb-4">Crekai</h1>
         <div className="h-2 bg-black mx-auto w-64 mb-4"></div>
         <p className="text-lg md:text-xl text-gray-800 font-serif italic mb-2">
-          Learn AI & Machine Learning Through Hands On Practice
+          Learn AI & Machine Learning Through Real Projects
         </p>
         <p className="text-xs text-gray-600 tracking-widest font-sans uppercase">Your Source for AI/ML Mastery</p>
       </div>
 
       {/* Hero Section */}
       <div className="flex-1 flex flex-col">
-        <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
+        <div className="flex-1 grid md:grid-cols-3 gap-4 p-6 max-w-7xl mx-auto w-full">
           {/* Main Featured Article */}
-          <div className>
+          <div className="md:col-span-2">
             <div className="bg-white border-4 border-black h-full flex flex-col">
               <div className="border-b-2 border-black p-6">
                 <p className="text-xs uppercase tracking-widest font-sans font-bold mb-2 text-gray-700">Featured</p>
@@ -42,7 +42,7 @@ export default async function Home() {
               <div className="p-6 flex-1 flex flex-col justify-between">
                 <div>
                   <p className="text-lg font-serif text-black mb-4 leading-relaxed">
-                    CrekAI brings you industry-standard AI and ML courses built for real-world learning. Learn from
+                    Crekai brings you industry-standard AI and ML courses built for real-world learning. Learn from
                     expert projects, solve real problems, and unlock your potential in artificial intelligence.
                   </p>
                   <div className="space-y-3 mb-6">
@@ -60,28 +60,48 @@ export default async function Home() {
                     </div>
                   </div>
                 </div>
-                {/* FIX: You cannot nest <Link> components. 
-                  They must be siblings.
-                  I also changed border-3 to border-2 (a valid Tailwind class)
-                  and added a margin-top (mt-4) to the second button.
-                */}
-                <div>
-                  <Link href="/auth/sign-up">
-                    <button className="w-full px-8 py-4 bg-white text-black font-serif text-lg font-bold border-2 border-black hover:bg-gray-50 transition">
-                      Try Now
-                    </button>
-                  </Link>
-                  <Link href="/auth/login">
-                    <button className="w-full mt-4 px-8 py-4 bg-white text-black font-serif text-lg font-bold border-2 border-black hover:bg-gray-50 transition">
-                      Log In
-                    </button>
-                  </Link>
-                </div>
+                <Link href="/auth/sign-up">
+                  <button className="w-full px-8 py-4 bg-white text-black font-serif text-lg font-bold border-3 border-black hover:bg-gray-50 transition">
+                    Create Your Account
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
 
-          {/* This empty column (md:col-span-1) is fine, no errors here */}
+          {/* Sidebar */}
+          <div className="space-y-4">
+            {/* Why Crekai */}
+            <div className="bg-white border-2 border-black p-6">
+              <p className="text-xs uppercase tracking-widest font-bold mb-3 font-sans text-gray-700">
+                Why Choose Crekai
+              </p>
+              <ul className="space-y-2 text-sm font-sans text-gray-800">
+                <li className="flex items-start">
+                  <span className="mr-2">✓</span> Industry-experts design
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">✓</span> Step-by-step guidance
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">✓</span> Progress tracking
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">✓</span> Real-world projects
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">✓</span> Learn at your pace
+                </li>
+              </ul>
+            </div>
+
+            {/* CTA Box */}
+            <Link href="/auth/login">
+              <button className="w-full px-6 py-4 bg-white text-black font-serif font-bold border-3 border-black hover:bg-gray-50 transition">
+                Sign In
+              </button>
+            </Link>
+          </div>
         </div>
 
         {/* Bottom Section - Learning Paths Preview */}
@@ -120,7 +140,7 @@ export default async function Home() {
 
       {/* Footer */}
       <div className="border-t-4 border-black bg-white text-black py-8 px-6 text-center">
-        <p className="font-serif text-sm mb-2">CrekAI - Master AI & Machine Learning</p>
+        <p className="font-serif text-sm mb-2">Crekai - Master AI & Machine Learning</p>
         <p className="text-xs text-gray-500">© 2025 All rights reserved</p>
       </div>
     </div>
