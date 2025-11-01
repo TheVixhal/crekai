@@ -19,7 +19,7 @@ export default async function Home() {
         <h1 className="text-7xl md:text-8xl font-bold text-black font-serif tracking-wider mb-4">CrekAI</h1>
         <div className="h-2 bg-black mx-auto w-64 mb-4"></div>
         <p className="text-lg md:text-xl text-gray-800 font-serif italic mb-2">
-          Learn AI & Machine Learning Through Real Projects
+          Learn AI & Machine Learning Through Hands On Practice
         </p>
         <p className="text-xs text-gray-600 tracking-widest font-sans uppercase">Your Source for AI/ML Mastery</p>
       </div>
