@@ -11,8 +11,6 @@ export default async function Home() {
   if (user) {
     redirect("/projects")
   }
-
-  export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
       {/* Main Masthead */}
@@ -84,6 +82,8 @@ export default async function Home() {
                     Log In
                   </button>
                   </Link>  
+
+                    
                 </div>
               </div>
             </div>
