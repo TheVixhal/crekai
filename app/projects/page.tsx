@@ -68,19 +68,7 @@ export default async function ProjectsPage() {
       {/* Content */}
       <div className="max-w-7xl mx-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Profile Sidebar (MOVED TO THE LEFT) */}
-          <div className="lg:col-span-1">
-            <ProfileSidebar
-              user={user}
-              userProfile={userProfile}
-              createdAt={userProfile?.created_at}
-              projectsEnrolled={projectsEnrolled}
-              completedSteps={completedSteps}
-              projectsInProgress={projectsInProgress}
-            />
-          </div>
-
-          {/* Main Content (MOVED TO THE RIGHT) */}
+          {/* Main Content */}
           <div className="lg:col-span-2">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-black font-serif mb-2">Featured Projects</h2>
@@ -99,7 +87,19 @@ export default async function ProjectsPage() {
                 </div>
               )}
             </div>
-s          </div>
+          </div>
+
+          {/* Profile Sidebar */}
+          <div className="lg:col-span-1">
+            <ProfileSidebar
+              user={user}
+              userProfile={userProfile}
+              createdAt={userProfile?.created_at}
+              projectsEnrolled={projectsEnrolled}
+              completedSteps={completedSteps}
+              projectsInProgress={projectsInProgress}
+            />
+          </div>
         </div>
       </div>
     </div>
