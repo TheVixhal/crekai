@@ -14,9 +14,9 @@ NumPy stands for "Numerical Python" and provides support for:
 
 Install NumPy using pip:
 
-```python
+\`\`\`python
 pip install numpy
-```
+\`\`\`
 
 ## Your First Array
 
