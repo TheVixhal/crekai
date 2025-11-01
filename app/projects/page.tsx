@@ -45,7 +45,7 @@ export default async function ProjectsPage() {
     <div className="min-h-screen bg-amber-50">
       {/* Masthead */}
       <div className="border-b-4 border-black bg-white sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-start">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-start">
           <div>
             <h1 className="text-5xl font-bold text-black font-serif">CrekAI</h1>
             <p className="text-xs text-gray-700 uppercase tracking-widest">Learning Projects</p>
