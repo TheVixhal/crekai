@@ -16,7 +16,7 @@ export default async function Home() {
     <div className="min-h-screen flex flex-col bg-amber-50">
       {/* Main Masthead */}
       <div className="border-b-4 border-black py-12 px-6 text-center bg-white">
-        <h1 className="text-7xl md:text-8xl font-bold text-black font-serif tracking-wider mb-4">Crekai</h1>
+        <h1 className="text-7xl md:text-8xl font-bold text-black font-serif tracking-wider mb-4">CrekAI</h1>
         <div className="h-2 bg-black mx-auto w-64 mb-4"></div>
         <p className="text-lg md:text-xl text-gray-800 font-serif italic mb-2">
           Learn AI & Machine Learning Through Real Projects
@@ -42,7 +42,7 @@ export default async function Home() {
               <div className="p-6 flex-1 flex flex-col justify-between">
                 <div>
                   <p className="text-lg font-serif text-black mb-4 leading-relaxed">
-                    Crekai brings you industry-standard AI and ML courses built for real-world learning. Learn from
+                    CrekAI brings you industry-standard AI and ML courses built for real-world learning. Learn from
                     expert projects, solve real problems, and unlock your potential in artificial intelligence.
                   </p>
                   <div className="space-y-3 mb-6">
@@ -71,10 +71,10 @@ export default async function Home() {
 
           {/* Sidebar */}
           <div className="space-y-4">
-            {/* Why Crekai */}
+            {/* Why CrekAI */}
             <div className="bg-white border-2 border-black p-6">
               <p className="text-xs uppercase tracking-widest font-bold mb-3 font-sans text-gray-700">
-                Why Choose Crekai
+                Why Choose CrekAI
               </p>
               <ul className="space-y-2 text-sm font-sans text-gray-800">
                 <li className="flex items-start">
@@ -140,7 +140,7 @@ export default async function Home() {
 
       {/* Footer */}
       <div className="border-t-4 border-black bg-white text-black py-8 px-6 text-center">
-        <p className="font-serif text-sm mb-2">Crekai - Master AI & Machine Learning</p>
+        <p className="font-serif text-sm mb-2">CrekAI - Master AI & Machine Learning</p>
         <p className="text-xs text-gray-500">© 2025 All rights reserved</p>
       </div>
     </div>
