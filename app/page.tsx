@@ -26,7 +26,7 @@ export default async function Home() {
 
       {/* Hero Section */}
       <div className="flex-1 flex flex-col">
-        <div className="flex-1 grid md:grid-cols-3 gap-4 p-6 max-w-7xl mx-auto w-full">
+        <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
           {/* Main Featured Article */}
           <div>
             <div className="bg-white border-4 border-black h-full flex flex-col">
@@ -60,11 +60,7 @@ export default async function Home() {
                     </div>
                   </div>
                 </div>
-                {/* FIX: You cannot nest <Link> components. 
-                  They must be siblings.
-                  I also changed border-3 to border-2 (a valid Tailwind class)
-                  and added a margin-top (mt-4) to the second button.
-                */}
+                
                 <div>
                   <Link href="/auth/sign-up">
                     <button className="w-full px-8 py-4 bg-white text-black font-serif text-lg font-bold border-2 border-black hover:bg-gray-50 transition">
