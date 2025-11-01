@@ -60,20 +60,29 @@ export default async function Home() {
                     </div>
                   </div>
                 </div>
-                <Link href="/auth/sign-up">
-                  <button className="w-full px-8 py-4 bg-white text-black font-serif text-lg font-bold border-3 border-black hover:bg-gray-50 transition">
-                    Try Now
-                  </button>
+                {/* FIX: You cannot nest <Link> components. 
+                  They must be siblings.
+                  I also changed border-3 to border-2 (a valid Tailwind class)
+                  and added a margin-top (mt-4) to the second button.
+                */}
+                <div>
+                  <Link href="/auth/sign-up">
+                    <button className="w-full px-8 py-4 bg-white text-black font-serif text-lg font-bold border-2 border-black hover:bg-gray-50 transition">
+                      Try Now
+                    </button>
+                  </Link>
                   <Link href="/auth/login">
-                  <button className="w-full px-8 py-4 bg-white text-black font-serif text-lg font-bold border-3 border-black hover:bg-gray-50 transition">
-                    Log In
-                  </button>
-                </Link>
+                    <button className="w-full mt-4 px-8 py-4 bg-white text-black font-serif text-lg font-bold border-2 border-black hover:bg-gray-50 transition">
+                      Log In
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
 
-          
+          {/* This empty column (md:col-span-1) is fine, no errors here */}
+        </div>
 
         {/* Bottom Section - Learning Paths Preview */}
         <div className="border-t-4 border-black bg-white mt-6">
