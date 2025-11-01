@@ -73,40 +73,7 @@ export default async function Home() {
             </div>
           </div>
 
-          /* {/* Sidebar */}
-          <div className="space-y-4">
-            {/* Why CrekAI */}
-            <div className="bg-white border-2 border-black p-6">
-              <p className="text-xs uppercase tracking-widest font-bold mb-3 font-sans text-gray-700">
-                Why Choose CrekAI
-              </p>
-              <ul className="space-y-2 text-sm font-sans text-gray-800">
-                <li className="flex items-start">
-                  <span className="mr-2">✓</span> Industry-experts design
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">✓</span> Step-by-step guidance
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">✓</span> Progress tracking
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">✓</span> Real-world projects
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">✓</span> Learn at your pace
-                </li>
-              </ul>
-            </div>
-
-            {/* CTA Box */}
-            <Link href="/auth/login">
-              <button className="w-full px-6 py-4 bg-white text-black font-serif font-bold border-3 border-black hover:bg-gray-50 transition">
-                Sign In
-              </button>
-            </Link>
-          </div>
-        </div> */
+          
 
         {/* Bottom Section - Learning Paths Preview */}
         <div className="border-t-4 border-black bg-white mt-6">
