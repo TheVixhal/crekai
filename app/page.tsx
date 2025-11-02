@@ -113,7 +113,7 @@ export default async function Home() {
                 <p className="text-sm text-gray-700 mb-4 relative z-10">
                   A tokenizer in Natural Language Processing (NLP) is a tool that breaks down raw text into smaller, manageable units called tokens.
                 </p>
-                <p className="text-xs text-gray-600 font-sans relative z-10">20 Steps • Intermediate Project/p>
+                <p className="text-xs text-gray-600 font-sans relative z-10">20 Steps • Intermediate Project</p>
               </div>
               
               <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden">
