@@ -47,9 +47,7 @@ export default async function ProjectsPage() {
       <div className="border-b-4 border-black bg-gradient-to-r from-white to-amber-50 sticky top-0 z-50 shadow-lg backdrop-blur-sm bg-opacity-95">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-rose-500 rounded-lg border-2 border-black flex items-center justify-center">
-              <span className="text-white font-bold text-xl">C</span>
-            </div>
+           
             <div>
               <h1 className="text-4xl font-bold text-black font-serif tracking-tight">CrekAI</h1>
               <p className="text-xs text-gray-600 uppercase tracking-widest font-medium">Learning Projects</p>
@@ -142,7 +140,7 @@ export default async function ProjectsPage() {
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-600 font-sans text-sm">
-              © 2024 CrekAI. Empowering learners through hands-on AI projects.
+              © 2025 CrekAI. Empowering learners through hands-on AI projects.
             </p>
             <div className="flex gap-4">
               <a href="#" className="text-gray-600 hover:text-black transition font-sans text-sm font-medium">
