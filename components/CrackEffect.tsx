@@ -10,8 +10,6 @@ export default function CrackEffect({ children }) {
     const y = e.clientY
     const id = Date.now()
     
-    // Random rotation for variety
-    const rotation = Math.random() * 360
     // Random scale between 0.7 and 1.3
     const scale = 0.7 + Math.random() * 0.6
     
@@ -19,7 +17,6 @@ export default function CrackEffect({ children }) {
       id,
       x,
       y,
-      rotation,
       scale
     }
     
