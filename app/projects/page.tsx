@@ -80,7 +80,7 @@ export default async function ProjectsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-3xl font-bold text-white font-serif mb-2 drop-shadow-lg">
-                    Welcome Back, {user.full_name}!
+                    Welcome Back, {user.full_name?}!
                   </h2>
                   <p className="text-white/90 font-sans text-lg">
                     Continue your AI/ML learning journey
@@ -96,7 +96,7 @@ export default async function ProjectsPage() {
                 
                 <h2 className="text-3xl font-bold text-black font-serif">Featured Projects</h2>
               </div>
-              <p className="text-gray-700 font-sans text-lg pl-15">
+              <p className="text-gray-700 font-sans text-lg">
                 Choose a project and start building something amazing
               </p>
             </div>
