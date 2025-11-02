@@ -94,36 +94,36 @@ export default async function Home() {
         {/* Bottom Section - Learning Paths Preview */}
         <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 mt-6 shadow-inner">
           <div className="max-w-7xl mx-auto px-6 py-12">
-            <h3 className="text-3xl font-bold font-serif text-black mb-8">Popular Learning Paths</h3>
+            <h3 className="text-3xl font-bold font-serif text-black mb-8">Popular Projects</h3>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-blue-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-blue-600 font-sans relative z-10">Beginner</p>
-                <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">AI Fundamentals</h4>
+                <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Artificial Neural Network</h4>
                 <p className="text-sm text-gray-700 mb-4 relative z-10">
-                  Start with the basics of artificial intelligence and machine learning concepts.
+                  An artificial neural network (ANN) is a computational model inspired by the human brain's structure and function, consisting of interconnected nodes called neurons.
                 </p>
-                <p className="text-xs text-gray-600 font-sans relative z-10">5 Projects • Beginner Friendly</p>
+                <p className="text-xs text-gray-600 font-sans relative z-10">15 Steps • Beginner Friendly</p>
               </div>
               
               <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-purple-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-purple-600 font-sans relative z-10">Intermediate</p>
-                <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Deep Learning</h4>
+                <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Tokeniser</h4>
                 <p className="text-sm text-gray-700 mb-4 relative z-10">
-                  Dive deep into neural networks and build advanced AI models.
+                  A tokenizer in Natural Language Processing (NLP) is a tool that breaks down raw text into smaller, manageable units called tokens.
                 </p>
-                <p className="text-xs text-gray-600 font-sans relative z-10">8 Projects • Build Real Models</p>
+                <p className="text-xs text-gray-600 font-sans relative z-10">20 Steps • Intermediate Project/p>
               </div>
               
               <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-green-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-green-600 font-sans relative z-10">Advanced</p>
-                <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Production AI</h4>
+                <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Your Own GPT</h4>
                 <p className="text-sm text-gray-700 mb-4 relative z-10">
-                  Deploy AI models to production and scale your applications.
+                 GPT stands for Generative Pre-trained Transformer, which is a type of language model that uses a neural network architecture called a transformer to generate human-like text.
                 </p>
-                <p className="text-xs text-gray-600 font-sans relative z-10">6 Projects • Deploy to Production</p>
+                <p className="text-xs text-gray-600 font-sans relative z-10">25+ Steps • Advanced Project</p>
               </div>
             </div>
           </div>
