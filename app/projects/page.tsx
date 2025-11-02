@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
+import Image from "next/image"
 import ProjectCard from "@/components/project-card"
 import ProfileSidebar from "@/components/profile-sidebar"
 
@@ -43,11 +44,27 @@ export default async function ProjectsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
+      <style jsx>{`
+        @keyframes cloudFloat {
+          0% {
+            transform: translateX(-100px) translateY(0px);
+          }
+          50% {
+            transform: translateX(100px) translateY(-15px);
+          }
+          100% {
+            transform: translateX(-100px) translateY(0px);
+          }
+        }
+        .cloud-float {
+          animation: cloudFloat 20s ease-in-out infinite;
+        }
+      `}</style>
+
       {/* Enhanced Masthead with gradient and shadow */}
       <div className="border-b-4 border-black bg-gradient-to-r from-white to-amber-50 sticky top-0 z-50 shadow-lg backdrop-blur-sm bg-opacity-95">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-           
             <div>
               <h1 className="text-4xl font-bold text-black font-serif tracking-tight">CrekAI</h1>
               <p className="text-xs text-gray-600 uppercase tracking-widest font-medium">Learning Projects</p>
@@ -74,7 +91,19 @@ export default async function ProjectsPage() {
           {/* Main Content with enhanced header */}
           <div className="lg:col-span-2 space-y-8">
             {/* Welcome Banner */}
-            <div className="bg-gradient-to-r from-cyan-400 to-cyan-600 border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <div className="bg-gradient-to-r from-cyan-400 to-cyan-600 border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative">
+              {/* Floating Cloud - positioned above the banner */}
+              <div className="absolute -top-16 left-1/4 cloud-float z-20 pointer-events-none">
+                <Image
+                  src="/cloud.png"
+                  alt="Floating Cloud"
+                  width={100}
+                  height={70}
+                  className="drop-shadow-2xl opacity-90"
+                  priority
+                />
+              </div>
+              
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-3xl font-bold text-white font-serif mb-2 drop-shadow-lg">
@@ -91,7 +120,6 @@ export default async function ProjectsPage() {
             {/* Section Header */}
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                
                 <h2 className="text-3xl font-bold text-black font-serif">Featured Projects</h2>
               </div>
               <p className="text-gray-700 font-sans text-lg">
