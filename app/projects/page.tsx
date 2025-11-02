@@ -80,13 +80,13 @@ export default async function ProjectsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-3xl font-bold text-white font-serif mb-2 drop-shadow-lg">
-                    Welcome Back, {user.full_name?}!
+                    Welcome Back, {user.full_name[0]}!
                   </h2>
                   <p className="text-white/90 font-sans text-lg">
                     Continue your AI/ML learning journey
                   </p>
                 </div>
-                <div className="hidden md:block text-6xl">🧠</div>
+                <div className="hidden md:block text-6xl">🚀</div>
               </div>
             </div>
 
@@ -142,7 +142,7 @@ export default async function ProjectsPage() {
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-600 font-sans text-sm">
-              © 2025 CrekAI. Empowering learners through hands-on AI projects.
+              © 2024 CrekAI. Empowering learners through hands-on AI projects.
             </p>
             <div className="flex gap-4">
               <a href="#" className="text-gray-600 hover:text-black transition font-sans text-sm font-medium">
