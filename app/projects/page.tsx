@@ -80,7 +80,7 @@ export default async function ProjectsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-3xl font-bold text-white font-serif mb-2 drop-shadow-lg">
-                    Welcome Back, {user.full_name[0]}!
+                    Welcome Back, {userProfile.full_name}!
                   </h2>
                   <p className="text-white/90 font-sans text-lg">
                     Continue your AI/ML learning journey
