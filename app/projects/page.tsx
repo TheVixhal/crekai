@@ -80,7 +80,7 @@ export default async function ProjectsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-3xl font-bold text-white font-serif mb-2 drop-shadow-lg">
-                    Welcome Back, {user.email?.split('@')[0]}!
+                    Welcome Back, {user.full_name}!
                   </h2>
                   <p className="text-white/90 font-sans text-lg">
                     Continue your AI/ML learning journey
@@ -93,7 +93,7 @@ export default async function ProjectsPage() {
             {/* Section Header */}
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="h-1 w-12 bg-gradient-to-r from-orange-400 to-rose-500"></div>
+                
                 <h2 className="text-3xl font-bold text-black font-serif">Featured Projects</h2>
               </div>
               <p className="text-gray-700 font-sans text-lg pl-15">
