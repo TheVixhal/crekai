@@ -36,45 +36,33 @@ export default function CrackEffect({ children }) {
       {children}
       
       {/* Crack overlay */}
-      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none z-50">
         {cracks.map(crack => (
-          <div
+          <img 
             key={crack.id}
+            src="/crack.png" 
+            alt="" 
             className="absolute w-64 h-64 md:w-80 md:h-80"
-            style={{
+            style={{ 
               left: `${crack.x}px`,
               top: `${crack.y}px`,
               transform: `translate(-50%, -50%) rotate(${crack.rotation}deg) scale(${crack.scale})`,
-              transformOrigin: 'center center'
+              filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.3))',
+              mixBlendMode: 'multiply',
+              animation: 'crackAppear 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, crackFadeOut 0.8s ease-out forwards 1.2s'
             }}
-          >
-            <img 
-              src="/crack.png" 
-              alt="" 
-              className="w-full h-full object-contain crack-animation"
-              style={{ 
-                filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.3))',
-                mixBlendMode: 'multiply'
-              }}
-            />
-          </div>
+          />
         ))}
       </div>
 
       <style jsx>{`
-        .crack-animation {
-          animation: crackAppear 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, 
-                     crackFadeOut 0.8s ease-out forwards 1.2s;
-        }
-        
         @keyframes crackAppear {
           0% {
             opacity: 0;
-            transform: scale(0.3);
+            transform: translate(-50%, -50%) rotate(0deg) scale(0.3);
           }
           100% {
             opacity: 1;
-            transform: scale(1);
           }
         }
         
