@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 
 export default function CrackEffect({ children }) {
   const [cracks, setCracks] = useState([])
@@ -41,18 +40,18 @@ export default function CrackEffect({ children }) {
         {cracks.map(crack => (
           <div
             key={crack.id}
-            className="absolute"
+            className="absolute w-64 h-64 md:w-80 md:h-80"
             style={{
-              left: crack.x,
-              top: crack.y,
+              left: `${crack.x}px`,
+              top: `${crack.y}px`,
               transform: `translate(-50%, -50%) rotate(${crack.rotation}deg) scale(${crack.scale})`,
-              animation: 'crackAppear 0.2s ease-out forwards, crackFadeOut 0.8s ease-out forwards 1s'
+              transformOrigin: 'center center'
             }}
           >
             <img 
               src="/crack.png" 
               alt="" 
-              className="w-64 h-64 md:w-80 md:h-80"
+              className="w-full h-full object-contain crack-animation"
               style={{ 
                 filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.3))',
                 mixBlendMode: 'multiply'
@@ -63,14 +62,19 @@ export default function CrackEffect({ children }) {
       </div>
 
       <style jsx>{`
+        .crack-animation {
+          animation: crackAppear 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, 
+                     crackFadeOut 0.8s ease-out forwards 1.2s;
+        }
+        
         @keyframes crackAppear {
           0% {
             opacity: 0;
-            transform: translate(-50%, -50%) rotate(${0}deg) scale(0.5);
+            transform: scale(0.3);
           }
           100% {
             opacity: 1;
-            transform: translate(-50%, -50%) rotate(var(--rotation)) scale(var(--scale));
+            transform: scale(1);
           }
         }
         
