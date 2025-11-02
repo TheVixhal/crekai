@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react'
 
 export default function TypewriterHeading({ 
   texts = [
-    "Build Your Own Neural Network From Scratch",
-    "Build Your Own ChatGPT From Scratch",
+    "Build Artificial Neural Network From Scratch",
+    "Build Your Own ChatGPT",
   ],
   typingSpeed = 80,
   deletingSpeed = 40,
