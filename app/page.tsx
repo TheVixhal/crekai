@@ -2,6 +2,7 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import TypewriterHeading from "@/components/TypewriterHeading"
+import CrackEffect from "@/components/CrackEffect"
 
 export default async function Home() {
   const supabase = await createClient()
@@ -13,6 +14,7 @@ export default async function Home() {
     redirect("/projects")
   }
   return (
+    <CrackEffect>
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
       {/* Main Masthead */}
       <div className="border-b-4 border-black py-12 px-6 text-center bg-gradient-to-b from-white to-gray-50 shadow-lg relative overflow-hidden">
@@ -134,5 +136,6 @@ export default async function Home() {
         <p className="text-xs text-gray-500">© 2025 All rights reserved</p>
       </div>
     </div>
+  </CrackEffect>  
   )
 }
