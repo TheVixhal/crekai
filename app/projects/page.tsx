@@ -86,7 +86,7 @@ export default async function ProjectsPage() {
                     Continue your AI/ML learning journey
                   </p>
                 </div>
-                <div className="hidden md:block text-6xl">🚀</div>
+                <div className="hidden md:block text-6xl">🧠</div>
               </div>
             </div>
 
