@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
+import TypewriterHeading from "@/components/TypewriterHeading"
 
 export default async function Home() {
   const supabase = await createClient()
@@ -40,9 +41,7 @@ export default async function Home() {
               
               <div className="border-b-2 border-black p-6 bg-gradient-to-r from-gray-50 to-white relative">
                 <p className="text-xs uppercase tracking-widest font-sans font-bold mb-2 text-orange-600">Featured</p>
-                <h2 className="text-4xl md:text-5xl font-bold font-serif mb-3 text-black">
-                  Start Your AI Journey Today
-                </h2>
+                <TypewriterHeading />
                 <p className="text-sm text-gray-700 font-sans">
                   Master machine learning fundamentals through hands-on projects
                 </p>
