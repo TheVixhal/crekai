@@ -76,7 +76,7 @@ export default async function ProjectsPage() {
           {/* Main Content with enhanced header */}
           <div className="lg:col-span-2 space-y-8">
             {/* Welcome Banner */}
-            <div className="bg-gradient-to-r from-orange-400 to-rose-500 border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <div className="bg-gradient-to-r from-cyan-400 to-cyan-600 border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-3xl font-bold text-white font-serif mb-2 drop-shadow-lg">
