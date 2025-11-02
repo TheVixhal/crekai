@@ -1,25 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import { unstable_cache } from "next/cache"
 import ProjectCard from "@/components/project-card"
 import ProfileSidebar from "@/components/profile-sidebar"
-
-// Cache projects for 5 minutes (revalidate every 300 seconds)
-const getCachedProjects = unstable_cache(
-  async () => {
-    const supabase = await createClient()
-    const { data: projects, error } = await supabase
-      .from("projects")
-      .select("*")
-      .order("created_at", { ascending: false }) // Show newest first
-      .limit(50) // Limit to 50 projects for performance
-    
-    if (error) throw error
-    return projects
-  },
-  ["projects-list"],
-  { revalidate: 300, tags: ["projects"] }
-)
 
 export default async function ProjectsPage() {
   const supabase = await createClient()
@@ -31,36 +13,33 @@ export default async function ProjectsPage() {
     redirect("/auth/login")
   }
 
-  // Parallel data fetching instead of sequential
-  const [projects, progressData, userProfile] = await Promise.all([
-    getCachedProjects().catch(() => []),
-    supabase
-      .from("user_progress")
-      .select("project_id, current_step, total_steps, completed_steps")
-      .eq("user_id", user.id)
-      .then(({ data }) => data || []),
-    supabase
-      .from("user_profiles")
-      .select("id, created_at, display_name, avatar_url")
-      .eq("id", user.id)
-      .maybeSingle()
-      .then(({ data }) => data)
-  ])
+  // Fetch all projects
+  const { data: projects, error: projectsError } = await supabase
+    .from("projects")
+    .select("*")
+    .order("created_at", { ascending: true })
 
-  // Optimize progress map creation
-  const progressMap = progressData.reduce((acc, prog) => {
+  if (projectsError) {
+    console.error("Error fetching projects:", projectsError)
+  }
+
+  // Fetch user progress for all projects
+  const { data: progressData } = await supabase.from("user_progress").select("*").eq("user_id", user.id)
+
+  const progressMap = (progressData || []).reduce((acc: Record<string, any>, prog: any) => {
     acc[prog.project_id] = prog
     return acc
-  }, {} as Record<string, any>)
+  }, {})
 
-  // Calculate stats efficiently
-  const projectsEnrolled = progressData.length
-  const completedSteps = progressData.reduce((sum, prog) => 
-    sum + (prog.completed_steps?.length || 0), 0
-  )
-  const projectsInProgress = progressData.filter((prog) => 
-    prog.current_step && prog.current_step <= (prog.total_steps || 0)
-  ).length
+  const { data: userProfile } = await supabase.from("user_profiles").select("*").eq("id", user.id).maybeSingle()
+
+  const projectsEnrolled = Object.keys(progressMap).length
+  const completedSteps = Object.values(progressMap).reduce((sum, prog: any) => {
+    return sum + (prog.completed_steps?.length || 0)
+  }, 0)
+  const projectsInProgress = Object.values(progressMap).filter((prog: any) => {
+    return prog.current_step && prog.current_step <= (prog.total_steps || 0)
+  }).length
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
@@ -140,13 +119,6 @@ export default async function ProjectsPage() {
                 </div>
               )}
             </div>
-
-            {/* Pagination hint - can be implemented later */}
-            {projects && projects.length === 50 && (
-              <div className="text-center py-4">
-                <p className="text-gray-600 text-sm">Showing 50 most recent projects</p>
-              </div>
-            )}
           </div>
 
           {/* Profile Sidebar with sticky positioning */}
@@ -170,7 +142,7 @@ export default async function ProjectsPage() {
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-600 font-sans text-sm">
-              © 2024 CrekAI. Empowering learners through hands-on AI projects.
+              © 2025 CrekAI. Empowering learners through hands-on AI projects.
             </p>
             <div className="flex gap-4">
               <a href="#" className="text-gray-600 hover:text-black transition font-sans text-sm font-medium">
