@@ -50,10 +50,10 @@ export default function CrackEffect({ children }) {
               top: `${crack.y}px`,
               transform: `scale(${crack.scale})`,
               transformOrigin: 'center center',
-              filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.15)) brightness(0.4) contrast(1.2)',
-              mixBlendMode: 'darken',
+              filter: 'brightness(0) contrast(2) drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
+              mixBlendMode: 'multiply',
               opacity: 0,
-              animation: 'crackAppear 0.4s ease-out forwards, crackFadeOut 1s ease-out forwards 1.8s'
+              animation: 'crackAppear 0.1s ease-out forwards, crackFadeOut 1s ease-out forwards 1.5s'
             }}
           />
         ))}
