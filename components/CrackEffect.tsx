@@ -12,8 +12,8 @@ export default function CrackEffect({ children }) {
     
     // Random rotation for variety
     const rotation = Math.random() * 360
-    // Random scale between 0.8 and 1.5
-    const scale = 0.8 + Math.random() * 0.7
+    // Random scale between 0.7 and 1.3
+    const scale = 0.7 + Math.random() * 0.6
     
     const newCrack = {
       id,
@@ -25,10 +25,10 @@ export default function CrackEffect({ children }) {
     
     setCracks(prev => [...prev, newCrack])
     
-    // Remove crack after animation
+    // Remove crack after animation completes
     setTimeout(() => {
       setCracks(prev => prev.filter(crack => crack.id !== id))
-    }, 2000)
+    }, 3000)
   }
 
   return (
@@ -42,14 +42,15 @@ export default function CrackEffect({ children }) {
             key={crack.id}
             src="/crack.png" 
             alt="" 
-            className="absolute w-64 h-64 md:w-80 md:h-80"
+            className="absolute w-72 h-72 md:w-96 md:h-96"
             style={{ 
               left: `${crack.x}px`,
               top: `${crack.y}px`,
               transform: `translate(-50%, -50%) rotate(${crack.rotation}deg) scale(${crack.scale})`,
-              filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.3))',
-              mixBlendMode: 'multiply',
-              animation: 'crackAppear 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, crackFadeOut 0.8s ease-out forwards 1.2s'
+              filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.15)) brightness(0.4) contrast(1.2)',
+              mixBlendMode: 'darken',
+              opacity: 0,
+              animation: 'crackAppear 0.4s ease-out forwards, crackFadeOut 1s ease-out forwards 1.8s'
             }}
           />
         ))}
@@ -59,16 +60,23 @@ export default function CrackEffect({ children }) {
         @keyframes crackAppear {
           0% {
             opacity: 0;
-            transform: translate(-50%, -50%) rotate(0deg) scale(0.3);
+            transform: translate(-50%, -50%) rotate(${0}deg) scale(0.1);
+          }
+          20% {
+            opacity: 0.95;
+            transform: translate(-50%, -50%) scale(0.5);
+          }
+          60% {
+            opacity: 0.9;
           }
           100% {
-            opacity: 1;
+            opacity: 0.85;
           }
         }
         
         @keyframes crackFadeOut {
           0% {
-            opacity: 1;
+            opacity: 0.85;
           }
           100% {
             opacity: 0;
@@ -77,4 +85,3 @@ export default function CrackEffect({ children }) {
       `}</style>
     </div>
   )
-}
