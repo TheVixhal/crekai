@@ -1,43 +1,27 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import Image from 'next/image'
 
 export default function CrackEffect({ children }) {
   const [cracks, setCracks] = useState([])
-
-  const generateCrack = (x, y) => {
-    const crackLines = []
-    const numLines = 8 + Math.floor(Math.random() * 5) // 8-12 crack lines
-    
-    for (let i = 0; i < numLines; i++) {
-      const angle = (Math.PI * 2 * i) / numLines + (Math.random() - 0.5) * 0.5
-      const length = 30 + Math.random() * 70 // Random length between 30-100px
-      const endX = x + Math.cos(angle) * length
-      const endY = y + Math.sin(angle) * length
-      
-      // Add some randomness to make it look more natural
-      const midX = x + Math.cos(angle) * (length / 2) + (Math.random() - 0.5) * 20
-      const midY = y + Math.sin(angle) * (length / 2) + (Math.random() - 0.5) * 20
-      
-      crackLines.push({
-        path: `M ${x} ${y} Q ${midX} ${midY} ${endX} ${endY}`,
-        delay: Math.random() * 100
-      })
-    }
-    
-    return crackLines
-  }
 
   const handleClick = (e) => {
     const x = e.clientX
     const y = e.clientY
     const id = Date.now()
     
+    // Random rotation for variety
+    const rotation = Math.random() * 360
+    // Random scale between 0.8 and 1.5
+    const scale = 0.8 + Math.random() * 0.7
+    
     const newCrack = {
       id,
       x,
       y,
-      lines: generateCrack(x, y)
+      rotation,
+      scale
     }
     
     setCracks(prev => [...prev, newCrack])
@@ -45,7 +29,7 @@ export default function CrackEffect({ children }) {
     // Remove crack after animation
     setTimeout(() => {
       setCracks(prev => prev.filter(crack => crack.id !== id))
-    }, 1500)
+    }, 2000)
   }
 
   return (
@@ -53,65 +37,48 @@ export default function CrackEffect({ children }) {
       {children}
       
       {/* Crack overlay */}
-      <svg 
-        className="fixed inset-0 pointer-events-none z-50"
-        style={{ width: '100vw', height: '100vh' }}
-      >
+      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
         {cracks.map(crack => (
-          <g key={crack.id}>
-            {crack.lines.map((line, index) => (
-              <path
-                key={index}
-                d={line.path}
-                stroke="rgba(0, 0, 0, 0.6)"
-                strokeWidth="2"
-                fill="none"
-                strokeLinecap="round"
-                style={{
-                  animation: `crackAppear 0.3s ease-out forwards ${line.delay}ms, crackFade 0.5s ease-out forwards 0.8s`,
-                  strokeDasharray: '100',
-                  strokeDashoffset: '100'
-                }}
-              />
-            ))}
-            {/* Impact circle */}
-            <circle
-              cx={crack.x}
-              cy={crack.y}
-              r="0"
-              fill="rgba(0, 0, 0, 0.1)"
-              style={{
-                animation: 'impactPulse 0.4s ease-out forwards'
+          <div
+            key={crack.id}
+            className="absolute"
+            style={{
+              left: crack.x,
+              top: crack.y,
+              transform: `translate(-50%, -50%) rotate(${crack.rotation}deg) scale(${crack.scale})`,
+              animation: 'crackAppear 0.2s ease-out forwards, crackFadeOut 0.8s ease-out forwards 1s'
+            }}
+          >
+            <img 
+              src="/crack.png" 
+              alt="" 
+              className="w-64 h-64 md:w-80 md:h-80"
+              style={{ 
+                filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.3))',
+                mixBlendMode: 'multiply'
               }}
             />
-          </g>
+          </div>
         ))}
-      </svg>
+      </div>
 
       <style jsx>{`
         @keyframes crackAppear {
-          to {
-            strokeDashoffset: 0;
-          }
-        }
-        
-        @keyframes crackFade {
-          to {
-            opacity: 0;
-          }
-        }
-        
-        @keyframes impactPulse {
           0% {
-            r: 0;
-            opacity: 0.4;
-          }
-          50% {
-            r: 20;
-            opacity: 0.2;
+            opacity: 0;
+            transform: translate(-50%, -50%) rotate(${0}deg) scale(0.5);
           }
           100% {
-            r: 30;
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(var(--rotation)) scale(var(--scale));
+          }
+        }
+        
+        @keyframes crackFadeOut {
+          0% {
+            opacity: 1;
+          }
+          100% {
             opacity: 0;
           }
         }
