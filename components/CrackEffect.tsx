@@ -42,7 +42,7 @@ export default function CrackEffect({ children }) {
         {cracks.map(crack => (
           <img 
             key={crack.id}
-            src="/crack.png" 
+            src="/crack1.png" 
             alt="" 
             className="absolute w-96 h-96"
             style={{ 
