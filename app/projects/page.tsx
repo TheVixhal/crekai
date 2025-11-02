@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import Image from "next/image"
 import ProjectCard from "@/components/project-card"
 import ProfileSidebar from "@/components/profile-sidebar"
+import WelcomeBanner from "@/components/welcome-banner"
 
 export default async function ProjectsPage() {
   const supabase = await createClient()
