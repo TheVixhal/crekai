@@ -4,8 +4,15 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const geistSans = Geist({ 
+  subsets: ["latin"],
+  variable: "--font-geist-sans"
+})
+
+const geistMono = Geist_Mono({ 
+  subsets: ["latin"],
+  variable: "--font-geist-mono"
+})
 
 export const metadata: Metadata = {
   title: "CrekAI - Learn AI/ML by Building",
@@ -19,8 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <link rel="icon" href="/favicon.ico" sizes="any" />
-      <body className={`font-sans antialiased`}>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>
