@@ -13,10 +13,15 @@ export default function CrackEffect({ children }) {
     // Random scale between 0.7 and 1.3
     const scale = 0.7 + Math.random() * 0.6
     
+    // Calculate position to center the image (assuming 384px = 96 * 4 for w-96)
+    const imageSize = 384 // md:w-96 = 24rem = 384px
+    const centeredX = x - (imageSize / 2)
+    const centeredY = y - (imageSize / 2)
+    
     const newCrack = {
       id,
-      x,
-      y,
+      x: centeredX,
+      y: centeredY,
       scale
     }
     
@@ -39,11 +44,12 @@ export default function CrackEffect({ children }) {
             key={crack.id}
             src="/crack.png" 
             alt="" 
-            className="absolute w-72 h-72 md:w-96 md:h-96"
+            className="absolute w-96 h-96"
             style={{ 
               left: `${crack.x}px`,
               top: `${crack.y}px`,
-              transform: `translate(-50%, -50%) rotate(${crack.rotation}deg) scale(${crack.scale})`,
+              transform: `scale(${crack.scale})`,
+              transformOrigin: 'center center',
               filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.15)) brightness(0.4) contrast(1.2)',
               mixBlendMode: 'darken',
               opacity: 0,
@@ -57,11 +63,11 @@ export default function CrackEffect({ children }) {
         @keyframes crackAppear {
           0% {
             opacity: 0;
-            transform: translate(-50%, -50%) rotate(${0}deg) scale(0.1);
+            transform: scale(0.1);
           }
           20% {
             opacity: 0.95;
-            transform: translate(-50%, -50%) scale(0.5);
+            transform: scale(0.5);
           }
           60% {
             opacity: 0.9;
