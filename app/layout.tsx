@@ -10,6 +10,9 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "CrekAI - Learn AI/ML by Building",
   description: "Learn AI and Machine Learning through hands-on practice",
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export default function RootLayout({
