@@ -4,6 +4,9 @@ import { redirect } from "next/navigation"
 import TypewriterHeading from "@/components/TypewriterHeading"
 import CrackEffect from "@/components/CrackEffect"
 import { FloatingNav } from "@/components/ui/floating-navbar";
+import { IconHome, IconUser, IconMessage } from "@tabler/icons-react";
+
+
 
 export default async function Home() {
     const navItems = [
@@ -39,7 +42,9 @@ export default async function Home() {
     <FloatingNav navItems={navItems} />  
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
       {/* Main Masthead */}
+      
       <div className="border-b-4 border-black py-12 px-6 text-center bg-gradient-to-b from-white to-gray-50 shadow-lg relative overflow-hidden rounded-b-3xl">
+        
         <div className="absolute inset-0 opacity-5" style={{
           backgroundImage: `repeating-linear-gradient(0deg, #000 0px, #000 1px, transparent 1px, transparent 4px),
                            repeating-linear-gradient(90deg, #000 0px, #000 1px, transparent 1px, transparent 4px)`
@@ -52,6 +57,7 @@ export default async function Home() {
           </p>
           <p className="text-xs text-gray-600 tracking-widest font-sans uppercase">Your Source for AI/ML Mastery</p>
         </div>
+        
       </div>
 
       {/* Hero Section */}
