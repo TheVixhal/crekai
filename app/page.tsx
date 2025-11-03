@@ -23,7 +23,7 @@ export default async function Home() {
                            repeating-linear-gradient(90deg, #000 0px, #000 1px, transparent 1px, transparent 4px)`
         }}></div>
         <div className="relative z-10">
-          <h1 className="text-7xl md:text-8xl font-bold text-black font-serif tracking-wider mb-4 drop-shadow-sm">CrekAI</h1>
+          <h1 className="text-7xl md:text-8xl font-bold text-black font-serif tracking-wider mb-4 drop-shadow-sm">Crek AI</h1>
           <div className="h-2 bg-gradient-to-r from-transparent via-black to-transparent mx-auto w-64 mb-4 shadow-md"></div>
           <p className="text-lg md:text-xl text-gray-800 font-serif italic mb-2">
             Learn AI & Machine Learning Through Hands On Practice
@@ -37,7 +37,7 @@ export default async function Home() {
         <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
           {/* Main Featured Article */}
           <div>
-            <div className="bg-white border-4 border-black h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden">
+            <div className="bg-white border-b-4 border-black h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-b-3xl">
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-100 opacity-20 rounded-full blur-3xl"></div>
               <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-100 opacity-20 rounded-full blur-3xl"></div>
               
