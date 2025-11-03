@@ -37,7 +37,7 @@ export default async function Home() {
         <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
           {/* Main Featured Article */}
           <div>
-            <div className="bg-white border-4 border-black h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-3xl">
+            <div className="bg-white border-2 border-black h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-3xl">
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-100 opacity-20 rounded-full blur-3xl"></div>
               <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-100 opacity-20 rounded-full blur-3xl"></div>
               
@@ -96,7 +96,7 @@ export default async function Home() {
           <div className="max-w-7xl mx-auto px-6 py-12">
             <h3 className="text-3xl font-bold font-serif text-black mb-8">Popular Projects</h3>
             <div className="grid md:grid-cols-3 gap-6">
-              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden">
+              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-blue-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-blue-600 font-sans relative z-10">Beginner</p>
                 <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Artificial Neural Network</h4>
@@ -106,7 +106,7 @@ export default async function Home() {
                 <p className="text-xs text-gray-600 font-sans relative z-10">15 Steps • Beginner Friendly</p>
               </div>
               
-              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden">
+              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-purple-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-purple-600 font-sans relative z-10">Intermediate</p>
                 <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Tokeniser</h4>
@@ -116,7 +116,7 @@ export default async function Home() {
                 <p className="text-xs text-gray-600 font-sans relative z-10">20 Steps • Intermediate Project</p>
               </div>
               
-              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden">
+              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-green-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-green-600 font-sans relative z-10">Advanced</p>
                 <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Your Own GPT</h4>
