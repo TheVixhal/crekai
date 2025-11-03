@@ -3,8 +3,28 @@ import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import TypewriterHeading from "@/components/TypewriterHeading"
 import CrackEffect from "@/components/CrackEffect"
+import { FloatingNav } from "@/components/ui/floating-navbar";
 
 export default async function Home() {
+    const navItems = [
+    {
+      name: "Home",
+      link: "/",
+      icon: <IconHome className="h-4 w-4 text-neutral-500 dark:text-white" />,
+    },
+    {
+      name: "About",
+      link: "/about",
+      icon: <IconUser className="h-4 w-4 text-neutral-500 dark:text-white" />,
+    },
+    {
+      name: "Contact",
+      link: "/contact",
+      icon: (
+        <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />
+      ),
+    },
+  ];
   const supabase = await createClient()
   const {
     data: { user },
@@ -15,6 +35,8 @@ export default async function Home() {
   }
   return (
     <CrackEffect>
+    <div className="relative  w-full">  
+    <FloatingNav navItems={navItems} />  
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
       {/* Main Masthead */}
       <div className="border-b-4 border-black py-12 px-6 text-center bg-gradient-to-b from-white to-gray-50 shadow-lg relative overflow-hidden rounded-b-3xl">
@@ -136,6 +158,7 @@ export default async function Home() {
         <p className="text-xs text-gray-500">© 2025 All rights reserved</p>
       </div>
     </div>
+    </div>   
   </CrackEffect>  
   )
 }
