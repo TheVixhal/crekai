@@ -32,7 +32,7 @@ export default async function ProjectsPage() {
     return meta
   })
 
-  // 🔹 Fetch user progress (still dynamic)
+  // 🔹 Fetch user progress
   const { data: progressData } = await supabase
     .from("user_progress")
     .select("*")
@@ -58,24 +58,22 @@ export default async function ProjectsPage() {
     (prog: any) => prog.current_step && prog.current_step <= (prog.total_steps || 0)
   ).length
 
-  // ✅ Anthropic-styled design system colors
-  const cream = "#eeece2"
-  const mint = "#BED2CD"
-  const lavender = "#C8C6DA"
-  const blue = "#6594C1"
+  // 🎨 Anthropic cream base + accents
+  const cream = "#eeece2" // Background
+  const mint = "#BED2CD" // Muted accent green
+  const lavender = "#C8C6DA" // Soft neutral lavender-gray
+  const blue = "#6594C1" // Calm blue accent
 
   return (
     <div
       className="min-h-screen text-gray-900"
-      style={{
-        background: `linear-gradient(135deg, ${cream} 55%, ${mint} 85%)`,
-      }}
+      style={{ backgroundColor: cream }}
     >
       {/* Header */}
       <header
         className="sticky top-0 z-50 backdrop-blur-md border-b border-gray-300"
         style={{
-          backgroundColor: `${lavender}CC`,
+          backgroundColor: `${lavender}D9`, // soft translucent lavender
         }}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
@@ -94,7 +92,7 @@ export default async function ProjectsPage() {
             <button
               className="px-4 py-2 rounded-md text-sm font-medium text-white transition"
               style={{
-                background: `linear-gradient(to right, ${blue}, ${mint})`,
+                backgroundColor: blue,
               }}
             >
               Sign Out
@@ -105,21 +103,22 @@ export default async function ProjectsPage() {
 
       {/* Main */}
       <main className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Left: Main Content */}
+        {/* Left Section */}
         <section className="lg:col-span-2 space-y-10">
           {/* Welcome Banner */}
           <div
-            className="rounded-2xl border border-gray-200 shadow-sm p-8 backdrop-blur-md"
+            className="rounded-2xl border border-gray-200 shadow-sm p-8"
             style={{
-              background: `linear-gradient(110deg, ${mint}33, ${lavender}33, ${blue}22)`,
+              backgroundColor: mint,
+              color: "#1F2A2C",
             }}
           >
             <div className="flex justify-between items-center">
               <div>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+                <h2 className="text-2xl font-semibold mb-2">
                   Welcome back, {userProfile?.full_name?.split(" ")[0] || "Learner"} 👋
                 </h2>
-                <p className="text-gray-700 text-sm">
+                <p className="text-gray-800 text-sm">
                   Continue your AI/ML learning journey — progress grows one project at a time.
                 </p>
               </div>
@@ -135,7 +134,7 @@ export default async function ProjectsPage() {
             </p>
           </div>
 
-          {/* Project Grid */}
+          {/* Projects Grid */}
           <div className="grid md:grid-cols-2 gap-6">
             {projects.length > 0 ? (
               projects.map((project: any) => (
@@ -146,7 +145,7 @@ export default async function ProjectsPage() {
                 />
               ))
             ) : (
-              <div className="col-span-full bg-white/70 border border-gray-200 rounded-xl p-12 text-center shadow-sm backdrop-blur-sm">
+              <div className="col-span-full bg-white/80 border border-gray-200 rounded-xl p-12 text-center shadow-sm backdrop-blur-sm">
                 <div className="text-5xl mb-3">📚</div>
                 <p className="text-gray-800 font-medium">No projects found.</p>
                 <p className="text-gray-500 text-sm mt-1">
@@ -157,7 +156,7 @@ export default async function ProjectsPage() {
           </div>
         </section>
 
-        {/* Right: Profile Sidebar */}
+        {/* Sidebar */}
         <aside className="lg:col-span-1">
           <div className="sticky top-28">
             <ProfileSidebar
@@ -176,12 +175,12 @@ export default async function ProjectsPage() {
       <footer
         className="border-t mt-16 py-8 backdrop-blur-md"
         style={{
-          backgroundColor: `${lavender}33`,
-          borderColor: `${mint}99`,
+          backgroundColor: `${lavender}B3`,
+          borderColor: mint,
         }}
       >
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-700 text-sm">
             © 2025 CrekAI — Empowering learners through hands-on AI experiences.
           </p>
           <div className="flex gap-5 text-sm">
