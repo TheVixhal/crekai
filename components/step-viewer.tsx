@@ -35,19 +35,24 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
   const loadStep = async () => {
     setLoading(true)
     setError("")
+
     try {
+      // Fetch markdown file from public folder
       const response = await fetch(`/projects/${project.slug}/step_${currentStep}.md`)
+
       if (!response.ok) {
         setError(`Step ${currentStep} not found`)
         return
       }
+
       const content = await response.text()
       setStepContent(content)
+
       const completedSteps = progress?.completed_steps || []
       setCompleted(completedSteps.includes(currentStep))
     } catch (err) {
-      console.error(err)
       setError("Failed to load step content")
+      console.error(err)
     } finally {
       setLoading(false)
     }
@@ -56,19 +61,26 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
   const handleCompleteStep = async () => {
     try {
       const completedSteps = progress?.completed_steps || []
-      if (!completedSteps.includes(currentStep)) completedSteps.push(currentStep)
+
+      if (!completedSteps.includes(currentStep)) {
+        completedSteps.push(currentStep)
+      }
+
       const nextStep = currentStep + 1
       const hasNextStep = nextStep <= project.total_steps
 
       if (!progress) {
+        // Create new progress record
         const { error } = await supabase.from("user_progress").insert({
           user_id: userId,
           project_id: project.id,
           current_step: hasNextStep ? nextStep : currentStep,
           completed_steps: completedSteps,
         })
+
         if (error) throw error
       } else {
+        // Update existing progress
         const { error } = await supabase
           .from("user_progress")
           .update({
@@ -78,14 +90,18 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
           })
           .eq("user_id", userId)
           .eq("project_id", project.id)
+
         if (error) throw error
       }
 
       setCompleted(true)
-      if (hasNextStep) router.refresh()
+
+      if (hasNextStep) {
+        router.refresh()
+      }
     } catch (err) {
-      console.error(err)
       setError("Failed to save progress")
+      console.error(err)
     }
   }
 
@@ -108,8 +124,8 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
       router.push(`/projects/${project.slug}?step=1`)
       router.refresh()
     } catch (err) {
-      console.error(err)
       setError("Failed to reset project")
+      console.error(err)
     } finally {
       setResetting(false)
     }
@@ -120,101 +136,113 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
   const isProjectComplete = currentStep === project.total_steps && completed
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f9fafb] via-[#f5f6f7] to-[#eef0f2] text-gray-900">
-      {/* Header */}
-      <header className="sticky top-0 z-40 backdrop-blur-md bg-white/80 border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-6 py-5">
-          <Link
-            href="/projects"
-            className="text-sm text-gray-600 hover:text-gray-900 transition font-medium"
-          >
-            ← Back to Projects
+    <div className="min-h-screen bg-amber-50">
+      {/* Masthead */}
+      <div className="border-b-4 border-black bg-white mb-8">
+        <div className="max-w-4xl mx-auto px-6 py-6">
+          <Link href="/projects" className="text-black hover:underline text-sm font-bold font-sans mb-4 inline-block">
+            ← BACK TO PROJECTS
           </Link>
-          <h1 className="text-3xl font-semibold text-gray-900 mt-2">{project.title}</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-4xl font-bold text-black font-serif mb-3">{project.title}</h1>
+          <p className="text-gray-700 font-sans mb-4">
             Step {currentStep} of {project.total_steps}
           </p>
-          <div className="w-full bg-gray-200 rounded-full h-2 mt-3 overflow-hidden">
+          <div className="w-full bg-gray-300 h-2 border-2 border-black">
             <div
-              className="bg-gradient-to-r from-indigo-500 to-blue-400 h-full transition-all duration-500"
-              style={{ width: `${(currentStep / project.total_steps) * 100}%` }}
+              className="bg-black h-full transition-all"
+              style={{
+                width: `${(currentStep / project.total_steps) * 100}%`,
+              }}
             />
           </div>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-4xl mx-auto px-6 py-10">
+      {/* Main content */}
+      <div className="max-w-4xl mx-auto px-6 pb-8">
         {isProjectComplete && (
-          <div className="bg-gradient-to-r from-green-50 to-emerald-100 border border-emerald-200 rounded-xl p-8 text-center shadow-sm mb-8">
-            <h2 className="text-2xl font-semibold text-emerald-800 mb-3">🎉 Project Complete!</h2>
-            <p className="text-emerald-700 mb-6 text-sm">
-              You’ve completed all {project.total_steps} steps of <strong>{project.title}</strong>!
+          <div className="bg-green-50 border-3 border-green-700 p-8 mb-8 text-center">
+            <h2 className="text-3xl font-bold text-green-900 font-serif mb-4">🎉 Project Complete!</h2>
+            <p className="text-green-900 font-sans mb-6">
+              Congratulations! You've completed all {project.total_steps} steps of {project.title}.
             </p>
             <button
               onClick={handleResetProject}
               disabled={resetting}
-              className="px-6 py-2.5 rounded-md bg-emerald-700 text-white font-medium hover:bg-emerald-800 transition disabled:opacity-50"
+              className="px-8 py-3 bg-green-700 text-white font-serif font-bold border-2 border-green-900 hover:bg-green-800 disabled:opacity-50 transition"
             >
-              {resetting ? "Resetting..." : "Start Over"}
+              {resetting ? "RESETTING..." : "START OVER"}
             </button>
           </div>
         )}
 
         {/* Content Card */}
-        <div className="bg-white/70 backdrop-blur-md border border-gray-200 rounded-2xl shadow-sm p-8 mb-10">
+        <div className="bg-white border-2 border-black p-8 mb-8">
           {loading ? (
-            <div className="text-center text-gray-500 text-sm">Loading step...</div>
+            <div className="text-center text-gray-700 font-sans">Loading step...</div>
           ) : error ? (
-            <div className="text-center text-red-600 font-medium">{error}</div>
+            <div className="text-center text-red-900 font-sans font-bold">{error}</div>
           ) : (
-            <ReactMarkdown
-              components={{
-                h1: ({ ...props }) => (
-                  <h1 className="text-3xl font-semibold text-gray-900 mb-4" {...props} />
-                ),
-                h2: ({ ...props }) => (
-                  <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-3 border-b border-gray-200 pb-2" {...props} />
-                ),
-                h3: ({ ...props }) => (
-                  <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-2" {...props} />
-                ),
-                p: ({ children, ...props }) => (
-                  <p className="text-gray-700 leading-relaxed mb-4 text-[15px]" {...props}>
-                    {children}
-                  </p>
-                ),
-                ul: ({ ...props }) => (
-                  <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4" {...props} />
-                ),
-                ol: ({ ...props }) => (
-                  <ol className="list-decimal list-inside text-gray-700 space-y-2 mb-4" {...props} />
-                ),
-                code: ({ inline, className, children, ...props }: any) => {
-                  if (inline) {
+            <div className="text-gray-900">
+              <ReactMarkdown
+                components={{
+                  h1: ({ node, ...props }) => (
+                    <h1 className="text-4xl font-bold text-black mb-4 font-serif" {...props} />
+                  ),
+                  h2: ({ node, ...props }) => (
+                    <h2
+                      className="text-3xl font-bold text-black mb-4 mt-8 font-serif border-b-2 border-black pb-2"
+                      {...props}
+                    />
+                  ),
+                  h3: ({ node, ...props }) => (
+                    <h3 className="text-2xl font-bold text-black mb-3 mt-6 font-serif" {...props} />
+                  ),
+                  p: ({ node, children, ...props }) => {
                     return (
-                      <code className="bg-gray-100 px-2 py-1 rounded text-sm text-indigo-600 font-mono" {...props}>
+                      <p className="text-gray-900 mb-4 leading-relaxed font-serif" {...props}>
                         {children}
-                      </code>
+                      </p>
                     )
-                  }
-                  return (
-                    <pre className="bg-[#1e1e2f] text-gray-100 rounded-xl p-4 my-4 text-sm font-mono overflow-x-auto border border-gray-800 shadow-inner">
-                      <code className="text-[13px]" {...props}>
-                        {children}
-                      </code>
-                    </pre>
-                  )
-                },
-                blockquote: ({ ...props }) => (
-                  <blockquote className="border-l-4 border-indigo-400 pl-4 italic text-gray-700 my-4" {...props} />
-                ),
-                a: ({ ...props }) => (
-                  <a className="text-indigo-600 hover:text-indigo-800 underline transition" {...props} />
-                ),
-              }}
-            >
-              {stepContent}
-            </ReactMarkdown>
+                  },
+                  ul: ({ node, ...props }) => (
+                    <ul className="list-disc list-inside text-gray-900 mb-4 space-y-2 font-sans" {...props} />
+                  ),
+                  ol: ({ node, ...props }) => (
+                    <ol className="list-decimal list-inside text-gray-900 mb-4 space-y-2 font-sans" {...props} />
+                  ),
+                  code: ({ node, inline, className, children, ...props }: any) => {
+                    if (inline) {
+                      return (
+                        <code
+                          className="bg-gray-200 px-2 py-1 border border-black text-black font-mono text-sm"
+                          {...props}
+                        >
+                          {children}
+                        </code>
+                      )
+                    }
+
+                    return (
+                      <pre className="bg-gray-900 border-2 border-black p-4 text-gray-100 font-mono text-sm my-4 overflow-x-auto">
+                        <code className="text-gray-100" {...props}>
+                          {children}
+                        </code>
+                      </pre>
+                    )
+                  },
+                  blockquote: ({ node, ...props }) => (
+                    <blockquote
+                      className="border-l-4 border-black pl-4 italic text-gray-700 my-4 font-serif"
+                      {...props}
+                    />
+                  ),
+                  a: ({ node, ...props }) => <a className="text-blue-900 hover:underline font-bold" {...props} />,
+                }}
+              >
+                {stepContent}
+              </ReactMarkdown>
+            </div>
           )}
         </div>
 
@@ -223,36 +251,32 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
           <button
             onClick={handlePrevStep}
             disabled={!canGoPrev}
-            className="px-5 py-2 rounded-md text-sm font-medium bg-white border border-gray-300 text-gray-800 hover:bg-gray-50 transition disabled:opacity-50"
+            className="px-6 py-2 bg-white border-2 border-black text-black font-serif font-bold disabled:opacity-30 hover:bg-gray-100 transition"
           >
-            ← Previous
+            ← PREVIOUS
           </button>
 
           <button
             onClick={handleCompleteStep}
             disabled={completed}
-            className={`px-6 py-2 rounded-md text-sm font-medium transition ${
-              completed
-                ? "bg-gray-200 text-gray-600 cursor-not-allowed"
-                : "bg-gradient-to-r from-green-600 to-emerald-500 text-white hover:from-green-700 hover:to-emerald-600"
+            className={`px-8 py-2 font-serif font-bold border-2 border-black transition ${
+              completed ? "bg-gray-300 text-gray-700 cursor-not-allowed" : "bg-green-600 text-white hover:bg-green-700"
             }`}
           >
-            {completed ? "✓ Completed" : "Mark Complete"}
+            {completed ? "✓ COMPLETED" : "MARK COMPLETE"}
           </button>
 
           <button
             onClick={handleNextStep}
             disabled={!canGoNext}
-            className={`px-5 py-2 rounded-md text-sm font-medium transition ${
-              canGoNext
-                ? "bg-gray-900 text-white hover:bg-gray-800"
-                : "bg-gray-200 text-gray-600 cursor-not-allowed"
+            className={`px-6 py-2 font-serif font-bold border-2 border-black transition ${
+              canGoNext ? "bg-black text-white hover:bg-gray-900" : "bg-gray-300 text-gray-700 cursor-not-allowed"
             }`}
           >
-            Next →
+            NEXT →
           </button>
         </div>
-      </main>
+      </div>
     </div>
   )
 }
