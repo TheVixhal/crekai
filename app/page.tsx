@@ -156,6 +156,26 @@ export default async function Home() {
                 <p className="text-xs text-gray-600 font-sans relative z-10">25+ Steps • Advanced Project</p>
               </div>
             </div>
+
+            {/* Video Section */}
+            <div className="mt-8 border-2 border-black bg-white rounded-lg overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
+              <div className="border-b-2 border-black p-4 bg-gradient-to-r from-amber-50 to-orange-50">
+                <p className="text-xs uppercase tracking-widest font-sans font-bold mb-1 text-orange-600">Featured Demo</p>
+                <h4 className="text-xl font-bold font-serif text-black">See Our Projects in Action</h4>
+              </div>
+              
+              <div className="p-6 bg-white">
+                <div className="relative w-full rounded overflow-hidden border-2 border-black" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full"
+                    src="YOUR_VIDEO_URL_HERE"
+                    title="CrekAI Project Demo"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
