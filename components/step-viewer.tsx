@@ -202,8 +202,8 @@ const handleManualComplete = async () => {
 
       {/* Main content */}
       <div className="max-w-5xl mx-auto px-6 py-8 relative">
-        {/* Colab Token Display - Only show if step has assignment */}
-        {stepConfig?.has_assignment && (
+        {/* Colab Token Display - Show by default, hide only if explicitly has_assignment: false */}
+        {(stepConfig === null || stepConfig?.has_assignment !== false) && (
           <ColabTokenDisplay projectSlug={project.slug} />
         )}
 
@@ -313,8 +313,8 @@ const handleManualComplete = async () => {
 
         {/* Navigation */}
         <div className="space-y-4">
-          {/* Colab Verification Status - Only for assignment steps */}
-          {!completed && stepConfig?.has_assignment && (
+          {/* Colab Verification Status - Show by default, hide only for non-assignment steps */}
+          {!completed && (stepConfig === null || stepConfig?.has_assignment !== false) && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
               <div className="flex items-center justify-center gap-2 text-amber-800 mb-2">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -344,7 +344,7 @@ const handleManualComplete = async () => {
             </button>
 
             {/* Show different middle button based on step type */}
-            {stepConfig?.has_assignment ? (
+            {(stepConfig === null || stepConfig?.has_assignment !== false) ? (
               <div className={`px-8 py-3 font-medium rounded-lg flex items-center gap-2 ${
                 completed 
                   ? "bg-green-100 text-green-700 border border-green-300" 
