@@ -58,15 +58,30 @@ export default async function ProjectsPage() {
     (prog: any) => prog.current_step && prog.current_step <= (prog.total_steps || 0)
   ).length
 
-  // ✅ Return UI
+  // ✅ Anthropic-styled design system colors
+  const cream = "#eeece2"
+  const mint = "#BED2CD"
+  const lavender = "#C8C6DA"
+  const blue = "#6594C1"
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f8f6ef] via-[#f3f0e7] to-[#eeece2] text-gray-900">
+    <div
+      className="min-h-screen text-gray-900"
+      style={{
+        background: `linear-gradient(135deg, ${cream} 55%, ${mint} 85%)`,
+      }}
+    >
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#f8f6ef]/80 border-b border-gray-300">
+      <header
+        className="sticky top-0 z-50 backdrop-blur-md border-b border-gray-300"
+        style={{
+          backgroundColor: `${lavender}CC`,
+        }}
+      >
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-semibold tracking-tight text-gray-900">CrekAI</h1>
-            <span className="text-sm text-gray-600">Learning Projects</span>
+            <span className="text-sm text-gray-700">Learning Projects</span>
           </div>
           <form
             action={async () => {
@@ -76,7 +91,12 @@ export default async function ProjectsPage() {
               redirect("/")
             }}
           >
-            <button className="px-4 py-2 bg-gray-900 text-white rounded-md text-sm font-medium hover:bg-gray-800 transition">
+            <button
+              className="px-4 py-2 rounded-md text-sm font-medium text-white transition"
+              style={{
+                background: `linear-gradient(to right, ${blue}, ${mint})`,
+              }}
+            >
               Sign Out
             </button>
           </form>
@@ -88,13 +108,18 @@ export default async function ProjectsPage() {
         {/* Left: Main Content */}
         <section className="lg:col-span-2 space-y-10">
           {/* Welcome Banner */}
-          <div className="rounded-2xl bg-gradient-to-r from-[#f9f7f2] via-[#f3f0e7] to-[#eeece2] p-8 border border-gray-200 shadow-sm">
+          <div
+            className="rounded-2xl border border-gray-200 shadow-sm p-8 backdrop-blur-md"
+            style={{
+              background: `linear-gradient(110deg, ${mint}33, ${lavender}33, ${blue}22)`,
+            }}
+          >
             <div className="flex justify-between items-center">
               <div>
                 <h2 className="text-2xl font-semibold text-gray-900 mb-2">
                   Welcome back, {userProfile?.full_name?.split(" ")[0] || "Learner"} 👋
                 </h2>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-700 text-sm">
                   Continue your AI/ML learning journey — progress grows one project at a time.
                 </p>
               </div>
@@ -148,19 +173,25 @@ export default async function ProjectsPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-300 mt-16 py-8 bg-[#f8f6ef]/60 backdrop-blur-md">
+      <footer
+        className="border-t mt-16 py-8 backdrop-blur-md"
+        style={{
+          backgroundColor: `${lavender}33`,
+          borderColor: `${mint}99`,
+        }}
+      >
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-600 text-sm">
             © 2025 CrekAI — Empowering learners through hands-on AI experiences.
           </p>
           <div className="flex gap-5 text-sm">
-            <a href="#" className="text-gray-600 hover:text-gray-900 transition">
+            <a href="#" className="text-gray-700 hover:text-gray-900 transition">
               About
             </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900 transition">
+            <a href="#" className="text-gray-700 hover:text-gray-900 transition">
               Help
             </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900 transition">
+            <a href="#" className="text-gray-700 hover:text-gray-900 transition">
               Contact
             </a>
           </div>
