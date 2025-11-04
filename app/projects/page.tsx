@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import ProjectCard from "@/components/project-card"
+import Link from "next/link"
 
 export default async function ProjectsPage() {
   const supabase = await createClient()
@@ -12,18 +12,27 @@ export default async function ProjectsPage() {
     redirect("/auth/login")
   }
 
-  const { data: projects, error } = await supabase
+  // Fetch all projects
+  const { data: projects, error: projectsError } = await supabase
     .from("projects")
     .select("*")
     .order("created_at", { ascending: true })
 
-  if (error) console.error(error)
+  if (projectsError) {
+    console.error("Error fetching projects:", projectsError)
+  }
 
-  const { data: progressData } = await supabase
+  // Fetch user progress for all projects
+  const { data: progressData, error: progressError } = await supabase
     .from("user_progress")
     .select("*")
     .eq("user_id", user.id)
 
+  if (progressError) {
+    console.error("Error fetching user progress:", progressError)
+  }
+
+  // Map progress data
   const progressMap = (progressData || []).reduce((acc: Record<string, any>, prog: any) => {
     acc[prog.project_id] = prog
     return acc
@@ -75,12 +84,10 @@ export default async function ProjectsPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects && projects.length > 0 ? (
             projects.map((project: any) => {
-              const progress = progressMap[project.id]
-              const totalStages = project.total_steps || 0
-              const completed = progress?.completed_steps?.length || 0
-              const progressText = totalStages
-                ? `${completed}/${totalStages} stages`
-                : "No stages"
+              const progress = progressMap[project.id] || {}
+              const completed = progress.completed_steps?.length || 0
+              const totalSteps = project.total_steps || 0
+              const isCompleted = totalSteps > 0 && completed >= totalSteps
 
               return (
                 <div
@@ -92,11 +99,13 @@ export default async function ProjectsPage() {
                       <h2 className="font-semibold text-gray-900 text-lg mb-1">
                         {project.title}
                       </h2>
-                      <p className="text-gray-600 text-sm leading-relaxed">
+                      <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
                         {project.description}
                       </p>
                     </div>
-                    <div className="text-gray-400 text-xl">⚙️</div>
+                    <div className="text-gray-400 text-xl">
+                      {project.icon || "📘"}
+                    </div>
                   </div>
 
                   <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
@@ -115,12 +124,19 @@ export default async function ProjectsPage() {
                           d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      {progressText}
+                      {totalSteps > 0 ? `${completed}/${totalSteps} stages` : "0 stages"}
                     </span>
 
-                    <button className="text-indigo-600 font-medium hover:underline">
-                      {completed === totalStages && totalStages > 0 ? "Completed" : "Continue"}
-                    </button>
+                    <Link
+                      href={`/projects/${project.id}`}
+                      className={`font-medium transition ${
+                        isCompleted
+                          ? "text-green-600 hover:text-green-700"
+                          : "text-indigo-600 hover:text-indigo-700"
+                      }`}
+                    >
+                      {isCompleted ? "Completed" : "Continue →"}
+                    </Link>
                   </div>
                 </div>
               )
