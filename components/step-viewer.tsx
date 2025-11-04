@@ -9,6 +9,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { createClient } from "@/lib/supabase/client"
 import { resetProjectProgress } from "@/app/projects/[slug]/action"
 import Image from "next/image"
+import ColabTokenDisplay from "./colab-token-display"
 
 interface StepViewerProps {
   project: {
@@ -189,6 +190,9 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
 
       {/* Main content */}
       <div className="max-w-5xl mx-auto px-6 py-8 relative">
+        {/* Colab Token Display */}
+        <ColabTokenDisplay projectSlug={project.slug} />
+
         {isProjectComplete && (
           <div className="bg-green-50 border border-green-200 rounded-xl p-8 mb-8 text-center">
             <div className="text-6xl mb-4">🎉</div>
