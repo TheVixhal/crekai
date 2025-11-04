@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { createClient } from "@/lib/supabase/server"
+
 import { redirect } from "next/navigation"
 import TypewriterHeading from "@/components/TypewriterHeading"
 import CrackEffect from "@/components/CrackEffect"
@@ -28,14 +28,7 @@ export default async function Home() {
       ),
     },
   ];
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (user) {
-    redirect("/projects")
-  }
+  
   return (
     <CrackEffect>
     <div className="relative w-full">  
