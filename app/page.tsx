@@ -38,14 +38,14 @@ export default async function Home() {
   }
   return (
     <CrackEffect>
-    <div className="relative  w-full">  
+    <div className="relative w-full">  
     <FloatingNav navItems={navItems} />  
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
       {/* Main Masthead */}
       
-      <div className="border-b-4 border-black py-12 px-6 text-center bg-gradient-to-b from-white to-gray-50 shadow-lg relative overflow-hidden rounded-b-3xl">
+      <div className="border-b-4 border-black py-12 px-6 text-center bg-gradient-to-b from-white to-gray-50 shadow-lg relative overflow-hidden rounded-b-3xl parallax-header">
         
-        <div className="absolute inset-0 opacity-5" style={{
+        <div className="absolute inset-0 opacity-5 parallax-grid" style={{
           backgroundImage: `repeating-linear-gradient(0deg, #000 0px, #000 1px, transparent 1px, transparent 4px),
                            repeating-linear-gradient(90deg, #000 0px, #000 1px, transparent 1px, transparent 4px)`
         }}></div>
@@ -65,9 +65,9 @@ export default async function Home() {
         <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
           {/* Main Featured Article */}
           <div>
-            <div className="bg-white border-2 border-black h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-3xl">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-100 opacity-20 rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-100 opacity-20 rounded-full blur-3xl"></div>
+            <div className="bg-white border-2 border-black h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-3xl parallax-card">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-100 opacity-20 rounded-full blur-3xl parallax-blob-1"></div>
+              <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-100 opacity-20 rounded-full blur-3xl parallax-blob-2"></div>
               
               <div className="border-b-2 border-black p-6 bg-gradient-to-r from-gray-50 to-white relative">
                 <p className="text-xs uppercase tracking-widest font-sans font-bold mb-2 text-orange-600">Featured</p>
@@ -120,11 +120,11 @@ export default async function Home() {
         </div>
 
         {/* Bottom Section - Learning Paths Preview */}
-        <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 mt-6 shadow-inner">
+        <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 mt-6 shadow-inner parallax-section">
           <div className="max-w-7xl mx-auto px-6 py-12">
             <h3 className="text-3xl font-bold font-serif text-black mb-8">Popular Projects</h3>
             <div className="grid md:grid-cols-3 gap-6">
-              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
+              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded parallax-project-card">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-blue-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-blue-600 font-sans relative z-10">Beginner</p>
                 <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Artificial Neural Network</h4>
@@ -134,7 +134,7 @@ export default async function Home() {
                 <p className="text-xs text-gray-600 font-sans relative z-10">15 Steps • Beginner Friendly</p>
               </div>
               
-              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
+              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded parallax-project-card">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-purple-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-purple-600 font-sans relative z-10">Intermediate</p>
                 <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Tokeniser</h4>
@@ -144,7 +144,7 @@ export default async function Home() {
                 <p className="text-xs text-gray-600 font-sans relative z-10">20 Steps • Intermediate Project</p>
               </div>
               
-              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
+              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded parallax-project-card">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-green-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-green-600 font-sans relative z-10">Advanced</p>
                 <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Your Own GPT</h4>
@@ -164,6 +164,75 @@ export default async function Home() {
         <p className="text-xs text-gray-500">© 2025 All rights reserved</p>
       </div>
     </div>
+    
+    {/* Parallax Script */}
+    <script dangerouslySetInnerHTML={{__html: `
+      (function() {
+        function initParallax() {
+          const handleScroll = () => {
+            const scrolled = window.pageYOffset;
+            
+            // Header parallax
+            const header = document.querySelector('.parallax-header');
+            if (header) {
+              header.style.transform = 'translateY(' + scrolled * 0.5 + 'px)';
+            }
+            
+            // Grid background parallax
+            const grid = document.querySelector('.parallax-grid');
+            if (grid) {
+              grid.style.transform = 'translateY(' + scrolled * 0.3 + 'px)';
+            }
+            
+            // Card parallax
+            const card = document.querySelector('.parallax-card');
+            if (card) {
+              const cardTop = card.getBoundingClientRect().top;
+              const cardOffset = cardTop - window.innerHeight;
+              if (cardOffset < 0) {
+                card.style.transform = 'translateY(' + (cardOffset * -0.1) + 'px)';
+              }
+            }
+            
+            // Blob parallax
+            const blob1 = document.querySelector('.parallax-blob-1');
+            const blob2 = document.querySelector('.parallax-blob-2');
+            if (blob1) blob1.style.transform = 'translate(' + scrolled * 0.1 + 'px, ' + scrolled * 0.15 + 'px)';
+            if (blob2) blob2.style.transform = 'translate(' + scrolled * -0.08 + 'px, ' + scrolled * -0.12 + 'px)';
+            
+            // Section parallax
+            const section = document.querySelector('.parallax-section');
+            if (section) {
+              const sectionTop = section.getBoundingClientRect().top;
+              const sectionOffset = sectionTop - window.innerHeight;
+              if (sectionOffset < 0 && sectionTop > 0) {
+                section.style.transform = 'translateY(' + (sectionOffset * -0.08) + 'px)';
+              }
+            }
+            
+            // Project cards parallax
+            const projectCards = document.querySelectorAll('.parallax-project-card');
+            projectCards.forEach((card, index) => {
+              const cardTop = card.getBoundingClientRect().top;
+              const cardOffset = cardTop - window.innerHeight;
+              if (cardOffset < 0 && cardTop > 0) {
+                const speed = 0.05 + (index * 0.02);
+                card.style.transform = 'translateY(' + (cardOffset * -speed) + 'px)';
+              }
+            });
+          };
+          
+          window.addEventListener('scroll', handleScroll);
+          handleScroll(); // Initial call
+        }
+        
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initParallax);
+        } else {
+          initParallax();
+        }
+      })();
+    `}} />
     </div>   
   </CrackEffect>  
   )
