@@ -80,8 +80,7 @@ export default async function Home() {
               <div className="p-6 flex-1 flex flex-col justify-between relative z-10">
                 <div>
                   <p className="text-lg font-serif text-black mb-4 leading-relaxed">
-                    CrekAI brings you industry-standard AI and ML courses built for real-world learning. Learn from
-                    expert projects, solve real problems, and unlock your potential in artificial intelligence.
+                    Become a better machine learning engineer.
                   </p>
                   <div className="space-y-3 mb-6">
                     <div className="flex items-start group">
