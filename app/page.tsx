@@ -39,8 +39,8 @@ export default async function Home() {
       <div className="border-b-4 border-black py-12 px-6 text-center bg-gradient-to-b from-white to-gray-50 shadow-lg relative overflow-hidden parallax-header">
         
         <div className="absolute inset-0 opacity-5 parallax-grid" style={{
-          backgroundImage: `repeating-linear-gradient(0deg, #000 0px, #000 1px, transparent 1px, transparent 4px),
-                           repeating-linear-gradient(90deg, #000 0px, #000 1px, transparent 1px, transparent 4px)`
+          backgroundImage: `repeating-linear-gradient(0deg, #000 0px, #000 2px, transparent 2px, transparent 4px),
+                           repeating-linear-gradient(90deg, #000 0px, #000 2px, transparent 2px, transparent 4px)`
         }}></div>
         <div className="relative z-10">
           <h1 className="text-7xl md:text-8xl font-bold text-black tracking-wider mb-4 drop-shadow-sm">Crek AI</h1>
