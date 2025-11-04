@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Copy, RefreshCw, Eye, EyeOff } from "lucide-react"
+import { Copy, RefreshCw, Eye, EyeOff, ChevronDown, ChevronUp } from "lucide-react"
 
 export default function ColabTokenDisplay({ projectSlug }: { projectSlug: string }) {
   const [token, setToken] = useState<string | null>(null)
@@ -10,6 +10,7 @@ export default function ColabTokenDisplay({ projectSlug }: { projectSlug: string
   const [copied, setCopied] = useState(false)
   const [showToken, setShowToken] = useState(false)
   const [error, setError] = useState("")
+  const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
     fetchToken()
@@ -96,32 +97,47 @@ except Exception as e:
 
   if (loading) {
     return (
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
         <div className="text-blue-700 text-sm">Loading token...</div>
       </div>
     )
   }
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <h3 className="text-lg font-semibold text-blue-900 mb-1">
-            🔗 Colab Assignment Verification
-          </h3>
-          <p className="text-sm text-blue-700">
-            Complete assignments in Google Colab to automatically unlock the next step
-          </p>
+    <div className="bg-blue-50 border border-blue-200 rounded-lg mb-6 overflow-hidden">
+      {/* Header - Always Visible */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-blue-100 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="text-2xl">🔗</div>
+          <div className="text-left">
+            <h3 className="text-base font-semibold text-blue-900">
+              Colab Assignment Verification
+            </h3>
+            <p className="text-xs text-blue-700">
+              {token ? "Token ready - Click to view" : "Generate token to track assignments"}
+            </p>
+          </div>
         </div>
-      </div>
+        {isExpanded ? (
+          <ChevronUp className="w-5 h-5 text-blue-700 flex-shrink-0" />
+        ) : (
+          <ChevronDown className="w-5 h-5 text-blue-700 flex-shrink-0" />
+        )}
+      </button>
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4 text-red-700 text-sm">
-          {error}
-        </div>
-      )}
+      {/* Expandable Content */}
+      {isExpanded && (
+        <div className="px-6 pb-6 pt-2 border-t border-blue-200">
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4 text-red-700 text-sm">
+              {error}
+            </div>
+          )}
 
-      {!token ? (
+          {!token ? (
         <div className="space-y-3">
           <p className="text-sm text-blue-800">
             Generate your unique token to start tracking your Colab assignments
@@ -207,6 +223,8 @@ print("✅ Verified!" if response.ok
               Regenerating will invalidate your old token
             </span>
           </div>
+        </div>
+      )}
         </div>
       )}
     </div>
