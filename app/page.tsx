@@ -43,7 +43,7 @@ export default async function Home() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
       {/* Main Masthead */}
       
-      <div className="border-b-4 border-black py-12 px-6 text-center bg-gradient-to-b from-white to-gray-50 shadow-lg relative overflow-hidden">
+      <div className="border-b-4 border-black py-12 px-6 text-center bg-gradient-to-b from-white to-gray-50 shadow-lg relative overflow-hidden parallax-header">
         
         <div className="absolute inset-0 opacity-5 parallax-grid" style={{
           backgroundImage: `repeating-linear-gradient(0deg, #000 0px, #000 1px, transparent 1px, transparent 4px),
@@ -65,7 +65,7 @@ export default async function Home() {
         <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
           {/* Main Featured Article */}
           <div>
-            <div className="bg-white border-2 border-black h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-t-3xl parallax-card">
+            <div className="bg-white border-2 border-black h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-t-3xl">
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-100 opacity-20 rounded-full blur-3xl parallax-blob-1"></div>
               <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-100 opacity-20 rounded-full blur-3xl parallax-blob-2"></div>
               
