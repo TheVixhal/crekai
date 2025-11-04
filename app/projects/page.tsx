@@ -23,15 +23,22 @@ export default async function ProjectsPage() {
     console.error("Error fetching projects:", projectsError)
   }
 
-  // Fetch user progress for all projects
-  const { data: progressData } = await supabase.from("user_progress").select("*").eq("user_id", user.id)
+  // Fetch user progress
+  const { data: progressData } = await supabase
+    .from("user_progress")
+    .select("*")
+    .eq("user_id", user.id)
 
   const progressMap = (progressData || []).reduce((acc: Record<string, any>, prog: any) => {
     acc[prog.project_id] = prog
     return acc
   }, {})
 
-  const { data: userProfile } = await supabase.from("user_profiles").select("*").eq("id", user.id).maybeSingle()
+  const { data: userProfile } = await supabase
+    .from("user_profiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle()
 
   const projectsEnrolled = Object.keys(progressMap).length
   const completedSteps = Object.values(progressMap).reduce((sum, prog: any) => {
@@ -42,16 +49,13 @@ export default async function ProjectsPage() {
   }).length
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
-      {/* Enhanced Masthead with gradient and shadow */}
-      <div className="border-b-4 border-black bg-gradient-to-r from-white to-amber-50 sticky top-0 z-50 shadow-lg backdrop-blur-sm bg-opacity-95">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-           
-            <div>
-              <h1 className="text-4xl font-bold text-black font-serif tracking-tight">CrekAI</h1>
-              <p className="text-xs text-gray-600 uppercase tracking-widest font-medium">Learning Projects</p>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 text-gray-900">
+      {/* Header */}
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-semibold tracking-tight text-gray-900">CrekAI</h1>
+            <span className="text-sm text-gray-500">Learning Projects</span>
           </div>
           <form
             action={async () => {
@@ -61,101 +65,93 @@ export default async function ProjectsPage() {
               redirect("/")
             }}
           >
-            <button className="px-6 py-2.5 border-2 border-black bg-white text-black font-sans font-bold hover:bg-black hover:text-white transition-all duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px]">
+            <button className="px-4 py-2 bg-gray-900 text-white rounded-md text-sm font-medium hover:bg-gray-800 transition">
               Sign Out
             </button>
           </form>
         </div>
-      </div>
+      </header>
 
-      {/* Content with improved spacing */}
-      <div className="max-w-7xl mx-auto p-6 lg:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
-          {/* Main Content with enhanced header */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Welcome Banner */}
-            <div className="bg-gradient-to-r from-cyan-400 to-cyan-600 border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-3xl font-bold text-white font-serif mb-2 drop-shadow-lg">
-                    Welcome Back, {userProfile.full_name}!
-                  </h2>
-                  <p className="text-white/90 font-sans text-lg">
-                    Continue your AI/ML learning journey
-                  </p>
-                </div>
-                <div className="hidden md:block text-6xl">🚀</div>
+      <main className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main content */}
+        <section className="lg:col-span-2 space-y-8">
+          {/* Welcome banner */}
+          <div className="rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-100 p-8 border border-gray-200 shadow-sm">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+                  Welcome back, {userProfile?.full_name?.split(" ")[0] || "Learner"} 👋
+                </h2>
+                <p className="text-gray-600 text-sm">
+                  Continue your journey in building real-world AI projects.
+                </p>
               </div>
-            </div>
-
-            {/* Section Header */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                
-                <h2 className="text-3xl font-bold text-black font-serif">Featured Projects</h2>
-              </div>
-              <p className="text-gray-700 font-sans text-lg">
-                Choose a project and start building something amazing
-              </p>
-            </div>
-
-            {/* Projects Grid with improved spacing */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {projects && projects.length > 0 ? (
-                projects.map((project: any) => (
-                  <ProjectCard key={project.id} project={project} progress={progressMap[project.id]} />
-                ))
-              ) : (
-                <div className="col-span-full bg-white border-4 border-black p-12 text-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                  <div className="text-6xl mb-4">📚</div>
-                  <p className="text-gray-700 font-sans text-lg font-medium">
-                    No projects available yet.
-                  </p>
-                  <p className="text-gray-500 font-sans text-sm mt-2">
-                    Check back soon for exciting learning opportunities!
-                  </p>
-                </div>
-              )}
+              <div className="hidden md:block text-5xl opacity-80">🚀</div>
             </div>
           </div>
 
-          {/* Profile Sidebar with sticky positioning */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24">
-              <ProfileSidebar
-                user={user}
-                userProfile={userProfile}
-                createdAt={userProfile?.created_at}
-                projectsEnrolled={projectsEnrolled}
-                completedSteps={completedSteps}
-                projectsInProgress={projectsInProgress}
-              />
-            </div>
+          {/* Section Header */}
+          <div className="space-y-2">
+            <h3 className="text-xl font-semibold text-gray-900">Featured Projects</h3>
+            <p className="text-gray-600 text-sm">
+              Choose a project and start building something impactful.
+            </p>
           </div>
-        </div>
-      </div>
+
+          {/* Projects Grid */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {projects && projects.length > 0 ? (
+              projects.map((project: any) => (
+                <ProjectCard key={project.id} project={project} progress={progressMap[project.id]} />
+              ))
+            ) : (
+              <div className="col-span-full bg-white border border-gray-200 rounded-xl p-10 text-center shadow-sm">
+                <div className="text-5xl mb-3">📚</div>
+                <p className="text-gray-800 font-medium">
+                  No projects available yet.
+                </p>
+                <p className="text-gray-500 text-sm mt-1">
+                  Check back soon for new learning opportunities.
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Sidebar */}
+        <aside className="lg:col-span-1">
+          <div className="sticky top-28">
+            <ProfileSidebar
+              user={user}
+              userProfile={userProfile}
+              createdAt={userProfile?.created_at}
+              projectsEnrolled={projectsEnrolled}
+              completedSteps={completedSteps}
+              projectsInProgress={projectsInProgress}
+            />
+          </div>
+        </aside>
+      </main>
 
       {/* Footer */}
-      <div className="mt-16 border-t-4 border-black bg-white">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-600 font-sans text-sm">
-              © 2025 CrekAI. Empowering learners through hands-on AI projects.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="text-gray-600 hover:text-black transition font-sans text-sm font-medium">
-                About
-              </a>
-              <a href="#" className="text-gray-600 hover:text-black transition font-sans text-sm font-medium">
-                Help
-              </a>
-              <a href="#" className="text-gray-600 hover:text-black transition font-sans text-sm font-medium">
-                Contact
-              </a>
-            </div>
+      <footer className="border-t border-gray-200 mt-16 py-8 bg-white/60 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-500 text-sm">
+            © 2025 CrekAI — Empowering learners through hands-on AI experiences.
+          </p>
+          <div className="flex gap-5 text-sm">
+            <a href="#" className="text-gray-600 hover:text-gray-900 transition">
+              About
+            </a>
+            <a href="#" className="text-gray-600 hover:text-gray-900 transition">
+              Help
+            </a>
+            <a href="#" className="text-gray-600 hover:text-gray-900 transition">
+              Contact
+            </a>
           </div>
         </div>
-      </div>
+      </footer>
     </div>
   )
 }
