@@ -120,10 +120,23 @@ export default async function Home() {
         </div>
 
         {/* Trusted By Companies Section */}
-        
+        <div className="border-y-4 border-black bg-white py-12 px-6">
+          <div className="max-w-7xl mx-auto">
+            <p className="text-center text-sm uppercase tracking-widest font-bold text-gray-600 mb-8 font-sans">
+              Enjoyed by developers at the world's best companies
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Google</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Microsoft</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Meta</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Amazon</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Netflix</div>
+            </div>
+          </div>
+        </div>
 
         {/* Bottom Section - Learning Paths Preview */}
-        <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 mt-6 shadow-inner z-10">
+        <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 mt-6 shadow-inner">
           <div className="max-w-7xl mx-auto px-6 py-12">
             <h3 className="text-3xl font-bold font-serif text-black mb-8">Popular Projects</h3>
             <div className="grid md:grid-cols-3 gap-6">
@@ -320,33 +333,51 @@ export default async function Home() {
           const handleScroll = () => {
             const scrolled = window.pageYOffset;
             
-            // Header parallax
+            // Header parallax - only when header is in viewport
             const header = document.querySelector('.parallax-header');
             if (header) {
-              header.style.transform = 'translateY(' + scrolled * 0.5 + 'px)';
+              const headerBottom = header.offsetTop + header.offsetHeight;
+              if (scrolled < headerBottom) {
+                header.style.transform = 'translateY(' + scrolled * 0.5 + 'px)';
+              }
             }
             
-            // Grid background parallax
+            // Grid background parallax - only when header is in viewport
             const grid = document.querySelector('.parallax-grid');
-            if (grid) {
-              grid.style.transform = 'translateY(' + scrolled * 0.3 + 'px)';
+            if (grid && header) {
+              const headerBottom = header.offsetTop + header.offsetHeight;
+              if (scrolled < headerBottom) {
+                grid.style.transform = 'translateY(' + scrolled * 0.3 + 'px)';
+              }
             }
             
-            // Card parallax
+            // Card parallax - only when card is in viewport
             const card = document.querySelector('.parallax-card');
             if (card) {
               const cardTop = card.getBoundingClientRect().top;
+              const cardBottom = card.getBoundingClientRect().bottom;
               const cardOffset = cardTop - window.innerHeight;
-              if (cardOffset < 0) {
+              
+              // Only apply parallax when card is visible in viewport
+              if (cardTop < window.innerHeight && cardBottom > 0 && cardOffset < 0) {
                 card.style.transform = 'translateY(' + (cardOffset * -0.1) + 'px)';
               }
             }
             
-            // Blob parallax
+            // Blob parallax - only when card is in viewport
             const blob1 = document.querySelector('.parallax-blob-1');
             const blob2 = document.querySelector('.parallax-blob-2');
-            if (blob1) blob1.style.transform = 'translate(' + scrolled * 0.1 + 'px, ' + scrolled * 0.15 + 'px)';
-            if (blob2) blob2.style.transform = 'translate(' + scrolled * -0.08 + 'px, ' + scrolled * -0.12 + 'px)';
+            
+            if (blob1 && card) {
+              const cardTop = card.getBoundingClientRect().top;
+              const cardBottom = card.getBoundingClientRect().bottom;
+              
+              // Only apply parallax when card is visible in viewport
+              if (cardTop < window.innerHeight && cardBottom > 0) {
+                blob1.style.transform = 'translate(' + scrolled * 0.1 + 'px, ' + scrolled * 0.15 + 'px)';
+                blob2.style.transform = 'translate(' + scrolled * -0.08 + 'px, ' + scrolled * -0.12 + 'px)';
+              }
+            }
           };
           
           window.addEventListener('scroll', handleScroll);
