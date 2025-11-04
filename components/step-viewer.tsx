@@ -62,52 +62,8 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
     }
   }
 
-  const handleCompleteStep = async () => {
-    try {
-      const completedSteps = progress?.completed_steps || []
-
-      if (!completedSteps.includes(currentStep)) {
-        completedSteps.push(currentStep)
-      }
-
-      const nextStep = currentStep + 1
-      const hasNextStep = nextStep <= project.total_steps
-
-      if (!progress) {
-        // Create new progress record
-        const { error } = await supabase.from("user_progress").insert({
-          user_id: userId,
-          project_id: project.id,
-          current_step: hasNextStep ? nextStep : currentStep,
-          completed_steps: completedSteps,
-        })
-
-        if (error) throw error
-      } else {
-        // Update existing progress
-        const { error } = await supabase
-          .from("user_progress")
-          .update({
-            current_step: hasNextStep ? nextStep : currentStep,
-            completed_steps: completedSteps,
-            last_accessed: new Date().toISOString(),
-          })
-          .eq("user_id", userId)
-          .eq("project_id", project.id)
-
-        if (error) throw error
-      }
-
-      setCompleted(true)
-
-      if (hasNextStep) {
-        router.refresh()
-      }
-    } catch (err) {
-      setError("Failed to save progress")
-      console.error(err)
-    }
-  }
+  // Removed manual completion - users must complete via Colab
+  // const handleCompleteStep = async () => { ... }
 
   const handleNextStep = () => {
     if (currentStep < project.total_steps) {
@@ -298,46 +254,78 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between items-center gap-4">
-          <button
-            onClick={handlePrevStep}
-            disabled={!canGoPrev}
-            className="px-6 py-3 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition flex items-center gap-2"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Previous
-          </button>
+        <div className="space-y-4">
+          {/* Colab Verification Status */}
+          {!completed && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
+              <div className="flex items-center justify-center gap-2 text-amber-800 mb-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <span className="font-semibold">Complete Assignment in Colab to Unlock</span>
+              </div>
+              <p className="text-sm text-amber-700">
+                Run the verification cell in your Colab notebook to mark this step as complete
+              </p>
+            </div>
+          )}
+          
+          <div className="flex justify-between items-center gap-4">
+            <button
+              onClick={handlePrevStep}
+              disabled={!canGoPrev}
+              className="px-6 py-3 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition flex items-center gap-2"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              Previous
+            </button>
 
-          <button
-            onClick={handleCompleteStep}
-            disabled={completed}
-            className={`px-8 py-3 font-medium rounded-lg transition ${
+            <div className={`px-8 py-3 font-medium rounded-lg flex items-center gap-2 ${
               completed 
-                ? "bg-gray-100 text-gray-500 cursor-not-allowed border border-gray-200" 
-                : "bg-green-600 text-white hover:bg-green-700"
-            }`}
-          >
-            {completed ? "✓ Completed" : "Mark Complete"}
-          </button>
+                ? "bg-green-100 text-green-700 border border-green-300" 
+                : "bg-gray-100 text-gray-500 border border-gray-200"
+            }`}>
+              {completed ? (
+                <>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                  Verified via Colab
+                </>
+              ) : (
+                <>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  Awaiting Verification
+                </>
+              )}
+            </div>
 
-          <button
-            onClick={handleNextStep}
-            disabled={!canGoNext}
-            className={`px-6 py-3 font-medium rounded-lg transition flex items-center gap-2 ${
-              canGoNext 
-                ? "bg-gray-900 text-white hover:bg-gray-800" 
-                : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
-            }`}
-          >
-            Next
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
+            <button
+              onClick={handleNextStep}
+              disabled={!canGoNext}
+              className={`px-6 py-3 font-medium rounded-lg transition flex items-center gap-2 ${
+                canGoNext 
+                  ? "bg-gray-900 text-white hover:bg-gray-800" 
+                  : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+              }`}
+            >
+              Next
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
