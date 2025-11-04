@@ -1,0 +1,73 @@
+{
+  "project_id": "learn-numpy",
+  "project_name": "Learn NumPy",
+  "steps": [
+    {
+      "step": 1,
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_match",
+        "expected_variables": {
+          "arr": {
+            "type": "numpy.ndarray",
+            "shape": [10],
+            "min_value": 1,
+            "max_value": 10
+          },
+          "arr_doubled": {
+            "type": "numpy.ndarray",
+            "shape": [10],
+            "check": "all(arr_doubled == arr * 2)"
+          },
+          "mean": {
+            "type": "float",
+            "expected": 5.5
+          },
+          "median": {
+            "type": "float",
+            "expected": 5.5
+          }
+        }
+      },
+      "colab_notebook_url": "https://colab.research.google.com/drive/your-notebook-id"
+    },
+    {
+      "step": 2,
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_match",
+        "expected_variables": {
+          "matrix": {
+            "type": "numpy.ndarray",
+            "shape": [3, 3]
+          }
+        }
+      }
+    },
+    {
+      "step": 3,
+      "has_assignment": false,
+      "requires_manual_completion": true
+    },
+    {
+      "step": 4,
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_match",
+        "expected_variables": {
+          "result": {
+            "type": "numpy.ndarray"
+          }
+        }
+      }
+    },
+    {
+      "step": 5,
+      "has_assignment": false,
+      "requires_manual_completion": true
+    }
+  ]
+}
