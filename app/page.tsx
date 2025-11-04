@@ -123,7 +123,7 @@ export default async function Home() {
         
 
         {/* Bottom Section - Learning Paths Preview */}
-        <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 mt-6 shadow-inner">
+        <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 mt-6 shadow-inner z-10">
           <div className="max-w-7xl mx-auto px-6 py-12">
             <h3 className="text-3xl font-bold font-serif text-black mb-8">Popular Projects</h3>
             <div className="grid md:grid-cols-3 gap-6">
