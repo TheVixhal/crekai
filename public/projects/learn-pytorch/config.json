@@ -1,0 +1,20 @@
+{
+  "project_id": "learn-pytorch",
+  "project_name": "Learn PyTorch",
+  "steps": [
+    {
+      "step": 1,
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_match",
+        "expected_variables": {
+          "tensor": {
+            "type": "torch.Tensor",
+            "shape": [3, 3]
+          }
+        }
+      }
+    }
+  ]
+}
