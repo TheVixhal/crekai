@@ -30,49 +30,60 @@ export default function ProfileSidebar({
   }
 
   return (
-    <div className="bg-white border-2 border-black p-6 sticky top-24 h-fit">
-      <h3 className="text-lg font-bold font-serif text-black mb-4 border-b-2 border-black pb-2">Your Profile</h3>
+    <div className="bg-white/70 backdrop-blur-md border border-gray-200 rounded-2xl p-6 shadow-sm">
+      <h3 className="text-lg font-semibold text-gray-900 mb-6 tracking-tight">
+        Your Profile
+      </h3>
 
       {/* User Info */}
-      <div className="mb-6">
-        <div className="mb-3">
-          <p className="text-xs uppercase tracking-widest text-gray-600 font-sans font-bold">Name</p>
-          <p className="text-sm text-black font-sans">{userProfile?.full_name || "N/A"}</p>
-        </div>
-        <div className="mb-3">
-          <p className="text-xs uppercase tracking-widest text-gray-600 font-sans font-bold">Username</p>
-          <p className="text-sm text-black font-sans">{userProfile?.username || "N/A"}</p>
-        </div>
-        <div className="mb-3">
-          <p className="text-xs uppercase tracking-widest text-gray-600 font-sans font-bold">Email</p>
-          <p className="text-sm text-black font-sans break-words">{user.email}</p>
+      <div className="space-y-4 mb-8">
+        <div>
+          <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">Name</p>
+          <p className="text-sm text-gray-800">{userProfile?.full_name || "N/A"}</p>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-widest text-gray-600 font-sans font-bold">Member Since</p>
-          <p className="text-sm text-black font-sans">{formatDate(createdAt)}</p>
+          <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">Username</p>
+          <p className="text-sm text-gray-800">{userProfile?.username || "N/A"}</p>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">Email</p>
+          <p className="text-sm text-gray-800 break-words">{user.email}</p>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">Member Since</p>
+          <p className="text-sm text-gray-800">{formatDate(createdAt)}</p>
         </div>
       </div>
 
-      <div className="border-t-2 border-black my-4"></div>
+      {/* Divider */}
+      <div className="h-px bg-gray-200 mb-6" />
 
       {/* Stats */}
       <div>
-        <p className="text-xs uppercase tracking-widest text-gray-600 font-sans font-bold mb-4">Your Stats</p>
+        <p className="text-xs uppercase tracking-wider text-gray-500 font-medium mb-4">
+          Your Stats
+        </p>
 
         <div className="space-y-4">
-          <div className="bg-amber-50 border-2 border-black p-3">
-            <p className="text-xs uppercase tracking-widest text-gray-700 font-sans font-bold">Projects Enrolled</p>
-            <p className="text-2xl font-bold text-black font-serif">{projectsEnrolled}</p>
+          <div className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-4">
+            <p className="text-xs text-gray-600 uppercase font-medium mb-1">
+              Projects Enrolled
+            </p>
+            <p className="text-2xl font-semibold text-gray-900">{projectsEnrolled}</p>
           </div>
 
-          <div className="bg-amber-50 border-2 border-black p-3">
-            <p className="text-xs uppercase tracking-widest text-gray-700 font-sans font-bold">Steps Completed</p>
-            <p className="text-2xl font-bold text-black font-serif">{completedSteps}</p>
+          <div className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-4">
+            <p className="text-xs text-gray-600 uppercase font-medium mb-1">
+              Steps Completed
+            </p>
+            <p className="text-2xl font-semibold text-gray-900">{completedSteps}</p>
           </div>
 
-          <div className="bg-amber-50 border-2 border-black p-3">
-            <p className="text-xs uppercase tracking-widest text-gray-700 font-sans font-bold">In Progress</p>
-            <p className="text-2xl font-bold text-black font-serif">{projectsInProgress}</p>
+          <div className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-4">
+            <p className="text-xs text-gray-600 uppercase font-medium mb-1">
+              In Progress
+            </p>
+            <p className="text-2xl font-semibold text-gray-900">{projectsInProgress}</p>
           </div>
         </div>
       </div>
