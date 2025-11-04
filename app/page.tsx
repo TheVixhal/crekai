@@ -330,57 +330,83 @@ export default async function Home() {
     <script dangerouslySetInnerHTML={{__html: `
       (function() {
         function initParallax() {
+          let ticking = false;
+          
           const handleScroll = () => {
-            const scrolled = window.pageYOffset;
-            
-            // Header parallax - only when header is in viewport
-            const header = document.querySelector('.parallax-header');
-            if (header) {
-              const headerBottom = header.offsetTop + header.offsetHeight;
-              if (scrolled < headerBottom) {
-                header.style.transform = 'translateY(' + scrolled * 0.5 + 'px)';
-              }
-            }
-            
-            // Grid background parallax - only when header is in viewport
-            const grid = document.querySelector('.parallax-grid');
-            if (grid && header) {
-              const headerBottom = header.offsetTop + header.offsetHeight;
-              if (scrolled < headerBottom) {
-                grid.style.transform = 'translateY(' + scrolled * 0.3 + 'px)';
-              }
-            }
-            
-            // Card parallax - only when card is in viewport
-            const card = document.querySelector('.parallax-card');
-            if (card) {
-              const cardTop = card.getBoundingClientRect().top;
-              const cardBottom = card.getBoundingClientRect().bottom;
-              const cardOffset = cardTop - window.innerHeight;
+            if (!ticking) {
+              window.requestAnimationFrame(() => {
+                const scrolled = window.pageYOffset;
+                
+                // Header parallax - only when header is in viewport
+                const header = document.querySelector('.parallax-header');
+                if (header) {
+                  const headerRect = header.getBoundingClientRect();
+                  const headerBottom = header.offsetTop + header.offsetHeight;
+                  
+                  if (scrolled < headerBottom * 1.5) {
+                    const movement = Math.min(scrolled * 0.3, headerBottom);
+                    header.style.transform = 'translateY(' + movement + 'px)';
+                  }
+                }
+                
+                // Grid background parallax - only when header is in viewport
+                const grid = document.querySelector('.parallax-grid');
+                if (grid && header) {
+                  const headerBottom = header.offsetTop + header.offsetHeight;
+                  
+                  if (scrolled < headerBottom * 1.5) {
+                    const movement = Math.min(scrolled * 0.2, headerBottom * 0.8);
+                    grid.style.transform = 'translateY(' + movement + 'px)';
+                  }
+                }
+                
+                // Card parallax - only when card is in viewport
+                const card = document.querySelector('.parallax-card');
+                if (card) {
+                  const cardRect = card.getBoundingClientRect();
+                  const cardMiddle = cardRect.top + cardRect.height / 2;
+                  const windowMiddle = window.innerHeight / 2;
+                  
+                  // Only apply parallax when card is visible in viewport
+                  if (cardRect.top < window.innerHeight && cardRect.bottom > 0) {
+                    const distance = windowMiddle - cardMiddle;
+                    const movement = distance * 0.05;
+                    const clampedMovement = Math.max(-30, Math.min(30, movement));
+                    card.style.transform = 'translateY(' + clampedMovement + 'px)';
+                  }
+                }
+                
+                // Blob parallax - only when card is in viewport
+                const blob1 = document.querySelector('.parallax-blob-1');
+                const blob2 = document.querySelector('.parallax-blob-2');
+                
+                if (blob1 && blob2 && card) {
+                  const cardRect = card.getBoundingClientRect();
+                  
+                  // Only apply parallax when card is visible in viewport
+                  if (cardRect.top < window.innerHeight && cardRect.bottom > 0) {
+                    const cardMiddle = cardRect.top + cardRect.height / 2;
+                    const windowMiddle = window.innerHeight / 2;
+                    const distance = windowMiddle - cardMiddle;
+                    
+                    const blob1X = distance * 0.02;
+                    const blob1Y = distance * 0.03;
+                    const blob2X = distance * -0.015;
+                    const blob2Y = distance * -0.025;
+                    
+                    blob1.style.transform = 'translate(' + blob1X + 'px, ' + blob1Y + 'px)';
+                    blob2.style.transform = 'translate(' + blob2X + 'px, ' + blob2Y + 'px)';
+                  }
+                }
+                
+                ticking = false;
+              });
               
-              // Only apply parallax when card is visible in viewport
-              if (cardTop < window.innerHeight && cardBottom > 0 && cardOffset < 0) {
-                card.style.transform = 'translateY(' + (cardOffset * -0.1) + 'px)';
-              }
-            }
-            
-            // Blob parallax - only when card is in viewport
-            const blob1 = document.querySelector('.parallax-blob-1');
-            const blob2 = document.querySelector('.parallax-blob-2');
-            
-            if (blob1 && card) {
-              const cardTop = card.getBoundingClientRect().top;
-              const cardBottom = card.getBoundingClientRect().bottom;
-              
-              // Only apply parallax when card is visible in viewport
-              if (cardTop < window.innerHeight && cardBottom > 0) {
-                blob1.style.transform = 'translate(' + scrolled * 0.1 + 'px, ' + scrolled * 0.15 + 'px)';
-                blob2.style.transform = 'translate(' + scrolled * -0.08 + 'px, ' + scrolled * -0.12 + 'px)';
-              }
+              ticking = true;
             }
           };
           
-          window.addEventListener('scroll', handleScroll);
+          window.addEventListener('scroll', handleScroll, { passive: true });
           handleScroll(); // Initial call
         }
         
