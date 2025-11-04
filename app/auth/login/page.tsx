@@ -1,11 +1,11 @@
+"use client"
 import type React from "react"
-import { createClient } from "@/lib/supabase/server"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { signIn } from "@/lib/utils/auth"
 
-export default async function LoginPage() {
+export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -25,15 +25,6 @@ export default async function LoginPage() {
     } else {
       router.push("/projects")
     }
-  }
-
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (user) {
-    redirect("/projects")
   }
 
   return (
