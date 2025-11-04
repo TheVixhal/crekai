@@ -119,6 +119,22 @@ export default async function Home() {
           </div>
         </div>
 
+        {/* Trusted By Companies Section */}
+        <div className="border-y-4 border-black bg-white py-12 px-6 parallax-companies">
+          <div className="max-w-7xl mx-auto">
+            <p className="text-center text-sm uppercase tracking-widest font-bold text-gray-600 mb-8 font-sans">
+              Enjoyed by developers at the world's best companies
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Google</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Microsoft</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Meta</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Amazon</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Netflix</div>
+            </div>
+          </div>
+        </div>
+
         {/* Bottom Section - Learning Paths Preview */}
         <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 mt-6 shadow-inner parallax-section">
           <div className="max-w-7xl mx-auto px-6 py-12">
@@ -153,6 +169,151 @@ export default async function Home() {
                 </p>
                 <p className="text-xs text-gray-600 font-sans relative z-10">25+ Steps • Advanced Project</p>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Testimonials Section */}
+        <div className="border-t-4 border-black bg-gradient-to-br from-amber-50 to-orange-50 py-16 px-6 parallax-testimonials">
+          <div className="max-w-7xl mx-auto">
+            <h3 className="text-4xl font-bold font-serif text-black mb-4 text-center">Hear it from our members</h3>
+            <p className="text-center text-gray-700 mb-12 font-sans">See what learners are saying about their CrekAI experience</p>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-white border-2 border-black p-6 relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all parallax-testimonial-card">
+                <div className="absolute top-0 left-0 w-16 h-16 bg-orange-200 opacity-20 rounded-full blur-2xl"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-amber-400 flex items-center justify-center text-white font-bold text-xl border-2 border-black">
+                      S
+                    </div>
+                    <div className="ml-3">
+                      <p className="font-bold font-serif text-black">Sarah Chen</p>
+                      <p className="text-xs text-gray-600 font-sans">ML Engineer at Google</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-700 font-sans leading-relaxed">
+                    "CrekAI transformed how I learn AI. The hands-on approach helped me land my dream job at Google. The projects are practical and industry-relevant!"
+                  </p>
+                  <div className="mt-4 flex gap-1">
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white border-2 border-black p-6 relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all parallax-testimonial-card">
+                <div className="absolute top-0 left-0 w-16 h-16 bg-purple-200 opacity-20 rounded-full blur-2xl"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold text-xl border-2 border-black">
+                      M
+                    </div>
+                    <div className="ml-3">
+                      <p className="font-bold font-serif text-black">Michael Rodriguez</p>
+                      <p className="text-xs text-gray-600 font-sans">Data Scientist at Meta</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-700 font-sans leading-relaxed">
+                    "Finally, a platform that focuses on doing rather than just watching. I built my GPT model from scratch and gained confidence in my abilities."
+                  </p>
+                  <div className="mt-4 flex gap-1">
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white border-2 border-black p-6 relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all parallax-testimonial-card">
+                <div className="absolute top-0 left-0 w-16 h-16 bg-blue-200 opacity-20 rounded-full blur-2xl"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white font-bold text-xl border-2 border-black">
+                      P
+                    </div>
+                    <div className="ml-3">
+                      <p className="font-bold font-serif text-black">Priya Sharma</p>
+                      <p className="text-xs text-gray-600 font-sans">AI Researcher at Microsoft</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-700 font-sans leading-relaxed">
+                    "The step-by-step projects made complex concepts crystal clear. CrekAI is the best investment I made in my AI career journey."
+                  </p>
+                  <div className="mt-4 flex gap-1">
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                    <span className="text-orange-500">★</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="border-t-4 border-black bg-white py-16 px-6 parallax-faq">
+          <div className="max-w-4xl mx-auto">
+            <h3 className="text-4xl font-bold font-serif text-black mb-4 text-center">Frequently Asked Questions</h3>
+            <p className="text-center text-gray-700 mb-12 font-sans">Everything you need to know about CrekAI</p>
+            
+            <div className="space-y-4">
+              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow parallax-faq-item">
+                <summary className="cursor-pointer p-6 font-bold font-serif text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
+                  What makes CrekAI different from other learning platforms?
+                  <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <div className="p-6 pt-0 text-gray-700 font-sans border-t-2 border-black">
+                  <p>CrekAI focuses on hands-on, project-based learning rather than passive video watching. You'll build real AI projects from scratch, gaining practical experience that employers value. Our structured learning paths guide you from beginner to advanced concepts with clear milestones and achievements.</p>
+                </div>
+              </details>
+
+              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow parallax-faq-item">
+                <summary className="cursor-pointer p-6 font-bold font-serif text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
+                  Do I need prior programming experience?
+                  <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <div className="p-6 pt-0 text-gray-700 font-sans border-t-2 border-black">
+                  <p>While basic programming knowledge is helpful, our beginner projects are designed for those new to AI and ML. We provide step-by-step guidance and explain concepts clearly. If you're completely new to programming, we recommend starting with our foundational projects.</p>
+                </div>
+              </details>
+
+              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow parallax-faq-item">
+                <summary className="cursor-pointer p-6 font-bold font-serif text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
+                  How long does it take to complete a project?
+                  <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <div className="p-6 pt-0 text-gray-700 font-sans border-t-2 border-black">
+                  <p>Project duration varies based on complexity and your pace. Beginner projects typically take 2-4 hours, intermediate projects 5-8 hours, and advanced projects 10-15 hours. You can work at your own speed and pause/resume anytime.</p>
+                </div>
+              </details>
+
+              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow parallax-faq-item">
+                <summary className="cursor-pointer p-6 font-bold font-serif text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
+                  Can I access projects after completing them?
+                  <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <div className="p-6 pt-0 text-gray-700 font-sans border-t-2 border-black">
+                  <p>Yes! All your completed projects remain accessible in your account. You can revisit them anytime to review concepts, reference code, or build upon what you've learned. Your progress and achievements are saved permanently.</p>
+                </div>
+              </details>
+
+              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow parallax-faq-item">
+                <summary className="cursor-pointer p-6 font-bold font-serif text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
+                  Is there a money-back guarantee?
+                  <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <div className="p-6 pt-0 text-gray-700 font-sans border-t-2 border-black">
+                  <p>We offer a 30-day money-back guarantee. If you're not satisfied with CrekAI for any reason within the first 30 days, contact our support team for a full refund. No questions asked.</p>
+                </div>
+              </details>
             </div>
           </div>
         </div>
@@ -200,6 +361,16 @@ export default async function Home() {
             if (blob1) blob1.style.transform = 'translate(' + scrolled * 0.1 + 'px, ' + scrolled * 0.15 + 'px)';
             if (blob2) blob2.style.transform = 'translate(' + scrolled * -0.08 + 'px, ' + scrolled * -0.12 + 'px)';
             
+            // Companies section parallax
+            const companies = document.querySelector('.parallax-companies');
+            if (companies) {
+              const companiesTop = companies.getBoundingClientRect().top;
+              const companiesOffset = companiesTop - window.innerHeight;
+              if (companiesOffset < 0 && companiesTop > 0) {
+                companies.style.transform = 'translateY(' + (companiesOffset * -0.05) + 'px)';
+              }
+            }
+            
             // Section parallax
             const section = document.querySelector('.parallax-section');
             if (section) {
@@ -218,6 +389,48 @@ export default async function Home() {
               if (cardOffset < 0 && cardTop > 0) {
                 const speed = 0.05 + (index * 0.02);
                 card.style.transform = 'translateY(' + (cardOffset * -speed) + 'px)';
+              }
+            });
+            
+            // Testimonials section parallax
+            const testimonials = document.querySelector('.parallax-testimonials');
+            if (testimonials) {
+              const testimonialsTop = testimonials.getBoundingClientRect().top;
+              const testimonialsOffset = testimonialsTop - window.innerHeight;
+              if (testimonialsOffset < 0 && testimonialsTop > 0) {
+                testimonials.style.transform = 'translateY(' + (testimonialsOffset * -0.06) + 'px)';
+              }
+            }
+            
+            // Testimonial cards parallax
+            const testimonialCards = document.querySelectorAll('.parallax-testimonial-card');
+            testimonialCards.forEach((card, index) => {
+              const cardTop = card.getBoundingClientRect().top;
+              const cardOffset = cardTop - window.innerHeight;
+              if (cardOffset < 0 && cardTop > 0) {
+                const speed = 0.04 + (index * 0.015);
+                card.style.transform = 'translateY(' + (cardOffset * -speed) + 'px)';
+              }
+            });
+            
+            // FAQ section parallax
+            const faq = document.querySelector('.parallax-faq');
+            if (faq) {
+              const faqTop = faq.getBoundingClientRect().top;
+              const faqOffset = faqTop - window.innerHeight;
+              if (faqOffset < 0 && faqTop > 0) {
+                faq.style.transform = 'translateY(' + (faqOffset * -0.04) + 'px)';
+              }
+            }
+            
+            // FAQ items parallax
+            const faqItems = document.querySelectorAll('.parallax-faq-item');
+            faqItems.forEach((item, index) => {
+              const itemTop = item.getBoundingClientRect().top;
+              const itemOffset = itemTop - window.innerHeight;
+              if (itemOffset < 0 && itemTop > 0) {
+                const speed = 0.03 + (index * 0.01);
+                item.style.transform = 'translateY(' + (itemOffset * -speed) + 'px)';
               }
             });
           };
