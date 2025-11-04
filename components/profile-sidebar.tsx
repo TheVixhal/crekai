@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 interface ProfileSidebarProps {
   user: {
     email?: string
@@ -5,6 +7,7 @@ interface ProfileSidebarProps {
   userProfile?: {
     full_name?: string
     username?: string
+    level?: number
   }
   createdAt?: string
   projectsEnrolled: number
@@ -16,9 +19,6 @@ export default function ProfileSidebar({
   user,
   userProfile,
   createdAt,
-  projectsEnrolled,
-  completedSteps,
-  projectsInProgress,
 }: ProfileSidebarProps) {
   const formatDate = (dateString?: string) => {
     if (!dateString) return "Recently"
@@ -29,51 +29,67 @@ export default function ProfileSidebar({
     })
   }
 
-  return (
-    <div className="bg-white border-2 border-black p-6 sticky top-24 h-fit">
-      <h3 className="text-lg font-bold font-serif text-black mb-4 border-b-2 border-black pb-2">Your Profile</h3>
+  const userLevel = userProfile?.level ?? 0
+  const subscriptionStatus = userLevel === 1 ? "Pro" : "Free"
 
-      {/* User Info */}
-      <div className="mb-6">
-        <div className="mb-3">
-          <p className="text-xs uppercase tracking-widest text-gray-600 font-sans font-bold">Name</p>
-          <p className="text-sm text-black font-sans">{userProfile?.full_name || "N/A"}</p>
-        </div>
-        <div className="mb-3">
-          <p className="text-xs uppercase tracking-widest text-gray-600 font-sans font-bold">Username</p>
-          <p className="text-sm text-black font-sans">{userProfile?.username || "N/A"}</p>
-        </div>
-        <div className="mb-3">
-          <p className="text-xs uppercase tracking-widest text-gray-600 font-sans font-bold">Email</p>
-          <p className="text-sm text-black font-sans break-words">{user.email}</p>
-        </div>
-        <div>
-          <p className="text-xs uppercase tracking-widest text-gray-600 font-sans font-bold">Member Since</p>
-          <p className="text-sm text-black font-sans">{formatDate(createdAt)}</p>
+  return (
+    <div className="space-y-6">
+      {/* Chameleon Background Header */}
+      <div className="relative h-32 bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden">
+        <Image 
+          src="/chameleon.png" 
+          alt="Chameleon" 
+          width={140} 
+          height={140}
+          className="opacity-40"
+        />
+      </div>
+
+      {/* Subscription Status */}
+      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs font-medium text-gray-500 mb-1">Subscription</p>
+            <p className="text-lg font-semibold text-gray-900">{subscriptionStatus}</p>
+          </div>
+          {userLevel === 0 && (
+            <a 
+              href="/subscription" 
+              className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              Upgrade
+            </a>
+          )}
+          {userLevel === 1 && (
+            <div className="flex items-center justify-center w-10 h-10 bg-black rounded-lg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="border-t-2 border-black my-4"></div>
-
-      {/* Stats */}
-      <div>
-        <p className="text-xs uppercase tracking-widest text-gray-600 font-sans font-bold mb-4">Your Stats</p>
-
-        <div className="space-y-4">
-          <div className="bg-amber-50 border-2 border-black p-3">
-            <p className="text-xs uppercase tracking-widest text-gray-700 font-sans font-bold">Projects Enrolled</p>
-            <p className="text-2xl font-bold text-black font-serif">{projectsEnrolled}</p>
-          </div>
-
-          <div className="bg-amber-50 border-2 border-black p-3">
-            <p className="text-xs uppercase tracking-widest text-gray-700 font-sans font-bold">Steps Completed</p>
-            <p className="text-2xl font-bold text-black font-serif">{completedSteps}</p>
-          </div>
-
-          <div className="bg-amber-50 border-2 border-black p-3">
-            <p className="text-xs uppercase tracking-widest text-gray-700 font-sans font-bold">In Progress</p>
-            <p className="text-2xl font-bold text-black font-serif">{projectsInProgress}</p>
-          </div>
+      {/* User Info */}
+      <div className="space-y-4">
+        <div>
+          <p className="text-xs font-medium text-gray-500 mb-1">Name</p>
+          <p className="text-sm text-gray-900">{userProfile?.full_name || "N/A"}</p>
+        </div>
+        
+        <div>
+          <p className="text-xs font-medium text-gray-500 mb-1">Username</p>
+          <p className="text-sm text-gray-900">{userProfile?.username || "N/A"}</p>
+        </div>
+        
+        <div>
+          <p className="text-xs font-medium text-gray-500 mb-1">Email</p>
+          <p className="text-sm text-gray-900 break-words">{user.email}</p>
+        </div>
+        
+        <div>
+          <p className="text-xs font-medium text-gray-500 mb-1">Member Since</p>
+          <p className="text-sm text-gray-900">{formatDate(createdAt)}</p>
         </div>
       </div>
     </div>
