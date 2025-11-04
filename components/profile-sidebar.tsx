@@ -1,4 +1,6 @@
+"use client"
 import Image from "next/image"
+import { useState } from "react"
 
 interface ProfileSidebarProps {
   user: {
@@ -20,6 +22,11 @@ export default function ProfileSidebar({
   userProfile,
   createdAt,
 }: ProfileSidebarProps) {
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [name, setName] = useState(userProfile?.full_name || "")
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState("")
+
   const formatDate = (dateString?: string) => {
     if (!dateString) return "Recently"
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -27,6 +34,38 @@ export default function ProfileSidebar({
       month: "short",
       day: "numeric",
     })
+  }
+
+  const handleSaveName = async () => {
+    if (!name.trim()) {
+      setError("Name cannot be empty")
+      return
+    }
+
+    setSaving(true)
+    setError("")
+
+    try {
+      const response = await fetch('/api/profile/update-name', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fullName: name }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update name')
+      }
+
+      setIsEditingName(false)
+      window.location.reload()
+    } catch (err) {
+      setError("Failed to update name")
+      console.error(err)
+    } finally {
+      setSaving(false)
+    }
   }
 
   const userLevel = userProfile?.level ?? 0
@@ -39,9 +78,9 @@ export default function ProfileSidebar({
         <Image 
           src="/chameleon.png" 
           alt="Chameleon" 
-          width={140} 
+          width={280} 
           height={140}
-          className="opacity-40"
+          className="opacity-100"
         />
       </div>
 
@@ -73,8 +112,51 @@ export default function ProfileSidebar({
       {/* User Info */}
       <div className="space-y-4">
         <div>
-          <p className="text-xs font-medium text-gray-500 mb-1">Name</p>
-          <p className="text-sm text-gray-900">{userProfile?.full_name || "N/A"}</p>
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-xs font-medium text-gray-500">Name</p>
+            {!isEditingName && (
+              <button 
+                onClick={() => setIsEditingName(true)}
+                className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Edit
+              </button>
+            )}
+          </div>
+          
+          {isEditingName ? (
+            <div className="space-y-2">
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                placeholder="Enter your name"
+              />
+              {error && <p className="text-xs text-red-600">{error}</p>}
+              <div className="flex gap-2">
+                <button
+                  onClick={handleSaveName}
+                  disabled={saving}
+                  className="px-3 py-1.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50"
+                >
+                  {saving ? "Saving..." : "Save"}
+                </button>
+                <button
+                  onClick={() => {
+                    setIsEditingName(false)
+                    setName(userProfile?.full_name || "")
+                    setError("")
+                  }}
+                  className="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-900">{userProfile?.full_name || "N/A"}</p>
+          )}
         </div>
         
         <div>

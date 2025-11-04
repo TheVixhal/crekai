@@ -154,7 +154,7 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
 
       {/* Header */}
       <div className="border-b border-gray-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50 relative">
-        <div className="max-w-5xl mx-auto px-6 py-4">
+        <div className="max-w-5xl mx-auto px-6 py-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link href="/projects" className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition text-sm font-medium">

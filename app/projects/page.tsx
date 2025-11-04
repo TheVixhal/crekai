@@ -52,7 +52,7 @@ export default async function ProjectsPage() {
     <div className="min-h-screen bg-[#F7F5F2] relative">
       {/* Grid Background */}
       <div 
-        className="absolute inset-0 opacity-[0.15]" 
+        className="absolute inset-0 opacity-[0.25]" 
         style={{
           backgroundImage: `
             linear-gradient(to right, #D4D4D4 1px, transparent 1px),
@@ -64,7 +64,7 @@ export default async function ProjectsPage() {
 
       {/* Header */}
       <div className="border-b border-gray-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50 relative">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Image 
               src="/sphereo.png" 
@@ -79,7 +79,7 @@ export default async function ProjectsPage() {
           <div className="flex items-center gap-3">
             <button 
               id="profile-toggle"
-              className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              className="border-2 px-5 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
             >
               Profile
             </button>
@@ -91,7 +91,7 @@ export default async function ProjectsPage() {
                 redirect("/")
               }}
             >
-              <button className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+              <button className="border-2 px-5 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
                 Sign Out
               </button>
             </form>
@@ -104,9 +104,9 @@ export default async function ProjectsPage() {
         {/* Projects Section */}
         {regularProjects.length > 0 && (
           <div className="mb-12">
-            <h2 className="text-3xl font-semibold text-gray-900 mb-6">Projects</h2>
+            <h2 className="text-3xl font-semibold text-gray-900 mb-4">Projects</h2>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-4">
               {regularProjects.map((project: any) => (
                 <ProjectCard 
                   key={project.id} 
@@ -122,9 +122,9 @@ export default async function ProjectsPage() {
         {/* Learning Modules Section */}
         {learningModules.length > 0 && (
           <div className="mb-12">
-            <h2 className="text-3xl font-semibold text-gray-900 mb-6">Learning Modules</h2>
+            <h2 className="text-3xl font-semibold text-gray-900 mb-4">Learning Modules</h2>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-4">
               {learningModules.map((project: any) => (
                 <ProjectCard 
                   key={project.id} 
@@ -196,8 +196,8 @@ export default async function ProjectsPage() {
       ></div>
 
       {/* Footer */}
-      <div className="mt-16 border-t border-gray-200 bg-white relative">
-        <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="mt-16 border-t border-gray-200 relative">
+        <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 text-sm">
               © 2025 CrekAI. Empowering learners through hands-on AI projects.
