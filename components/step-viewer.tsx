@@ -4,8 +4,11 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { createClient } from "@/lib/supabase/client"
 import { resetProjectProgress } from "@/app/projects/[slug]/action"
+import Image from "next/image"
 
 interface StepViewerProps {
   project: {
@@ -136,108 +139,152 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
   const isProjectComplete = currentStep === project.total_steps && completed
 
   return (
-    <div className="min-h-screen bg-amber-50">
-      {/* Masthead */}
-      <div className="border-b-4 border-black bg-white mb-8">
-        <div className="max-w-4xl mx-auto px-6 py-6">
-          <Link href="/projects" className="text-black hover:underline text-sm font-bold font-sans mb-4 inline-block">
-            ← BACK TO PROJECTS
-          </Link>
-          <h1 className="text-4xl font-bold text-black font-serif mb-3">{project.title}</h1>
-          <p className="text-gray-700 font-sans mb-4">
-            Step {currentStep} of {project.total_steps}
-          </p>
-          <div className="w-full bg-gray-300 h-2 border-2 border-black">
-            <div
-              className="bg-black h-full transition-all"
-              style={{
-                width: `${(currentStep / project.total_steps) * 100}%`,
-              }}
+    <div className="min-h-screen bg-[#F7F5F2] relative">
+      {/* Grid Background */}
+      <div 
+        className="absolute inset-0 opacity-[0.15]" 
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, #D4D4D4 1px, transparent 1px),
+            linear-gradient(to bottom, #D4D4D4 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px'
+        }}
+      />
+
+      {/* Header */}
+      <div className="border-b border-gray-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50 relative">
+        <div className="max-w-5xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/projects" className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition text-sm font-medium">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Projects
+              </Link>
+              
+              <div className="h-4 w-px bg-gray-300" />
+              
+              <h1 className="text-xl font-semibold text-gray-900">{project.title}</h1>
+              
+              <div className="h-4 w-px bg-gray-300" />
+              
+              <span className="text-sm text-gray-600">
+                Step {currentStep} of {project.total_steps}
+              </span>
+            </div>
+            
+            <Image 
+              src="/sphereo.png" 
+              alt="CrekAI" 
+              width={32} 
+              height={32}
+              className="rounded-lg"
             />
           </div>
         </div>
       </div>
 
       {/* Main content */}
-      <div className="max-w-4xl mx-auto px-6 pb-8">
+      <div className="max-w-5xl mx-auto px-6 py-8 relative">
         {isProjectComplete && (
-          <div className="bg-green-50 border-3 border-green-700 p-8 mb-8 text-center">
-            <h2 className="text-3xl font-bold text-green-900 font-serif mb-4">🎉 Project Complete!</h2>
-            <p className="text-green-900 font-sans mb-6">
+          <div className="bg-green-50 border border-green-200 rounded-xl p-8 mb-8 text-center">
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-3xl font-semibold text-green-900 mb-3">Project Complete!</h2>
+            <p className="text-green-800 mb-6">
               Congratulations! You've completed all {project.total_steps} steps of {project.title}.
             </p>
             <button
               onClick={handleResetProject}
               disabled={resetting}
-              className="px-8 py-3 bg-green-700 text-white font-serif font-bold border-2 border-green-900 hover:bg-green-800 disabled:opacity-50 transition"
+              className="px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 transition"
             >
-              {resetting ? "RESETTING..." : "START OVER"}
+              {resetting ? "Resetting..." : "Start Over"}
             </button>
           </div>
         )}
 
         {/* Content Card */}
-        <div className="bg-white border-2 border-black p-8 mb-8">
+        <div className="bg-white border border-gray-200 rounded-xl p-8 mb-8 shadow-sm">
           {loading ? (
-            <div className="text-center text-gray-700 font-sans">Loading step...</div>
+            <div className="text-center text-gray-600 py-12">Loading step...</div>
           ) : error ? (
-            <div className="text-center text-red-900 font-sans font-bold">{error}</div>
+            <div className="text-center text-red-600 py-12 font-medium">{error}</div>
           ) : (
-            <div className="text-gray-900">
+            <div className="prose prose-gray max-w-none">
               <ReactMarkdown
                 components={{
                   h1: ({ node, ...props }) => (
-                    <h1 className="text-4xl font-bold text-black mb-4 font-serif" {...props} />
+                    <h1 className="text-3xl font-semibold text-gray-900 mb-6 mt-0" {...props} />
                   ),
                   h2: ({ node, ...props }) => (
-                    <h2
-                      className="text-3xl font-bold text-black mb-4 mt-8 font-serif border-b-2 border-black pb-2"
-                      {...props}
-                    />
+                    <h2 className="text-2xl font-semibold text-gray-900 mb-4 mt-8 pb-2 border-b border-gray-200" {...props} />
                   ),
                   h3: ({ node, ...props }) => (
-                    <h3 className="text-2xl font-bold text-black mb-3 mt-6 font-serif" {...props} />
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3 mt-6" {...props} />
                   ),
-                  p: ({ node, children, ...props }) => {
-                    return (
-                      <p className="text-gray-900 mb-4 leading-relaxed font-serif" {...props}>
-                        {children}
-                      </p>
-                    )
-                  },
+                  p: ({ node, ...props }) => (
+                    <p className="text-gray-700 mb-4 leading-relaxed" {...props} />
+                  ),
                   ul: ({ node, ...props }) => (
-                    <ul className="list-disc list-inside text-gray-900 mb-4 space-y-2 font-sans" {...props} />
+                    <ul className="list-disc list-outside ml-6 text-gray-700 mb-4 space-y-2" {...props} />
                   ),
                   ol: ({ node, ...props }) => (
-                    <ol className="list-decimal list-inside text-gray-900 mb-4 space-y-2 font-sans" {...props} />
+                    <ol className="list-decimal list-outside ml-6 text-gray-700 mb-4 space-y-2" {...props} />
+                  ),
+                  li: ({ node, ...props }) => (
+                    <li className="text-gray-700" {...props} />
                   ),
                   code: ({ node, inline, className, children, ...props }: any) => {
+                    const match = /language-(\w+)/.exec(className || '')
+                    const language = match ? match[1] : ''
+                    
                     if (inline) {
                       return (
-                        <code
-                          className="bg-gray-200 px-2 py-1 border border-black text-black font-mono text-sm"
-                          {...props}
-                        >
+                        <code className="bg-gray-100 px-2 py-0.5 rounded text-sm font-mono text-gray-900 border border-gray-200" {...props}>
                           {children}
                         </code>
                       )
                     }
 
                     return (
-                      <pre className="bg-gray-900 border-2 border-black p-4 text-gray-100 font-mono text-sm my-4 overflow-x-auto">
-                        <code className="text-gray-100" {...props}>
-                          {children}
-                        </code>
-                      </pre>
+                      <div className="my-6 rounded-lg overflow-hidden border border-gray-200">
+                        {language && (
+                          <div className="bg-gray-100 px-4 py-2 text-xs font-medium text-gray-600 border-b border-gray-200">
+                            {language}
+                          </div>
+                        )}
+                        <SyntaxHighlighter
+                          language={language || 'text'}
+                          style={vscDarkPlus}
+                          customStyle={{
+                            margin: 0,
+                            borderRadius: 0,
+                            fontSize: '0.875rem',
+                            padding: '1.25rem',
+                          }}
+                          showLineNumbers={true}
+                        >
+                          {String(children).replace(/\n$/, '')}
+                        </SyntaxHighlighter>
+                      </div>
                     )
                   },
+                  pre: ({ node, ...props }) => <div {...props} />,
                   blockquote: ({ node, ...props }) => (
-                    <blockquote
-                      className="border-l-4 border-black pl-4 italic text-gray-700 my-4 font-serif"
-                      {...props}
-                    />
+                    <blockquote className="border-l-4 border-gray-300 pl-4 italic text-gray-600 my-6" {...props} />
                   ),
-                  a: ({ node, ...props }) => <a className="text-blue-900 hover:underline font-bold" {...props} />,
+                  a: ({ node, ...props }) => (
+                    <a className="text-blue-600 hover:text-blue-800 underline" {...props} />
+                  ),
+                  strong: ({ node, ...props }) => (
+                    <strong className="font-semibold text-gray-900" {...props} />
+                  ),
+                  em: ({ node, ...props }) => (
+                    <em className="italic" {...props} />
+                  ),
                 }}
               >
                 {stepContent}
@@ -251,29 +298,41 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
           <button
             onClick={handlePrevStep}
             disabled={!canGoPrev}
-            className="px-6 py-2 bg-white border-2 border-black text-black font-serif font-bold disabled:opacity-30 hover:bg-gray-100 transition"
+            className="px-6 py-3 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-gray-300 transition flex items-center gap-2"
           >
-            ← PREVIOUS
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Previous
           </button>
 
           <button
             onClick={handleCompleteStep}
             disabled={completed}
-            className={`px-8 py-2 font-serif font-bold border-2 border-black transition ${
-              completed ? "bg-gray-300 text-gray-700 cursor-not-allowed" : "bg-green-600 text-white hover:bg-green-700"
+            className={`px-8 py-3 font-medium rounded-lg transition ${
+              completed 
+                ? "bg-gray-100 text-gray-500 cursor-not-allowed border border-gray-200" 
+                : "bg-green-600 text-white hover:bg-green-700"
             }`}
           >
-            {completed ? "✓ COMPLETED" : "MARK COMPLETE"}
+            {completed ? "✓ Completed" : "Mark Complete"}
           </button>
 
           <button
             onClick={handleNextStep}
             disabled={!canGoNext}
-            className={`px-6 py-2 font-serif font-bold border-2 border-black transition ${
-              canGoNext ? "bg-black text-white hover:bg-gray-900" : "bg-gray-300 text-gray-700 cursor-not-allowed"
+            className={`px-6 py-3 font-medium rounded-lg transition flex items-center gap-2 ${
+              canGoNext 
+                ? "bg-gray-900 text-white hover:bg-gray-800" 
+                : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
             }`}
           >
-            NEXT →
+            Next
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
           </button>
         </div>
       </div>
