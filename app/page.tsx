@@ -52,7 +52,7 @@ export default async function Home() {
         <div className="relative z-10">
           <h1 className="text-7xl md:text-8xl font-bold text-black tracking-wider mb-4 drop-shadow-sm">Crek AI</h1>
           <div className="h-2 bg-gradient-to-r from-transparent via-black to-transparent mx-auto w-64 mb-4 shadow-md"></div>
-          <p className="text-lg md:text-xl text-gray-800  italic mb-2">
+          <p className="text-lg md:text-xl text-gray-800 mb-2">
             Learn AI & Machine Learning Through Hands On Practice
           </p>
           <p className="text-xs text-gray-600 tracking-widest font-sans uppercase">Your Source for AI/ML Mastery</p>
@@ -100,13 +100,13 @@ export default async function Home() {
                 
                 <div>
                   <Link href="/auth/sign-up">
-                  <button className="w-full px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white  text-lg font-bold border-2 border-black hover:from-orange-600 hover:to-amber-600 transition-all shadow-md hover:shadow-xl hover:translate-y-[-2px]">
+                  <button className="w-full px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-lg border-2 border-black hover:from-orange-600 hover:to-amber-600 transition-all shadow-md hover:shadow-xl hover:translate-y-[-2px]">
                     Try Now
                   </button>
                   </Link>
 
                   <Link href="/auth/login">
-                  <button className="w-full mt-4 px-8 py-4 bg-white text-black  text-lg font-bold border-2 border-black hover:bg-gray-100 transition-all shadow-sm hover:shadow-lg hover:translate-y-[-2px]">
+                  <button className="w-full mt-4 px-8 py-4 bg-white text-black text-lg border-2 border-black hover:bg-gray-100 transition-all shadow-sm hover:shadow-lg hover:translate-y-[-2px]">
                     Log In
                   </button>
                   </Link>  
@@ -128,7 +128,7 @@ export default async function Home() {
               <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-blue-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-blue-600 font-sans relative z-10">Beginner</p>
-                <h4 className="text-xl font-bold  mb-3 text-black relative z-10">Build Artificial Neural Network</h4>
+                <h4 className="text-xl mb-3 text-black relative z-10">Build Artificial Neural Network</h4>
                 <p className="text-sm text-gray-700 mb-4 relative z-10">
                   An artificial neural network (ANN) is a computational model inspired by the human brain's structure and function, consisting of interconnected nodes called neurons.
                 </p>
@@ -138,7 +138,7 @@ export default async function Home() {
               <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-purple-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-purple-600 font-sans relative z-10">Intermediate</p>
-                <h4 className="text-xl font-bold  mb-3 text-black relative z-10">Build Tokeniser</h4>
+                <h4 className="text-xl mb-3 text-black relative z-10">Build Tokeniser</h4>
                 <p className="text-sm text-gray-700 mb-4 relative z-10">
                   A tokenizer in Natural Language Processing (NLP) is a tool that breaks down raw text into smaller, manageable units called tokens.
                 </p>
@@ -148,7 +148,7 @@ export default async function Home() {
               <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-green-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-green-600 font-sans relative z-10">Advanced</p>
-                <h4 className="text-xl font-bold  mb-3 text-black relative z-10">Build Your Own GPT</h4>
+                <h4 className="text-xl mb-3 text-black relative z-10">Build Your Own GPT</h4>
                 <p className="text-sm text-gray-700 mb-4 relative z-10">
                  GPT stands for Generative Pre-trained Transformer, which is a type of language model that uses a neural network architecture called a transformer to generate human-like text.
                 </p>
@@ -284,7 +284,7 @@ export default async function Home() {
               </details>
 
               <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
-                <summary className="cursor-pointer p-6 font-bold  text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
+                <summary className="cursor-pointer p-6 text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
                   Do I need prior programming experience?
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
                 </summary>
@@ -294,7 +294,7 @@ export default async function Home() {
               </details>
 
               <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
-                <summary className="cursor-pointer p-6 font-bold  text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
+                <summary className="cursor-pointer p-6 text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
                   How long does it take to complete a project?
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
                 </summary>
@@ -304,7 +304,7 @@ export default async function Home() {
               </details>
 
               <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
-                <summary className="cursor-pointer p-6 font-bold  text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
+                <summary className="cursor-pointer p-6 text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
                   Can I access projects after completing them?
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
                 </summary>
@@ -314,7 +314,7 @@ export default async function Home() {
               </details>
 
               <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
-                <summary className="cursor-pointer p-6 font-bold  text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
+                <summary className="cursor-pointer p-6 text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
                   Is there a money-back guarantee?
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
                 </summary>
