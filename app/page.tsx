@@ -62,10 +62,10 @@ export default async function Home() {
 
       {/* Hero Section */}
       <div className="flex-1 flex flex-col">
-        <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
+        <div className="flex-1 pt-6 px-6 max-w-7xl mx-auto w-full">
           {/* Main Featured Article */}
           <div>
-            <div className="bg-white border-2 border-black h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-t-3xl">
+            <div className="bg-white border-2 border-black border-b-0 h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-3xl rounded-b-none parallax-card">
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-100 opacity-20 rounded-full blur-3xl parallax-blob-1"></div>
               <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-100 opacity-20 rounded-full blur-3xl parallax-blob-2"></div>
               
@@ -122,7 +122,7 @@ export default async function Home() {
 
 
         {/* Bottom Section - Learning Paths Preview */}
-        <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 shadow-inner">
+        <div className="border-t-2 border-black bg-gradient-to-b from-white to-gray-50 shadow-inner">
           <div className="max-w-7xl mx-auto px-6 py-12">
             <h3 className="text-3xl font-bold font-serif text-black mb-8">Popular Projects</h3>
             <div className="grid md:grid-cols-3 gap-6">
