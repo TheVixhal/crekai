@@ -1,3 +1,5 @@
+import fs from "fs"
+import path from "path"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import ProjectCard from "@/components/project-card"
@@ -13,17 +15,24 @@ export default async function ProjectsPage() {
     redirect("/auth/login")
   }
 
-  // Fetch all projects
-  const { data: projects, error: projectsError } = await supabase
-    .from("projects")
-    .select("*")
-    .order("created_at", { ascending: true })
+  // 🔹 Fetch local markdown projects metadata
+  const projectsDir = path.join(process.cwd(), "public", "projects")
+  const projectFolders = fs.readdirSync(projectsDir)
 
-  if (projectsError) {
-    console.error("Error fetching projects:", projectsError)
-  }
+  const projects = projectFolders.map((folder) => {
+    const metaPath = path.join(projectsDir, folder, "meta.json")
+    const meta = fs.existsSync(metaPath)
+      ? JSON.parse(fs.readFileSync(metaPath, "utf-8"))
+      : {
+          slug: folder,
+          title: folder,
+          description: "No description available.",
+          total_steps: 1,
+        }
+    return meta
+  })
 
-  // Fetch user progress
+  // 🔹 Fetch user progress (still dynamic)
   const { data: progressData } = await supabase
     .from("user_progress")
     .select("*")
@@ -41,21 +50,23 @@ export default async function ProjectsPage() {
     .maybeSingle()
 
   const projectsEnrolled = Object.keys(progressMap).length
-  const completedSteps = Object.values(progressMap).reduce((sum, prog: any) => {
-    return sum + (prog.completed_steps?.length || 0)
-  }, 0)
-  const projectsInProgress = Object.values(progressMap).filter((prog: any) => {
-    return prog.current_step && prog.current_step <= (prog.total_steps || 0)
-  }).length
+  const completedSteps = Object.values(progressMap).reduce(
+    (sum, prog: any) => sum + (prog.completed_steps?.length || 0),
+    0
+  )
+  const projectsInProgress = Object.values(progressMap).filter(
+    (prog: any) => prog.current_step && prog.current_step <= (prog.total_steps || 0)
+  ).length
 
+  // ✅ Return UI
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f9fafb] via-[#f5f6f7] to-[#eef0f2] text-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#f8f6ef] via-[#f3f0e7] to-[#eeece2] text-gray-900">
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-gray-200">
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#f8f6ef]/80 border-b border-gray-300">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-semibold tracking-tight text-gray-900">CrekAI</h1>
-            <span className="text-sm text-gray-500">Learning Projects</span>
+            <span className="text-sm text-gray-600">Learning Projects</span>
           </div>
           <form
             action={async () => {
@@ -72,21 +83,22 @@ export default async function ProjectsPage() {
         </div>
       </header>
 
+      {/* Main */}
       <main className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Main content */}
+        {/* Left: Main Content */}
         <section className="lg:col-span-2 space-y-10">
-          {/* Welcome banner */}
-          <div className="rounded-2xl bg-gradient-to-r from-[#e7f0ff] via-[#edf2ff] to-[#f6f8ff] p-8 border border-gray-200 shadow-sm">
+          {/* Welcome Banner */}
+          <div className="rounded-2xl bg-gradient-to-r from-[#f9f7f2] via-[#f3f0e7] to-[#eeece2] p-8 border border-gray-200 shadow-sm">
             <div className="flex justify-between items-center">
               <div>
                 <h2 className="text-2xl font-semibold text-gray-900 mb-2">
                   Welcome back, {userProfile?.full_name?.split(" ")[0] || "Learner"} 👋
                 </h2>
                 <p className="text-gray-600 text-sm">
-                  Continue your AI/ML learning journey — progress is built one project at a time.
+                  Continue your AI/ML learning journey — progress grows one project at a time.
                 </p>
               </div>
-              <div className="hidden md:block text-5xl opacity-90">🚀</div>
+              <div className="hidden md:block text-5xl opacity-80">🚀</div>
             </div>
           </div>
 
@@ -94,31 +106,33 @@ export default async function ProjectsPage() {
           <div className="space-y-2">
             <h3 className="text-xl font-semibold text-gray-900">Featured Projects</h3>
             <p className="text-gray-600 text-sm">
-              Dive into real-world AI projects curated to enhance your skills.
+              Explore hands-on AI projects curated for practical learning.
             </p>
           </div>
 
-          {/* Projects Grid */}
+          {/* Project Grid */}
           <div className="grid md:grid-cols-2 gap-6">
-            {projects && projects.length > 0 ? (
+            {projects.length > 0 ? (
               projects.map((project: any) => (
-                <ProjectCard key={project.id} project={project} progress={progressMap[project.id]} />
+                <ProjectCard
+                  key={project.slug}
+                  project={project}
+                  progress={progressMap[project.slug]}
+                />
               ))
             ) : (
-              <div className="col-span-full bg-white/60 border border-gray-200 rounded-xl p-12 text-center shadow-sm backdrop-blur-sm">
+              <div className="col-span-full bg-white/70 border border-gray-200 rounded-xl p-12 text-center shadow-sm backdrop-blur-sm">
                 <div className="text-5xl mb-3">📚</div>
-                <p className="text-gray-800 font-medium">
-                  No projects available yet.
-                </p>
+                <p className="text-gray-800 font-medium">No projects found.</p>
                 <p className="text-gray-500 text-sm mt-1">
-                  Check back soon for new challenges.
+                  Check your <code className="bg-gray-100 px-1 rounded">/public/projects</code> folder.
                 </p>
               </div>
             )}
           </div>
         </section>
 
-        {/* Sidebar */}
+        {/* Right: Profile Sidebar */}
         <aside className="lg:col-span-1">
           <div className="sticky top-28">
             <ProfileSidebar
@@ -134,10 +148,10 @@ export default async function ProjectsPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 mt-16 py-8 bg-white/40 backdrop-blur-md">
+      <footer className="border-t border-gray-300 mt-16 py-8 bg-[#f8f6ef]/60 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">
-            © 2025 CrekAI — Empowering learners through hands-on AI projects.
+          <p className="text-gray-600 text-sm">
+            © 2025 CrekAI — Empowering learners through hands-on AI experiences.
           </p>
           <div className="flex gap-5 text-sm">
             <a href="#" className="text-gray-600 hover:text-gray-900 transition">
