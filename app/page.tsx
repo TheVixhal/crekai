@@ -267,7 +267,7 @@ export default async function Home() {
             
             <div className="space-y-4">
               <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
-                <summary className="cursor-pointer p-6 font-bold  text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
+                <summary className="cursor-pointer p-6 text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
                   What makes CrekAI different from other learning platforms?
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
                 </summary>
