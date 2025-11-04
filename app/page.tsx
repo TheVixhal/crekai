@@ -50,7 +50,7 @@ export default async function Home() {
                            repeating-linear-gradient(90deg, #000 0px, #000 1px, transparent 1px, transparent 4px)`
         }}></div>
         <div className="relative z-10">
-          <h1 className="text-7xl md:text-8xl font-bold text-black font-serif tracking-wider mb-4 drop-shadow-sm">Crek AI</h1>
+          <h1 className="text-7xl md:text-8xl font-bold text-black tracking-wider mb-4 drop-shadow-sm">Crek AI</h1>
           <div className="h-2 bg-gradient-to-r from-transparent via-black to-transparent mx-auto w-64 mb-4 shadow-md"></div>
           <p className="text-lg md:text-xl text-gray-800 font-serif italic mb-2">
             Learn AI & Machine Learning Through Hands On Practice
