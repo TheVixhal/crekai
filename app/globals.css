@@ -75,6 +75,9 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+.font-momo {
+  font-family: "Momo Trust Display", sans-serif;
+}
 @theme inline {
   /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
   --color-background: var(--background);
