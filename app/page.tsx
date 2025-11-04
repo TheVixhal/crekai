@@ -120,7 +120,7 @@ export default async function Home() {
         </div>
 
         {/* Trusted By Companies Section */}
-        <div className="border-y-4 border-black bg-white py-12 px-6 parallax-companies">
+        <div className="border-y-4 border-black bg-white py-12 px-6">
           <div className="max-w-7xl mx-auto">
             <p className="text-center text-sm uppercase tracking-widest font-bold text-gray-600 mb-8 font-sans">
               Enjoyed by developers at the world's best companies
@@ -136,11 +136,11 @@ export default async function Home() {
         </div>
 
         {/* Bottom Section - Learning Paths Preview */}
-        <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 mt-6 shadow-inner parallax-section">
+        <div className="border-t-4 border-black bg-gradient-to-b from-white to-gray-50 mt-6 shadow-inner">
           <div className="max-w-7xl mx-auto px-6 py-12">
             <h3 className="text-3xl font-bold font-serif text-black mb-8">Popular Projects</h3>
             <div className="grid md:grid-cols-3 gap-6">
-              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded parallax-project-card">
+              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-blue-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-blue-600 font-sans relative z-10">Beginner</p>
                 <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Artificial Neural Network</h4>
@@ -150,7 +150,7 @@ export default async function Home() {
                 <p className="text-xs text-gray-600 font-sans relative z-10">15 Steps • Beginner Friendly</p>
               </div>
               
-              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded parallax-project-card">
+              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-purple-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-purple-600 font-sans relative z-10">Intermediate</p>
                 <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Tokeniser</h4>
@@ -160,7 +160,7 @@ export default async function Home() {
                 <p className="text-xs text-gray-600 font-sans relative z-10">20 Steps • Intermediate Project</p>
               </div>
               
-              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded parallax-project-card">
+              <div className="border-2 border-black p-6 bg-white hover:shadow-2xl transition-all duration-300 hover:translate-y-[-4px] group relative overflow-hidden rounded">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-green-100 opacity-0 group-hover:opacity-30 rounded-full blur-2xl transition-opacity"></div>
                 <p className="text-xs uppercase tracking-widest font-bold mb-3 text-green-600 font-sans relative z-10">Advanced</p>
                 <h4 className="text-xl font-bold font-serif mb-3 text-black relative z-10">Build Your Own GPT</h4>
@@ -174,13 +174,13 @@ export default async function Home() {
         </div>
 
         {/* Testimonials Section */}
-        <div className="border-t-4 border-black bg-gradient-to-br from-amber-50 to-orange-50 py-16 px-6 parallax-testimonials">
+        <div className="border-t-4 border-black bg-gradient-to-br from-amber-50 to-orange-50 py-16 px-6">
           <div className="max-w-7xl mx-auto">
             <h3 className="text-4xl font-bold font-serif text-black mb-4 text-center">Hear it from our members</h3>
             <p className="text-center text-gray-700 mb-12 font-sans">See what learners are saying about their CrekAI experience</p>
             
             <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-white border-2 border-black p-6 relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all parallax-testimonial-card">
+              <div className="bg-white border-2 border-black p-6 relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all">
                 <div className="absolute top-0 left-0 w-16 h-16 bg-orange-200 opacity-20 rounded-full blur-2xl"></div>
                 <div className="relative z-10">
                   <div className="flex items-center mb-4">
@@ -205,7 +205,7 @@ export default async function Home() {
                 </div>
               </div>
 
-              <div className="bg-white border-2 border-black p-6 relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all parallax-testimonial-card">
+              <div className="bg-white border-2 border-black p-6 relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all">
                 <div className="absolute top-0 left-0 w-16 h-16 bg-purple-200 opacity-20 rounded-full blur-2xl"></div>
                 <div className="relative z-10">
                   <div className="flex items-center mb-4">
@@ -230,7 +230,7 @@ export default async function Home() {
                 </div>
               </div>
 
-              <div className="bg-white border-2 border-black p-6 relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all parallax-testimonial-card">
+              <div className="bg-white border-2 border-black p-6 relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all">
                 <div className="absolute top-0 left-0 w-16 h-16 bg-blue-200 opacity-20 rounded-full blur-2xl"></div>
                 <div className="relative z-10">
                   <div className="flex items-center mb-4">
@@ -259,13 +259,13 @@ export default async function Home() {
         </div>
 
         {/* FAQ Section */}
-        <div className="border-t-4 border-black bg-white py-16 px-6 parallax-faq">
+        <div className="border-t-4 border-black bg-white py-16 px-6">
           <div className="max-w-4xl mx-auto">
             <h3 className="text-4xl font-bold font-serif text-black mb-4 text-center">Frequently Asked Questions</h3>
             <p className="text-center text-gray-700 mb-12 font-sans">Everything you need to know about CrekAI</p>
             
             <div className="space-y-4">
-              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow parallax-faq-item">
+              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
                 <summary className="cursor-pointer p-6 font-bold font-serif text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
                   What makes CrekAI different from other learning platforms?
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
@@ -275,7 +275,7 @@ export default async function Home() {
                 </div>
               </details>
 
-              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow parallax-faq-item">
+              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
                 <summary className="cursor-pointer p-6 font-bold font-serif text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
                   Do I need prior programming experience?
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
@@ -285,7 +285,7 @@ export default async function Home() {
                 </div>
               </details>
 
-              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow parallax-faq-item">
+              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
                 <summary className="cursor-pointer p-6 font-bold font-serif text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
                   How long does it take to complete a project?
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
@@ -295,7 +295,7 @@ export default async function Home() {
                 </div>
               </details>
 
-              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow parallax-faq-item">
+              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
                 <summary className="cursor-pointer p-6 font-bold font-serif text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
                   Can I access projects after completing them?
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
@@ -305,7 +305,7 @@ export default async function Home() {
                 </div>
               </details>
 
-              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow parallax-faq-item">
+              <details className="group border-2 border-black rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
                 <summary className="cursor-pointer p-6 font-bold font-serif text-lg text-black bg-gradient-to-r from-gray-50 to-white hover:from-amber-50 hover:to-orange-50 transition-colors flex justify-between items-center">
                   Is there a money-back guarantee?
                   <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
@@ -326,7 +326,7 @@ export default async function Home() {
       </div>
     </div>
     
-    {/* Parallax Script */}
+    {/* Parallax Script - Only for Masthead and Hero Section */}
     <script dangerouslySetInnerHTML={{__html: `
       (function() {
         function initParallax() {
@@ -360,79 +360,6 @@ export default async function Home() {
             const blob2 = document.querySelector('.parallax-blob-2');
             if (blob1) blob1.style.transform = 'translate(' + scrolled * 0.1 + 'px, ' + scrolled * 0.15 + 'px)';
             if (blob2) blob2.style.transform = 'translate(' + scrolled * -0.08 + 'px, ' + scrolled * -0.12 + 'px)';
-            
-            // Companies section parallax
-            const companies = document.querySelector('.parallax-companies');
-            if (companies) {
-              const companiesTop = companies.getBoundingClientRect().top;
-              const companiesOffset = companiesTop - window.innerHeight;
-              if (companiesOffset < 0 && companiesTop > 0) {
-                companies.style.transform = 'translateY(' + (companiesOffset * -0.05) + 'px)';
-              }
-            }
-            
-            // Section parallax
-            const section = document.querySelector('.parallax-section');
-            if (section) {
-              const sectionTop = section.getBoundingClientRect().top;
-              const sectionOffset = sectionTop - window.innerHeight;
-              if (sectionOffset < 0 && sectionTop > 0) {
-                section.style.transform = 'translateY(' + (sectionOffset * -0.08) + 'px)';
-              }
-            }
-            
-            // Project cards parallax
-            const projectCards = document.querySelectorAll('.parallax-project-card');
-            projectCards.forEach((card, index) => {
-              const cardTop = card.getBoundingClientRect().top;
-              const cardOffset = cardTop - window.innerHeight;
-              if (cardOffset < 0 && cardTop > 0) {
-                const speed = 0.05 + (index * 0.02);
-                card.style.transform = 'translateY(' + (cardOffset * -speed) + 'px)';
-              }
-            });
-            
-            // Testimonials section parallax
-            const testimonials = document.querySelector('.parallax-testimonials');
-            if (testimonials) {
-              const testimonialsTop = testimonials.getBoundingClientRect().top;
-              const testimonialsOffset = testimonialsTop - window.innerHeight;
-              if (testimonialsOffset < 0 && testimonialsTop > 0) {
-                testimonials.style.transform = 'translateY(' + (testimonialsOffset * -0.06) + 'px)';
-              }
-            }
-            
-            // Testimonial cards parallax
-            const testimonialCards = document.querySelectorAll('.parallax-testimonial-card');
-            testimonialCards.forEach((card, index) => {
-              const cardTop = card.getBoundingClientRect().top;
-              const cardOffset = cardTop - window.innerHeight;
-              if (cardOffset < 0 && cardTop > 0) {
-                const speed = 0.04 + (index * 0.015);
-                card.style.transform = 'translateY(' + (cardOffset * -speed) + 'px)';
-              }
-            });
-            
-            // FAQ section parallax
-            const faq = document.querySelector('.parallax-faq');
-            if (faq) {
-              const faqTop = faq.getBoundingClientRect().top;
-              const faqOffset = faqTop - window.innerHeight;
-              if (faqOffset < 0 && faqTop > 0) {
-                faq.style.transform = 'translateY(' + (faqOffset * -0.04) + 'px)';
-              }
-            }
-            
-            // FAQ items parallax
-            const faqItems = document.querySelectorAll('.parallax-faq-item');
-            faqItems.forEach((item, index) => {
-              const itemTop = item.getBoundingClientRect().top;
-              const itemOffset = itemTop - window.innerHeight;
-              if (itemOffset < 0 && itemTop > 0) {
-                const speed = 0.03 + (index * 0.01);
-                item.style.transform = 'translateY(' + (itemOffset * -speed) + 'px)';
-              }
-            });
           };
           
           window.addEventListener('scroll', handleScroll);
