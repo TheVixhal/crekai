@@ -160,21 +160,7 @@ export default async function Home() {
         </div>
 
 
-        {/* Trusted By Companies Section */}
-        <div className="border-y-4 border-black bg-white py-12 px-6">
-          <div className="max-w-7xl mx-auto">
-            <p className="text-center text-sm uppercase tracking-widest font-bold text-gray-600 mb-8 font-sans">
-              Enjoyed by developers at the world's best companies
-            </p>
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Google</div>
-              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Microsoft</div>
-              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Meta</div>
-              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Amazon</div>
-              <div className="text-3xl md:text-4xl font-bold text-gray-800 hover:text-black transition-colors">Netflix</div>
-            </div>
-          </div>
-        </div>   
+          
 
         {/* Testimonials Section */}
         <div className="border-t-4 border-black bg-gradient-to-br from-amber-50 to-orange-50 py-16 px-6">
