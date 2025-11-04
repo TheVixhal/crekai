@@ -65,7 +65,7 @@ export default async function Home() {
         <div className="flex-1 pt-6 px-6 max-w-7xl mx-auto w-full">
           {/* Main Featured Article */}
           <div>
-            <div className="bg-white border-2 border-black border-b-0 h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-3xl rounded-b-none parallax-card">
+            <div className="bg-white border-2 border-black border-b-0 h-full flex flex-col shadow-2xl hover:shadow-3xl transition-shadow duration-300 relative overflow-hidden rounded-t-3xl">
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-100 opacity-20 rounded-full blur-3xl parallax-blob-1"></div>
               <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-100 opacity-20 rounded-full blur-3xl parallax-blob-2"></div>
               
