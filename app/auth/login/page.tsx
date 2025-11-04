@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-
+import { createClient } from "@/lib/supabase/server"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -27,6 +27,15 @@ export default function LoginPage() {
     } else {
       router.push("/projects")
     }
+  }
+
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (user) {
+    redirect("/projects")
   }
 
   return (
