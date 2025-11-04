@@ -121,5 +121,6 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: "Momo Trust Display", sans-serif;
   }
 }
