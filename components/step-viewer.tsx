@@ -30,11 +30,27 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
   const [completed, setCompleted] = useState(false)
   const [error, setError] = useState("")
   const [resetting, setResetting] = useState(false)
+  const [stepConfig, setStepConfig] = useState<any>(null)
   const supabase = createClient()
 
   useEffect(() => {
     loadStep()
+    loadProjectConfig()
   }, [currentStep])
+
+  const loadProjectConfig = async () => {
+    try {
+      const response = await fetch(`/api/project-config/${project.slug}`)
+      const data = await response.json()
+      
+      if (data.success && data.config) {
+        const currentStepConfig = data.config.steps.find((s: any) => s.step === currentStep)
+        setStepConfig(currentStepConfig || null)
+      }
+    } catch (err) {
+      console.error("Failed to load project config:", err)
+    }
+  }
 
   const loadStep = async () => {
     setLoading(true)
@@ -62,8 +78,48 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
     }
   }
 
-  // Removed manual completion - users must complete via Colab
-  // const handleCompleteStep = async () => { ... }
+const handleManualComplete = async () => {
+  // Only for steps without assignments
+  try {
+    const completedSteps = progress?.completed_steps || []
+
+    if (!completedSteps.includes(currentStep)) {
+      completedSteps.push(currentStep)
+    }
+
+    const nextStep = currentStep + 1
+    const hasNextStep = nextStep <= project.total_steps
+
+    if (!progress) {
+      const { error } = await supabase.from("user_progress").insert({
+        user_id: userId,
+        project_id: project.id,
+        current_step: hasNextStep ? nextStep : currentStep,
+        completed_steps: completedSteps,
+      })
+      if (error) throw error
+    } else {
+      const { error } = await supabase
+        .from("user_progress")
+        .update({
+          current_step: hasNextStep ? nextStep : currentStep,
+          completed_steps: completedSteps,
+          last_accessed: new Date().toISOString(),
+        })
+        .eq("user_id", userId)
+        .eq("project_id", project.id)
+      if (error) throw error
+    }
+
+    setCompleted(true)
+    if (hasNextStep) {
+      router.refresh()
+    }
+  } catch (err) {
+    setError("Failed to save progress")
+    console.error(err)
+  }
+}
 
   const handleNextStep = () => {
     if (currentStep < project.total_steps) {
@@ -146,8 +202,10 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
 
       {/* Main content */}
       <div className="max-w-5xl mx-auto px-6 py-8 relative">
-        {/* Colab Token Display */}
-        <ColabTokenDisplay projectSlug={project.slug} />
+        {/* Colab Token Display - Only show if step has assignment */}
+        {stepConfig?.has_assignment && (
+          <ColabTokenDisplay projectSlug={project.slug} />
+        )}
 
         {isProjectComplete && (
           <div className="bg-green-50 border border-green-200 rounded-xl p-8 mb-8 text-center">
@@ -255,8 +313,8 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
 
         {/* Navigation */}
         <div className="space-y-4">
-          {/* Colab Verification Status */}
-          {!completed && (
+          {/* Colab Verification Status - Only for assignment steps */}
+          {!completed && stepConfig?.has_assignment && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
               <div className="flex items-center justify-center gap-2 text-amber-800 mb-2">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -285,30 +343,45 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
               Previous
             </button>
 
-            <div className={`px-8 py-3 font-medium rounded-lg flex items-center gap-2 ${
-              completed 
-                ? "bg-green-100 text-green-700 border border-green-300" 
-                : "bg-gray-100 text-gray-500 border border-gray-200"
-            }`}>
-              {completed ? (
-                <>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                  </svg>
-                  Verified via Colab
-                </>
-              ) : (
-                <>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                  </svg>
-                  Awaiting Verification
-                </>
-              )}
-            </div>
+            {/* Show different middle button based on step type */}
+            {stepConfig?.has_assignment ? (
+              <div className={`px-8 py-3 font-medium rounded-lg flex items-center gap-2 ${
+                completed 
+                  ? "bg-green-100 text-green-700 border border-green-300" 
+                  : "bg-gray-100 text-gray-500 border border-gray-200"
+              }`}>
+                {completed ? (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Verified via Colab
+                  </>
+                ) : (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Awaiting Verification
+                  </>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={handleManualComplete}
+                disabled={completed}
+                className={`px-8 py-3 font-medium rounded-lg transition ${
+                  completed 
+                    ? "bg-gray-100 text-gray-500 cursor-not-allowed border border-gray-200" 
+                    : "bg-green-600 text-white hover:bg-green-700"
+                }`}
+              >
+                {completed ? "✓ Completed" : "Mark Complete"}
+              </button>
+            )}
 
             <button
               onClick={handleNextStep}
