@@ -52,7 +52,7 @@ export default function TypewriterHeading({
   }, [charIndex, isDeleting, textIndex, texts, typingSpeed, deletingSpeed, pauseBeforeDelete])
 
   return (
-    <h2 className="text-4xl md:text-5xl font-bold font-serif mb-3 text-black min-h-[3rem] md:min-h-[4rem] flex items-center">
+    <h2 className="text-4xl md:text-5xl font-bold mb-3 text-black min-h-[3rem] md:min-h-[4rem] flex items-center">
       <span>{displayText}</span>
       <span className="ml-1 inline-block w-0.5 h-10 md:h-12 bg-black animate-blink"></span>
       <style jsx>{`
