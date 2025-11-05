@@ -319,6 +319,13 @@ export async function POST(request: NextRequest) {
 
     const completedSteps = existingProgress?.completed_steps || []
 
+    // Check if already completed
+    const alreadyCompleted = completedSteps.includes(stepNumber)
+    
+    if (alreadyCompleted) {
+      console.log(`Step ${stepNumber} already completed, allowing re-verification`)
+    }
+
     // Add step to completed if not already there
     if (!completedSteps.includes(stepNumber)) {
       completedSteps.push(stepNumber)
@@ -376,9 +383,12 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: `Step ${stepNumber} completed successfully!`,
+      message: alreadyCompleted 
+        ? `Step ${stepNumber} re-verified successfully!` 
+        : `Step ${stepNumber} completed successfully!`,
       next_step: hasNextStep ? nextStep : null,
       completed: true,
+      already_completed: alreadyCompleted,
     })
   } catch (error) {
     console.error("Track execution error:", error)
