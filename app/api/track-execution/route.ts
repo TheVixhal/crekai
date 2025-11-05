@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server"
-import { createServiceClient } from "@/lib/supabase/service"
 import { NextRequest, NextResponse } from "next/server"
 import fs from "fs/promises"
 import path from "path"
@@ -299,12 +298,11 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await createClient()
-    const supabaseService = createServiceClient()
 
-    // Find user by token using service client (bypasses RLS)
+    // Find user by token (RLS policy allows token lookup)
     console.log("Looking up token in database...")
     
-    const { data: profile, error: profileError } = await supabaseService
+    const { data: profile, error: profileError } = await supabase
       .from("user_profiles")
       .select("id")
       .eq("colab_token", token)
