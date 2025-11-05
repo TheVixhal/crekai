@@ -1,0 +1,138 @@
+{
+  "project_id": "build-ann",
+  "project_name": "Build Artificial Neural Network",
+  "steps": [
+    {
+      "step": 1,
+      "title": "Understanding Neural Networks",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "description": "Implement neuron and activation functions",
+        "tests": [
+          {
+            "name": "neuron_output",
+            "description": "Single neuron computation",
+            "check": {
+              "find_any_number": {}
+            }
+          },
+          {
+            "name": "relu_activation",
+            "description": "ReLU activation function result",
+            "check": {
+              "find_any_array": {}
+            }
+          },
+          {
+            "name": "layer_output",
+            "description": "Dense layer with 4 neurons",
+            "check": {
+              "find_any_array": {
+                "shape": [4]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "title": "Backpropagation from Scratch",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "description": "Implement backpropagation algorithm",
+        "tests": [
+          {
+            "name": "loss_gradient",
+            "description": "MSE loss gradient computed",
+            "check": {
+              "find_any_array": {}
+            }
+          },
+          {
+            "name": "relu_gradient",
+            "description": "ReLU gradient computed",
+            "check": {
+              "find_any_array": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "title": "Complete Network Implementation",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "tests": [
+          {
+            "name": "network_forward",
+            "description": "Forward pass through network",
+            "check": {
+              "find_any_array": {
+                "shape": [10]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 4,
+      "title": "Training Loop",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "tests": [
+          {
+            "name": "training_complete",
+            "description": "Model trained for multiple epochs",
+            "check": {
+              "find_any_number": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 5,
+      "title": "MNIST Classification",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "tests": [
+          {
+            "name": "accuracy_achieved",
+            "description": "Model accuracy on MNIST",
+            "check": {
+              "find_any_number": {
+                "value": 90,
+                "tolerance": 50
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 6,
+      "title": "Optimizations and Improvements",
+      "has_assignment": false,
+      "requires_manual_completion": true
+    },
+    {
+      "step": 7,
+      "title": "Deploy Your Model",
+      "has_assignment": false,
+      "requires_manual_completion": true
+    }
+  ]
+}
