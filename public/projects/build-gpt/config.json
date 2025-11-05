@@ -1,0 +1,156 @@
+{
+  "project_id": "build-gpt",
+  "project_name": "Build GPT from Scratch",
+  "steps": [
+    {
+      "step": 1,
+      "title": "Understanding Transformers",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "description": "Implement tokenization and positional encoding",
+        "tests": [
+          {
+            "name": "tokenization",
+            "description": "Text encoded and decoded correctly",
+            "check": {
+              "find_any_array": {}
+            }
+          },
+          {
+            "name": "positional_encoding",
+            "description": "Position embeddings created",
+            "check": {
+              "find_any_array": {
+                "shape": [10, 64]
+              }
+            }
+          },
+          {
+            "name": "attention_weights",
+            "description": "Attention weights computed",
+            "check": {
+              "find_any_array": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "title": "Self-Attention Mechanism",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "description": "Implement self-attention",
+        "tests": [
+          {
+            "name": "attention_output",
+            "description": "Self-attention output computed",
+            "check": {
+              "find_any_array": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "title": "Multi-Head Attention",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "tests": [
+          {
+            "name": "multihead_output",
+            "description": "Multi-head attention output",
+            "check": {
+              "find_any_array": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 4,
+      "title": "Transformer Block",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "tests": [
+          {
+            "name": "transformer_block",
+            "description": "Complete transformer block",
+            "check": {
+              "find_any_array": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 5,
+      "title": "Complete GPT Model",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "tests": [
+          {
+            "name": "gpt_output",
+            "description": "GPT model forward pass",
+            "check": {
+              "find_any_array": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 6,
+      "title": "Training GPT",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "tests": [
+          {
+            "name": "training_loss",
+            "description": "Training loss computed",
+            "check": {
+              "find_any_number": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 7,
+      "title": "Text Generation",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "tests": [
+          {
+            "name": "generated_text",
+            "description": "Model generated text",
+            "check": {
+              "find_any_array": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 8,
+      "title": "Fine-tuning and Deployment",
+      "has_assignment": false,
+      "requires_manual_completion": true
+    }
+  ]
+}
