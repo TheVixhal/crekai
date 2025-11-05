@@ -4,16 +4,123 @@
   "steps": [
     {
       "step": 1,
+      "title": "Introduction to PyTorch Tensors",
       "has_assignment": true,
       "assignment_type": "code_execution",
       "validation": {
-        "type": "output_match",
-        "expected_variables": {
-          "tensor": {
-            "type": "torch.Tensor",
-            "shape": [3, 3]
+        "type": "output_tests",
+        "description": "Create tensors and perform operations",
+        "tests": [
+          {
+            "name": "tensor_created",
+            "description": "Created PyTorch tensor",
+            "check": {
+              "find_any_array": {
+                "type": "torch.Tensor"
+              }
+            }
+          },
+          {
+            "name": "tensor_operations",
+            "description": "Performed tensor operations",
+            "check": {
+              "find_any_array": {}
+            }
           }
-        }
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "title": "Autograd and Gradients",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "description": "Compute gradients using autograd",
+        "tests": [
+          {
+            "name": "gradient_computed",
+            "description": "Computed gradient (should be 6.0 for x²)",
+            "check": {
+              "find_any_number": {
+                "value": 6.0,
+                "tolerance": 0.1
+              }
+            }
+          },
+          {
+            "name": "complex_gradient",
+            "description": "Gradient of complex function (should be 19.0)",
+            "check": {
+              "find_any_number": {
+                "value": 19.0,
+                "tolerance": 0.1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "title": "Building Neural Networks",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "description": "Build neural network with nn.Module",
+        "tests": [
+          {
+            "name": "model_output",
+            "description": "Model produces correct output shape",
+            "check": {
+              "find_any_array": {
+                "shape": [1, 5]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 4,
+      "title": "Training Your First Model",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "description": "Implement complete training loop",
+        "tests": [
+          {
+            "name": "loss_computed",
+            "description": "Loss value computed",
+            "check": {
+              "find_any_number": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "step": 5,
+      "title": "Real Data with DataLoaders",
+      "has_assignment": true,
+      "assignment_type": "code_execution",
+      "validation": {
+        "type": "output_tests",
+        "description": "Load and process MNIST dataset",
+        "tests": [
+          {
+            "name": "batch_shape",
+            "description": "DataLoader produces correct batch shape",
+            "check": {
+              "find_any_array": {
+                "shape": [64, 1, 28, 28]
+              }
+            }
+          }
+        ]
       }
     }
   ]
