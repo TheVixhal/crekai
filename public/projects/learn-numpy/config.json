@@ -7,67 +7,96 @@
       "has_assignment": true,
       "assignment_type": "code_execution",
       "validation": {
-        "type": "output_match",
-        "expected_variables": {
-          "arr": {
-            "type": "numpy.ndarray",
-            "shape": [10],
-            "min_value": 1,
-            "max_value": 10
+        "type": "output_tests",
+        "description": "Check if user created arrays and calculated statistics correctly",
+        "tests": [
+          {
+            "name": "array_1_to_10",
+            "description": "Created array with numbers 1 to 10",
+            "check": {
+              "find_any_array": {
+                "shape": [10],
+                "min": 1,
+                "max": 10
+              }
+            }
           },
-          "arr_doubled": {
-            "type": "numpy.ndarray",
-            "shape": [10],
-            "check": "all(arr_doubled == arr * 2)"
+          {
+            "name": "array_doubled",
+            "description": "Doubled the array (values 2 to 20)",
+            "check": {
+              "find_any_array": {
+                "shape": [10],
+                "min": 2,
+                "max": 20
+              }
+            }
           },
-          "mean": {
-            "type": "float",
-            "expected": 5.5
+          {
+            "name": "mean_calculated",
+            "description": "Calculated mean (should be 5.5)",
+            "check": {
+              "find_any_number": {
+                "value": 5.5,
+                "tolerance": 0.01
+              }
+            }
           },
-          "median": {
-            "type": "float",
-            "expected": 5.5
+          {
+            "name": "median_calculated",
+            "description": "Calculated median (should be 5.5)",
+            "check": {
+              "find_any_number": {
+                "value": 5.5,
+                "tolerance": 0.01
+              }
+            }
           }
-        }
-      },
-      "colab_notebook_url": "https://colab.research.google.com/drive/your-notebook-id"
+        ]
+      }
     },
     {
       "step": 2,
       "has_assignment": true,
-      "assignment_type": "code_execution",
       "validation": {
-        "type": "output_match",
-        "expected_variables": {
-          "matrix": {
-            "type": "numpy.ndarray",
-            "shape": [3, 3]
+        "type": "output_tests",
+        "tests": [
+          {
+            "name": "matrix_3x3",
+            "description": "Created 3x3 matrix",
+            "check": {
+              "find_any_array": {
+                "shape": [3, 3]
+              }
+            }
           }
-        }
+        ]
       }
     },
     {
       "step": 3,
-      "has_assignment": false,
-      "requires_manual_completion": true
+      "has_assignment": false
     },
     {
       "step": 4,
       "has_assignment": true,
-      "assignment_type": "code_execution",
       "validation": {
-        "type": "output_match",
-        "expected_variables": {
-          "result": {
-            "type": "numpy.ndarray"
+        "type": "output_tests",
+        "tests": [
+          {
+            "name": "reshape_operation",
+            "check": {
+              "find_any_array": {
+                "shape": [2, 5]
+              }
+            }
           }
-        }
+        ]
       }
     },
     {
       "step": 5,
-      "has_assignment": false,
-      "requires_manual_completion": true
+      "has_assignment": false
     }
   ]
 }
