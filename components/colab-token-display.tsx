@@ -67,26 +67,104 @@ export default function ColabTokenDisplay({ projectSlug }: { projectSlug: string
   }
 
   const copyTrackingCode = () => {
-    const code = `# Add this cell at the end of your assignment
-import requests
+    const code = `"""
+Universal CrekAI Verification Cell
+Copy this into your Colab notebook - it auto-captures all variables!
+"""
 
+import requests
+import json
+
+# ===== CONFIGURATION =====
 USER_TOKEN = "${token}"
 PROJECT_ID = "${projectSlug}"
-STEP = 1  # Change this to current step number
+STEP = 1  # Update this for each step
+API_BASE_URL = "https://your-domain.com/api"
+# =========================
+
+print("🔍 CrekAI Verification\\n")
+
+# ===== AUTO-CAPTURE ALL VARIABLES =====
+def capture_variable_info(var_name, var_value):
+    info = {"name": var_name, "type": None, "value": None, "shape": None, "min": None, "max": None}
+    
+    # NumPy arrays
+    try:
+        import numpy as np
+        if isinstance(var_value, np.ndarray):
+            info["type"] = "numpy.ndarray"
+            info["shape"] = list(var_value.shape)
+            info["min"] = float(var_value.min())
+            info["max"] = float(var_value.max())
+            return info
+    except: pass
+    
+    # PyTorch tensors
+    try:
+        import torch
+        if isinstance(var_value, torch.Tensor):
+            info["type"] = "torch.Tensor"
+            info["shape"] = list(var_value.shape)
+            info["min"] = float(var_value.min().item())
+            info["max"] = float(var_value.max().item())
+            return info
+    except: pass
+    
+    # Numbers
+    if isinstance(var_value, (int, float)):
+        info["type"] = "float" if isinstance(var_value, float) else "int"
+        info["value"] = float(var_value)
+        return info
+    
+    return info
+
+# Capture ALL variables
+print("📊 Capturing variables...")
+variables = {}
+
+for var_name, var_value in list(globals().items()):
+    if var_name.startswith('_'): continue
+    if var_name in ['In', 'Out', 'get_ipython', 'exit', 'quit', 'requests', 'json', 'np', 'torch']: continue
+    if callable(var_value) and not hasattr(var_value, 'shape'): continue
+    
+    try:
+        info = capture_variable_info(var_name, var_value)
+        if info["type"]:
+            variables[var_name] = info
+            print(f"   ✓ {var_name}")
+    except: pass
+
+# ===== SUBMIT =====
+print("\\n🚀 Submitting...\\n")
 
 try:
     response = requests.post(
-        "https://your-domain.com/api/track-execution",
+        f"{API_BASE_URL}/track-execution",
         json={
             "token": USER_TOKEN,
             "project_id": PROJECT_ID,
-            "step": STEP
-        }
+            "step": STEP,
+            "code": "executed",
+            "output": {"variables": variables}
+        },
+        timeout=10
     )
+    
     if response.status_code == 200:
-        print("✅ Assignment completed and verified!")
+        data = response.json()
+        print("=" * 60)
+        print("✅ SUCCESS! Assignment Verified!")
+        print("=" * 60)
+        print(f"\\n{data.get('message', '')}")
+        if data.get('next_step'):
+            print(f"\\n🚀 Step {data['next_step']} unlocked!")
+        print("\\n👉 Return to CrekAI")
+        print("=" * 60)
     else:
-        print("❌ Verification failed. Please try again.")
+        print("❌ Validation Failed")
+        error_data = response.json()
+        print(f"\\n{error_data.get('message', 'Check your code')}")
+        
 except Exception as e:
     print(f"❌ Error: {e}")
 `
@@ -180,25 +258,45 @@ except Exception as e:
 
           <div className="border-t border-blue-200 pt-4">
             <p className="text-sm text-blue-800 mb-3 font-medium">
-              Add this tracking code to your Colab notebook:
+              📋 Universal Verification Code (Auto-captures all variables):
             </p>
-            <div className="bg-gray-900 rounded-lg p-4 text-sm font-mono text-green-400 relative overflow-x-auto">
-              <pre className="whitespace-pre-wrap break-all">
-{`# Add at end of assignment
-import requests
+            <div className="bg-gray-900 rounded-lg p-4 text-sm font-mono text-green-400 relative overflow-x-auto max-h-96 overflow-y-auto">
+              <pre className="whitespace-pre-wrap break-all text-xs">
+{`import requests, json
 
 USER_TOKEN = "${token.slice(0, 12)}..."
 PROJECT_ID = "${projectSlug}"
-STEP = 1  # Update step number
+STEP = 1  # Update for each step
 
-response = requests.post(
-    "YOUR_DOMAIN/api/track-execution",
-    json={"token": USER_TOKEN, 
-          "project_id": PROJECT_ID, 
-          "step": STEP}
-)
-print("✅ Verified!" if response.ok 
-      else "❌ Failed")`}
+# Auto-capture variables
+def capture(name, val):
+    info = {"type": None, "value": None, "shape": None, "min": None, "max": None}
+    try:
+        import numpy as np
+        if isinstance(val, np.ndarray):
+            info.update({"type": "numpy.ndarray", "shape": list(val.shape), 
+                        "min": float(val.min()), "max": float(val.max())})
+    except: pass
+    if isinstance(val, (int, float)):
+        info.update({"type": "float" if isinstance(val, float) else "int", 
+                    "value": float(val)})
+    return info
+
+variables = {}
+for n, v in globals().items():
+    if not n.startswith('_') and n not in ['In','Out','exit']:
+        try:
+            info = capture(n, v)
+            if info["type"]: variables[n] = info
+        except: pass
+
+# Submit
+r = requests.post("YOUR_DOMAIN/api/track-execution",
+    json={"token": USER_TOKEN, "project_id": PROJECT_ID, 
+          "step": STEP, "code": "executed", 
+          "output": {"variables": variables}})
+
+print("✅ Success!" if r.ok else f"❌ Failed: {r.json()}")`}
               </pre>
             </div>
             <button
@@ -208,6 +306,9 @@ print("✅ Verified!" if response.ok
               <Copy className="w-4 h-4" />
               {copied ? "Copied!" : "Copy Full Code"}
             </button>
+            <p className="text-xs text-blue-600 mt-2">
+              ℹ️ Code auto-captures ALL variables - no manual list needed! Just update STEP number.
+            </p>
           </div>
 
           <div className="flex items-center gap-2">
