@@ -119,11 +119,6 @@ function validateOutput(output: any, validation: any): { valid: boolean; message
       return validateWithTests(output, validation.tests)
     }
 
-    // New test-based validation (checks logic, not variable names)
-    if (validation.type === "output_tests" && validation.tests) {
-      return validateWithTests(output, validation.tests)
-    }
-
     // Legacy validation (for backward compatibility)
     const { expected_variables } = validation
 
@@ -188,85 +183,6 @@ function validateOutput(output: any, validation: any): { valid: boolean; message
     return { valid: true, message: "All validations passed" }
   } catch (error) {
     console.error("Validation error:", error)
-    return { valid: false, message: "Validation failed" }
-  }
-}
-
-// Test-based validation - checks logic, not variable names
-function validateWithTests(output: any, tests: any[]): { valid: boolean; message: string } {
-  try {
-    const variables = output.variables || {}
-    const allVars = Object.values(variables)
-
-    for (const test of tests) {
-      const check = test.check
-
-      // Find any array matching criteria
-      if (check.find_any_array) {
-        const criteria = check.find_any_array
-        let found = false
-
-        for (const varData of allVars) {
-          if (varData.type !== "numpy.ndarray" && varData.type !== "torch.Tensor") {
-            continue
-          }
-
-          // Check shape
-          if (criteria.shape && JSON.stringify(varData.shape) !== JSON.stringify(criteria.shape)) {
-            continue
-          }
-
-          // Check min value
-          if (criteria.min !== undefined && Math.abs(varData.min - criteria.min) > 0.01) {
-            continue
-          }
-
-          // Check max value
-          if (criteria.max !== undefined && Math.abs(varData.max - criteria.max) > 0.01) {
-            continue
-          }
-
-          found = true
-          break
-        }
-
-        if (!found) {
-          return {
-            valid: false,
-            message: `Test failed: ${test.name || test.description || "Array check"}. Expected to find an array with shape ${JSON.stringify(criteria.shape)}, min=${criteria.min}, max=${criteria.max}`
-          }
-        }
-      }
-
-      // Find any number matching criteria
-      if (check.find_any_number) {
-        const criteria = check.find_any_number
-        let found = false
-
-        for (const varData of allVars) {
-          if (varData.type !== "float" && varData.type !== "int") {
-            continue
-          }
-
-          const tolerance = criteria.tolerance || 0.01
-          if (Math.abs(varData.value - criteria.value) <= tolerance) {
-            found = true
-            break
-          }
-        }
-
-        if (!found) {
-          return {
-            valid: false,
-            message: `Test failed: ${test.name || test.description || "Number check"}. Expected to find a number close to ${criteria.value}`
-          }
-        }
-      }
-    }
-
-    return { valid: true, message: "All tests passed!" }
-  } catch (error) {
-    console.error("Test validation error:", error)
     return { valid: false, message: "Validation failed" }
   }
 }
