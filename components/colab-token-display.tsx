@@ -296,7 +296,13 @@ r = requests.post("YOUR_DOMAIN/api/track-execution",
           "step": STEP, "code": "executed", 
           "output": {"variables": variables}})
 
-print("✅ Success!" if r.ok else f"❌ Failed: {r.json()}")`}
+if r.ok:
+    data = r.json()
+    print(f"✅ {data.get('message', 'Success!')}")
+    if data.get('already_completed'):
+        print("   (Step was already complete - re-verified)")
+else:
+    print(f"❌ Failed: {r.json().get('message', 'Error')}")`}
               </pre>
             </div>
             <button
