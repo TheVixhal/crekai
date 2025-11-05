@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createServiceClient } from "@/lib/supabase/service"
 import { NextRequest, NextResponse } from "next/server"
 import fs from "fs/promises"
 import path from "path"
@@ -15,15 +16,117 @@ async function loadProjectConfig(projectId: string) {
   }
 }
 
+// Test-based validation - checks logic, not variable names
+function validateWithTests(output: any, tests: any[]): { valid: boolean; message: string } {
+  try {
+    const variables = output.variables || {}
+    const allVars = Object.values(variables) as any[]
+
+    for (const test of tests) {
+      const check = test.check
+
+      // Find any array matching criteria
+      if (check.find_any_array) {
+        const criteria = check.find_any_array
+        let found = false
+
+        for (const varData of allVars) {
+          if (varData.type !== "numpy.ndarray" && varData.type !== "torch.Tensor") {
+            continue
+          }
+
+          let matches = true
+
+          // Check shape
+          if (criteria.shape) {
+            if (JSON.stringify(varData.shape) !== JSON.stringify(criteria.shape)) {
+              matches = false
+            }
+          }
+
+          // Check min value
+          if (criteria.min !== undefined) {
+            if (Math.abs(varData.min - criteria.min) > 0.01) {
+              matches = false
+            }
+          }
+
+          // Check max value
+          if (criteria.max !== undefined) {
+            if (Math.abs(varData.max - criteria.max) > 0.01) {
+              matches = false
+            }
+          }
+
+          if (matches) {
+            found = true
+            break
+          }
+        }
+
+        if (!found) {
+          const desc = test.description || test.name || "Array check"
+          return {
+            valid: false,
+            message: `${desc} - Expected array with shape ${JSON.stringify(criteria.shape)}, min=${criteria.min}, max=${criteria.max}`
+          }
+        }
+      }
+
+      // Find any number matching criteria
+      if (check.find_any_number) {
+        const criteria = check.find_any_number
+        let found = false
+
+        for (const varData of allVars) {
+          if (varData.type !== "float" && varData.type !== "int") {
+            continue
+          }
+
+          const tolerance = criteria.tolerance || 0.01
+          if (Math.abs(varData.value - criteria.value) <= tolerance) {
+            found = true
+            break
+          }
+        }
+
+        if (!found) {
+          const desc = test.description || test.name || "Number check"
+          return {
+            valid: false,
+            message: `${desc} - Expected a number close to ${criteria.value}`
+          }
+        }
+      }
+    }
+
+    return { valid: true, message: "All tests passed! Your logic is correct." }
+  } catch (error) {
+    console.error("Test validation error:", error)
+    return { valid: false, message: "Validation failed" }
+  }
+}
+
 // Validate code output against expected results
-function validateOutput(output: any, expected: any): { valid: boolean; message: string } {
+function validateOutput(output: any, validation: any): { valid: boolean; message: string } {
   try {
     // If no validation required, pass
-    if (!expected) {
+    if (!validation) {
       return { valid: true, message: "No validation required" }
     }
 
-    const { expected_variables } = expected
+    // New test-based validation (checks logic, not variable names)
+    if (validation.type === "output_tests" && validation.tests) {
+      return validateWithTests(output, validation.tests)
+    }
+
+    // New test-based validation (checks logic, not variable names)
+    if (validation.type === "output_tests" && validation.tests) {
+      return validateWithTests(output, validation.tests)
+    }
+
+    // Legacy validation (for backward compatibility)
+    const { expected_variables } = validation
 
     if (!expected_variables) {
       return { valid: true, message: "No variable validation required" }
@@ -90,10 +193,102 @@ function validateOutput(output: any, expected: any): { valid: boolean; message: 
   }
 }
 
+// Test-based validation - checks logic, not variable names
+function validateWithTests(output: any, tests: any[]): { valid: boolean; message: string } {
+  try {
+    const variables = output.variables || {}
+    const allVars = Object.values(variables)
+
+    for (const test of tests) {
+      const check = test.check
+
+      // Find any array matching criteria
+      if (check.find_any_array) {
+        const criteria = check.find_any_array
+        let found = false
+
+        for (const varData of allVars) {
+          if (varData.type !== "numpy.ndarray" && varData.type !== "torch.Tensor") {
+            continue
+          }
+
+          // Check shape
+          if (criteria.shape && JSON.stringify(varData.shape) !== JSON.stringify(criteria.shape)) {
+            continue
+          }
+
+          // Check min value
+          if (criteria.min !== undefined && Math.abs(varData.min - criteria.min) > 0.01) {
+            continue
+          }
+
+          // Check max value
+          if (criteria.max !== undefined && Math.abs(varData.max - criteria.max) > 0.01) {
+            continue
+          }
+
+          found = true
+          break
+        }
+
+        if (!found) {
+          return {
+            valid: false,
+            message: `Test failed: ${test.name || test.description || "Array check"}. Expected to find an array with shape ${JSON.stringify(criteria.shape)}, min=${criteria.min}, max=${criteria.max}`
+          }
+        }
+      }
+
+      // Find any number matching criteria
+      if (check.find_any_number) {
+        const criteria = check.find_any_number
+        let found = false
+
+        for (const varData of allVars) {
+          if (varData.type !== "float" && varData.type !== "int") {
+            continue
+          }
+
+          const tolerance = criteria.tolerance || 0.01
+          if (Math.abs(varData.value - criteria.value) <= tolerance) {
+            found = true
+            break
+          }
+        }
+
+        if (!found) {
+          return {
+            valid: false,
+            message: `Test failed: ${test.name || test.description || "Number check"}. Expected to find a number close to ${criteria.value}`
+          }
+        }
+      }
+    }
+
+    return { valid: true, message: "All tests passed!" }
+  } catch (error) {
+    console.error("Test validation error:", error)
+    return { valid: false, message: "Validation failed" }
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { token, project_id, step, code, output } = body
+    let { token, project_id, step, code, output } = body
+
+    // Trim token to remove any whitespace
+    token = token?.trim()
+
+    console.log("Track execution request:", { 
+      tokenLength: token?.length,
+      tokenStart: token?.substring(0, 10),
+      tokenEnd: token?.substring(token.length - 10),
+      project_id, 
+      step,
+      hasCode: !!code,
+      hasOutput: !!output
+    })
 
     // Validate required fields
     if (!token || !project_id || !step) {
@@ -104,17 +299,35 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await createClient()
+    const supabaseService = createServiceClient()
 
-    // Find user by token
-    const { data: profile, error: profileError } = await supabase
+    // Find user by token using service client (bypasses RLS)
+    console.log("Looking up token in database...")
+    
+    const { data: profile, error: profileError } = await supabaseService
       .from("user_profiles")
       .select("id")
       .eq("colab_token", token)
       .single()
 
+    console.log("Token lookup result:", { 
+      found: !!profile, 
+      profileId: profile?.id,
+      error: profileError?.message,
+      errorCode: profileError?.code
+    })
+
     if (profileError || !profile) {
       return NextResponse.json(
-        { error: "Invalid token" },
+        { 
+          error: "Invalid token",
+          details: "Token not found in database. Please regenerate your token.",
+          debug: {
+            message: profileError?.message,
+            code: profileError?.code,
+            tokenLength: token.length
+          }
+        },
         { status: 401 }
       )
     }
@@ -148,24 +361,15 @@ export async function POST(request: NextRequest) {
     const config = await loadProjectConfig(project_id)
     
     if (!config) {
-      return NextResponse.json(
-        { error: "Project configuration not found" },
-        { status: 500 }
-      )
+      console.log("No config found for project, allowing without validation")
+      // No config = allow completion without validation (backward compatible)
     }
 
     // Find step configuration
-    const stepConfig = config.steps.find((s: any) => s.step === stepNumber)
+    const stepConfig = config?.steps?.find((s: any) => s.step === stepNumber)
 
-    if (!stepConfig) {
-      return NextResponse.json(
-        { error: "Step configuration not found" },
-        { status: 400 }
-      )
-    }
-
-    // Check if step has assignment
-    if (stepConfig.has_assignment) {
+    // Check if step has assignment and validation
+    if (config && stepConfig?.has_assignment) {
       // Validate code and output are provided
       if (!code || !output) {
         return NextResponse.json(
@@ -180,13 +384,15 @@ export async function POST(request: NextRequest) {
       if (!validation.valid) {
         return NextResponse.json(
           { 
-            error: "Output validation failed", 
+            error: "Assignment validation failed", 
             message: validation.message,
             success: false 
           },
           { status: 400 }
         )
       }
+
+      console.log("✅ Validation passed:", validation.message)
     }
 
     // Get existing progress
@@ -209,6 +415,7 @@ export async function POST(request: NextRequest) {
 
     if (!existingProgress) {
       // Create new progress record
+      console.log("Creating new progress record for user:", userId)
       const { error: insertError } = await supabase.from("user_progress").insert({
         user_id: userId,
         project_id: project.id,
@@ -219,12 +426,17 @@ export async function POST(request: NextRequest) {
       if (insertError) {
         console.error("Insert error:", insertError)
         return NextResponse.json(
-          { error: "Failed to save progress" },
+          { 
+            error: "Failed to save progress",
+            details: insertError.message,
+            code: insertError.code
+          },
           { status: 500 }
         )
       }
     } else {
       // Update existing progress
+      console.log("Updating progress for user:", userId)
       const { error: updateError } = await supabase
         .from("user_progress")
         .update({
@@ -238,7 +450,11 @@ export async function POST(request: NextRequest) {
       if (updateError) {
         console.error("Update error:", updateError)
         return NextResponse.json(
-          { error: "Failed to update progress" },
+          { 
+            error: "Failed to update progress",
+            details: updateError.message,
+            code: updateError.code
+          },
           { status: 500 }
         )
       }
