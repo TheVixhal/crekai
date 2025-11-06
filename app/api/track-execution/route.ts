@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 import fs from "fs/promises"
 import path from "path"
 
-// ===== Load Project Config =====
+// Load project configuration
 async function loadProjectConfig(projectId: string) {
   try {
     const configPath = path.join(process.cwd(), "public", "projects", projectId, "config.json")
@@ -15,14 +15,16 @@ async function loadProjectConfig(projectId: string) {
   }
 }
 
-// ===== Validation Logic =====
+// Test-based validation
 function validateWithTests(output: any, tests: any[]): { valid: boolean; message: string } {
   try {
-    const variables = output?.variables || {}
+    const variables = output.variables || {}
     const allVars = Object.values(variables) as any[]
 
     for (const test of tests) {
       const check = test.check
+
+      // Array validation
       if (check.find_any_array) {
         const criteria = check.find_any_array
         let found = false
@@ -30,40 +32,45 @@ function validateWithTests(output: any, tests: any[]): { valid: boolean; message
         for (const varData of allVars) {
           if (varData.type !== "numpy.ndarray" && varData.type !== "torch.Tensor") continue
           let matches = true
+
           if (criteria.shape && JSON.stringify(varData.shape) !== JSON.stringify(criteria.shape)) matches = false
           if (criteria.min !== undefined && Math.abs(varData.min - criteria.min) > 0.01) matches = false
           if (criteria.max !== undefined && Math.abs(varData.max - criteria.max) > 0.01) matches = false
+
           if (matches) { found = true; break }
         }
 
         if (!found) {
+          const desc = test.description || test.name || "Array check"
           return {
             valid: false,
-            message: `${test.description || "Array check"} - Expected shape ${JSON.stringify(criteria.shape)}, min=${criteria.min}, max=${criteria.max}`
+            message: `${desc} - Expected array with shape ${JSON.stringify(criteria.shape)}, min=${criteria.min}, max=${criteria.max}`
           }
         }
       }
 
+      // Number validation
       if (check.find_any_number) {
         const criteria = check.find_any_number
         let found = false
+
         for (const varData of allVars) {
           if (varData.type !== "float" && varData.type !== "int") continue
           const tolerance = criteria.tolerance || 0.01
-          if (Math.abs(varData.value - criteria.value) <= tolerance) {
-            found = true
-            break
-          }
+          if (Math.abs(varData.value - criteria.value) <= tolerance) { found = true; break }
         }
-        if (!found)
-          return { valid: false, message: `${test.description || "Number check"} - Expected value near ${criteria.value}` }
+
+        if (!found) {
+          const desc = test.description || test.name || "Number check"
+          return { valid: false, message: `${desc} - Expected a number close to ${criteria.value}` }
+        }
       }
     }
 
-    return { valid: true, message: "✅ All tests passed! Logic is correct." }
-  } catch (err) {
-    console.error("validateWithTests error:", err)
-    return { valid: false, message: "Validation failed due to internal error." }
+    return { valid: true, message: "All tests passed! Your logic is correct." }
+  } catch (error) {
+    console.error("Test validation error:", error)
+    return { valid: false, message: "Validation failed" }
   }
 }
 
@@ -73,58 +80,54 @@ function validateOutput(output: any, validation: any): { valid: boolean; message
     if (validation.type === "output_tests" && validation.tests)
       return validateWithTests(output, validation.tests)
     return { valid: true, message: "All validations passed" }
-  } catch (err) {
-    console.error("validateOutput error:", err)
+  } catch (error) {
+    console.error("Validation error:", error)
     return { valid: false, message: "Validation failed" }
   }
 }
 
-// ===== MAIN HANDLER =====
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     let { token, project_id, step, code, output } = body
     token = token?.trim()
 
-    if (!token || !project_id || !step) {
-      return NextResponse.json({ error: "Missing required fields: token, project_id, step" }, { status: 400 })
-    }
-
     const supabase = await createClient()
 
-    // ===== 1️⃣ Validate Token =====
+    // ===== Validate token =====
     const { data: profile, error: profileError } = await supabase
       .from("user_profiles")
       .select("id")
       .eq("colab_token", token)
       .single()
 
-    if (profileError || !profile) {
+    if (profileError || !profile)
       return NextResponse.json({ error: "Invalid token" }, { status: 401 })
-    }
 
     const userId = profile.id
 
-    // ===== 2️⃣ Validate Project =====
+    // ===== Validate project =====
     const { data: project, error: projectError } = await supabase
       .from("projects")
       .select("id, total_steps")
       .eq("slug", project_id)
       .single()
 
-    if (projectError || !project) {
+    if (projectError || !project)
       return NextResponse.json({ error: "Project not found" }, { status: 404 })
-    }
 
-    const stepNumber = parseInt(step)
+    const stepNumber = Number.parseInt(step)
+    if (isNaN(stepNumber) || stepNumber < 1 || stepNumber > project.total_steps)
+      return NextResponse.json({ error: "Invalid step number" }, { status: 400 })
+
+    // ===== Load Config =====
     const config = await loadProjectConfig(project_id)
-    if (!config) {
+    if (!config)
       return NextResponse.json({ error: "Missing config.json for this project" }, { status: 500 })
-    }
 
-    const stepConfig = config.steps?.find((s: any) => s.step === stepNumber)
+    const stepConfig = config?.steps?.find((s: any) => s.step === stepNumber)
 
-    // ===== 3️⃣ Check progress in DB =====
+    // ===== Fetch existing progress =====
     const { data: existingProgress } = await supabase
       .from("user_progress")
       .select("*")
@@ -133,54 +136,60 @@ export async function POST(request: NextRequest) {
       .maybeSingle()
 
     const completedSteps = existingProgress?.completed_steps || []
-    const alreadyCompletedInDB = completedSteps.includes(stepNumber)
-    const explicitlyReverify = !!output?.variables?.already_completed
+    const alreadyCompleted = completedSteps.includes(stepNumber)
 
-    const isReverification = alreadyCompletedInDB || explicitlyReverify
+    // ===== Re-verification mode =====
+    if (alreadyCompleted) {
+      console.log(`Step ${stepNumber} already completed - re-verification mode`)
 
-    // ===== 4️⃣ Reverification Mode =====
-    if (isReverification) {
-      console.log(`🔁 Re-verifying project=${project_id}, step=${stepNumber}`)
-
-      if (!stepConfig?.validation) {
-        return NextResponse.json({ success: true, message: "No validation configured." })
+      // Validate only against config (no DB writes)
+      if (config && stepConfig?.has_assignment && code && output) {
+        const validation = validateOutput(output, stepConfig.validation)
+        if (!validation.valid) {
+          return NextResponse.json({
+            error: "Re-verification failed",
+            message: validation.message,
+            success: false,
+            already_completed: true
+          }, { status: 400 })
+        }
       }
 
-      const validation = validateOutput(output, stepConfig.validation)
-      if (!validation.valid) {
-        return NextResponse.json({
-          error: "Re-verification failed",
-          message: validation.message,
-          success: false,
-          already_completed: true,
-        }, { status: 400 })
-      }
-
+      // ✅ Re-verification passed, no DB changes
       return NextResponse.json({
         success: true,
         message: `Step ${stepNumber} re-verified successfully!`,
-        already_completed: true,
+        already_completed: true
       })
     }
 
-    // ===== 5️⃣ First-time Verification =====
-    if (stepConfig?.has_assignment && stepConfig.validation) {
+    // ===== First-time completion =====
+    if (config && stepConfig?.has_assignment) {
+      if (!code || !output)
+        return NextResponse.json({ error: "Code and output required" }, { status: 400 })
+
       const validation = validateOutput(output, stepConfig.validation)
-      if (!validation.valid) {
+      if (!validation.valid)
         return NextResponse.json({
           error: "Assignment validation failed",
           message: validation.message,
           success: false
         }, { status: 400 })
-      }
     }
 
+    // Mark as completed (DB write only once)
+    const newSteps = Array.isArray(completedSteps) ? [...completedSteps, stepNumber] : [stepNumber]
     const nextStep = stepNumber + 1
     const hasNextStep = nextStep <= project.total_steps
 
-    const newSteps = Array.from(new Set([...completedSteps, stepNumber]))
-
-    if (existingProgress) {
+    if (!existingProgress) {
+      await supabase.from("user_progress").insert({
+        user_id: userId,
+        project_id: project.id,
+        current_step: hasNextStep ? nextStep : stepNumber,
+        completed_steps: newSteps,
+      })
+    } else {
       await supabase
         .from("user_progress")
         .update({
@@ -190,25 +199,17 @@ export async function POST(request: NextRequest) {
         })
         .eq("user_id", userId)
         .eq("project_id", project.id)
-    } else {
-      await supabase
-        .from("user_progress")
-        .insert({
-          user_id: userId,
-          project_id: project.id,
-          current_step: hasNextStep ? nextStep : stepNumber,
-          completed_steps: newSteps,
-        })
     }
 
+    // ✅ First-time pass
     return NextResponse.json({
       success: true,
       message: `Step ${stepNumber} completed successfully!`,
       next_step: hasNextStep ? nextStep : null,
-      already_completed: false,
+      already_completed: false
     })
-  } catch (err) {
-    console.error("Track execution error:", err)
-    return NextResponse.json({ error: "Internal server error", details: String(err) }, { status: 500 })
+  } catch (error) {
+    console.error("Track execution error:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
