@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 import fs from "fs/promises"
 import path from "path"
 
-// ===== Load project config =====
+// ===== Load project configuration =====
 async function loadProjectConfig(projectId: string) {
   try {
     const configPath = path.join(process.cwd(), "public", "projects", projectId, "config.json")
@@ -15,7 +15,7 @@ async function loadProjectConfig(projectId: string) {
   }
 }
 
-// ===== Test-based validator =====
+// ===== Test-based validation =====
 function validateWithTests(output: any, tests: any[]): { valid: boolean; message: string } {
   try {
     const variables = output.variables || {}
@@ -24,7 +24,7 @@ function validateWithTests(output: any, tests: any[]): { valid: boolean; message
     for (const test of tests) {
       const check = test.check
 
-      // Array test
+      // === Array test ===
       if (check.find_any_array) {
         const criteria = check.find_any_array
         let found = false
@@ -52,7 +52,7 @@ function validateWithTests(output: any, tests: any[]): { valid: boolean; message
         }
       }
 
-      // Number test
+      // === Number test ===
       if (check.find_any_number) {
         const criteria = check.find_any_number
         if (criteria.value === undefined) {
@@ -128,7 +128,7 @@ function validateOutput(output: any, validation: any): { valid: boolean; message
   }
 }
 
-// ===== Main Handler =====
+// ===== MAIN HANDLER =====
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient()
 
-    // Find user by token
+    // === Validate token ===
     const { data: profile, error: profileError } = await supabase
       .from("user_profiles")
       .select("id")
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
 
     const userId = profile.id
 
-    // Find project
+    // === Get project ===
     const { data: project, error: projectError } = await supabase
       .from("projects")
       .select("id, total_steps")
@@ -171,11 +171,11 @@ export async function POST(request: NextRequest) {
     if (isNaN(stepNumber) || stepNumber < 1 || stepNumber > project.total_steps)
       return NextResponse.json({ error: "Invalid step number" }, { status: 400 })
 
-    // Load config
+    // === Load project config ===
     const config = await loadProjectConfig(project_id)
     const stepConfig = config?.steps?.find((s: any) => s.step === stepNumber)
 
-    // Get existing progress
+    // === Get existing progress FIRST ===
     const { data: existingProgress } = await supabase
       .from("user_progress")
       .select("*")
@@ -186,39 +186,51 @@ export async function POST(request: NextRequest) {
     const completedSteps = existingProgress?.completed_steps || []
     const alreadyCompleted = completedSteps.includes(stepNumber)
 
-    // === Run Validation ===
-    if (config && stepConfig?.has_assignment) {
-      if (!code || !output) {
-        return NextResponse.json({ error: "Code and output are required for assignment steps" }, { status: 400 })
-      }
-
-      const validation = validateOutput(output, stepConfig.validation)
-
-      if (!validation.valid) {
-        return NextResponse.json({
-          error: "Assignment validation failed",
-          message: validation.message,
-          success: false,
-          already_completed: alreadyCompleted,
-        }, { status: 400 })
-      }
-
-      console.log("✅ Validation passed:", validation.message)
-    }
-
-    // === If already completed, just verify & return ===
+    // === Handle re-verification FIRST ===
     if (alreadyCompleted) {
-      console.log(`Step ${stepNumber} already completed - skipping DB update.`)
+      console.log(`Step ${stepNumber} already completed - re-verification mode`)
+
+      if (config && stepConfig?.has_assignment && code && output) {
+        const validation = validateOutput(output, stepConfig.validation)
+        if (!validation.valid) {
+          return NextResponse.json({
+            error: "Re-verification failed",
+            message: validation.message,
+            success: false,
+            already_completed: true
+          }, { status: 400 })
+        }
+      }
+
       return NextResponse.json({
         success: true,
         message: `Step ${stepNumber} re-verified successfully!`,
         completed: true,
         already_completed: true,
-        next_step: null,
+        next_step: null
       })
     }
 
-    // === New step completion ===
+    // === Regular first-time validation ===
+    if (config && stepConfig?.has_assignment) {
+      if (!code || !output) {
+        return NextResponse.json(
+          { error: "Code and output are required for assignment steps" },
+          { status: 400 }
+        )
+      }
+
+      const validation = validateOutput(output, stepConfig.validation)
+      if (!validation.valid) {
+        return NextResponse.json({
+          error: "Assignment validation failed",
+          message: validation.message,
+          success: false
+        }, { status: 400 })
+      }
+    }
+
+    // === Update progress for first-time completion ===
     completedSteps.push(stepNumber)
     const nextStep = stepNumber + 1
     const hasNextStep = nextStep <= project.total_steps
@@ -246,6 +258,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Failed to update progress", details: updateError.message }, { status: 500 })
     }
 
+    // === Success Response ===
     return NextResponse.json({
       success: true,
       message: `Step ${stepNumber} completed successfully!`,
