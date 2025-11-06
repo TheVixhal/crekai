@@ -138,25 +138,24 @@ export async function POST(request: NextRequest) {
 
     const stepConfig = config?.steps?.find((s: any) => s.step === stepNumber)
 
-    // ===== Get existing user progress =====
-    const { data: existingProgress } = await supabase
+    // ===== Fetch user progress =====
+    const { data: existingProgress, error: progressError } = await supabase
       .from("user_progress")
       .select("*")
       .eq("user_id", userId)
       .eq("project_id", project.id)
       .maybeSingle()
 
-    let completedSteps: number[] = []
-    if (existingProgress?.completed_steps && Array.isArray(existingProgress.completed_steps)) {
-      completedSteps = existingProgress.completed_steps.map((s: any) => Number(s))
-    }
+    if (progressError) console.error("Progress fetch error:", progressError)
 
+    const completedSteps = existingProgress?.completed_steps || []
     const alreadyCompleted = completedSteps.includes(stepNumber)
 
-    // ===== RE-VERIFICATION MODE =====
-    if (alreadyCompleted) {
-      console.log(`🔁 Step ${stepNumber} already completed — re-verification mode`)
+    // ===== RE-VERIFICATION MODE (No DB Touch) =====
+    if (existingProgress && alreadyCompleted) {
+      console.log(`🔁 Step ${stepNumber} already completed — re-verification only`)
 
+      // Only validate again
       if (config && stepConfig?.has_assignment && code && output) {
         const validation = validateOutput(output, stepConfig.validation)
         if (!validation.valid) {
@@ -169,6 +168,7 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      // ✅ Early return — no DB updates below will execute
       return NextResponse.json({
         success: true,
         message: `Step ${stepNumber} re-verified successfully!`,
@@ -190,8 +190,8 @@ export async function POST(request: NextRequest) {
         }, { status: 400 })
     }
 
-    // ===== UPDATE DB (first-time completion) =====
-    const newSteps = Array.from(new Set([...(completedSteps || []), stepNumber]))
+    // ===== UPDATE DB (First-time only) =====
+    const newSteps = Array.from(new Set([...completedSteps, stepNumber]))
     const nextStep = stepNumber + 1
     const hasNextStep = nextStep <= project.total_steps
 
@@ -208,7 +208,10 @@ export async function POST(request: NextRequest) {
 
       if (updateError) {
         console.error("Update error:", updateError)
-        return NextResponse.json({ error: "Failed to update progress" }, { status: 500 })
+        return NextResponse.json({
+          error: "Failed to update progress",
+          details: updateError.message,
+        }, { status: 500 })
       }
     } else {
       const { error: insertError } = await supabase.from("user_progress").insert({
@@ -220,7 +223,10 @@ export async function POST(request: NextRequest) {
 
       if (insertError) {
         console.error("Insert error:", insertError)
-        return NextResponse.json({ error: "Failed to save progress" }, { status: 500 })
+        return NextResponse.json({
+          error: "Failed to save progress",
+          details: insertError.message,
+        }, { status: 500 })
       }
     }
 
