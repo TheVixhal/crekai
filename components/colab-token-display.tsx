@@ -23,12 +23,8 @@ export default function ColabTokenDisplay({ projectSlug }: { projectSlug: string
     try {
       const response = await fetch("/api/profile/get-token")
       const data = await response.json()
-
-      if (data.success) {
-        setToken(data.token)
-      } else {
-        setError("Failed to load token")
-      }
+      if (data.success) setToken(data.token)
+      else setError("Failed to load token")
     } catch (err) {
       console.error(err)
       setError("Failed to load token")
@@ -37,21 +33,15 @@ export default function ColabTokenDisplay({ projectSlug }: { projectSlug: string
     }
   }
 
-  // ========== GENERATE NEW TOKEN ==========
+  // ========== GENERATE TOKEN ==========
   const generateToken = async () => {
     setGenerating(true)
     setError("")
     try {
-      const response = await fetch("/api/profile/generate-token", {
-        method: "POST",
-      })
+      const response = await fetch("/api/profile/generate-token", { method: "POST" })
       const data = await response.json()
-
-      if (data.success) {
-        setToken(data.token)
-      } else {
-        setError("Failed to generate token")
-      }
+      if (data.success) setToken(data.token)
+      else setError("Failed to generate token")
     } catch (err) {
       console.error(err)
       setError("Failed to generate token")
@@ -82,7 +72,6 @@ print("🔍 CrekAI Verification\\n")
 def capture_variable_info(var_name, var_value):
     info = {"name": var_name, "type": None, "value": None, "shape": None, "min": None, "max": None}
     
-    # NumPy arrays
     try:
         import numpy as np
         if isinstance(var_value, np.ndarray):
@@ -93,7 +82,6 @@ def capture_variable_info(var_name, var_value):
             return info
     except: pass
     
-    # PyTorch tensors
     try:
         import torch
         if isinstance(var_value, torch.Tensor):
@@ -103,8 +91,7 @@ def capture_variable_info(var_name, var_value):
             info["max"] = float(var_value.max().item())
             return info
     except: pass
-    
-    # Numbers
+
     if isinstance(var_value, (int, float)):
         info["type"] = "float" if isinstance(var_value, float) else "int"
         info["value"] = float(var_value)
@@ -112,15 +99,13 @@ def capture_variable_info(var_name, var_value):
     
     return info
 
-# Capture ALL variables
+# ===== CAPTURE ALL VARIABLES =====
 print("📊 Capturing variables...")
 variables = {}
-
 for var_name, var_value in list(globals().items()):
     if var_name.startswith('_'): continue
     if var_name in ['In', 'Out', 'get_ipython', 'exit', 'quit', 'requests', 'json', 'np', 'torch']: continue
     if callable(var_value) and not hasattr(var_value, 'shape'): continue
-    
     try:
         info = capture_variable_info(var_name, var_value)
         if info["type"]:
@@ -143,23 +128,43 @@ try:
         },
         timeout=10
     )
-    
-    if response.status_code == 200:
+
+    data = {}
+    try:
         data = response.json()
+    except:
+        pass
+
+    if response.status_code == 200:
         print("=" * 60)
         print("✅ SUCCESS! Assignment Verified!")
         print("=" * 60)
         print(f"\\n{data.get('message', '')}")
+
         if data.get('already_completed'):
-            print("\\n✅ Step already completed — re-verified successfully!")
+            print("\\n🔁 Step already completed — re-verified successfully!")
+
         if data.get('next_step'):
             print(f"\\n🚀 Step {data['next_step']} unlocked!")
+
         print("\\n👉 Return to CrekAI")
         print("=" * 60)
+
+    elif response.status_code == 400:
+        message = data.get("message", "")
+        if "Re-verification failed" in message:
+            print("⚠️ Re-verification failed")
+            print("\\nYou already passed earlier, but your new code's output doesn't match the correct one.")
+        else:
+            print("❌ Validation Failed")
+            print(f"\\n{message or 'Check your code carefully'}")
+
+    elif response.status_code == 401:
+        print("❌ Invalid Token - Please regenerate your token in CrekAI.")
+
     else:
-        print("❌ Validation Failed")
-        error_data = response.json()
-        print(f"\\n{error_data.get('message', 'Check your code')}")
+        print(f"❌ Unexpected Error ({response.status_code})")
+        print(data.get("error", "Something went wrong."))
 
 except Exception as e:
     print(f"❌ Error: {e}")
@@ -175,11 +180,10 @@ except Exception as e:
   }
 
   const copyToken = () => {
-    if (token) {
-      navigator.clipboard.writeText(token)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    }
+    if (!token) return
+    navigator.clipboard.writeText(token)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
   // ========== RENDER ==========
@@ -243,9 +247,7 @@ except Exception as e:
             <div className="space-y-4">
               {/* TOKEN DISPLAY */}
               <div>
-                <label className="text-sm font-medium text-blue-900 mb-2 block">
-                  Your Token:
-                </label>
+                <label className="text-sm font-medium text-blue-900 mb-2 block">Your Token:</label>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 bg-white border border-blue-300 rounded-lg p-3 font-mono text-sm break-all">
                     {showToken ? token : "•".repeat(32)}
