@@ -16,6 +16,7 @@ export default function ColabTokenDisplay({ projectSlug }: { projectSlug: string
     fetchToken()
   }, [])
 
+  // ========== FETCH TOKEN ==========
   const fetchToken = async () => {
     setLoading(true)
     setError("")
@@ -29,13 +30,14 @@ export default function ColabTokenDisplay({ projectSlug }: { projectSlug: string
         setError("Failed to load token")
       }
     } catch (err) {
-      setError("Failed to load token")
       console.error(err)
+      setError("Failed to load token")
     } finally {
       setLoading(false)
     }
   }
 
+  // ========== GENERATE NEW TOKEN ==========
   const generateToken = async () => {
     setGenerating(true)
     setError("")
@@ -51,23 +53,15 @@ export default function ColabTokenDisplay({ projectSlug }: { projectSlug: string
         setError("Failed to generate token")
       }
     } catch (err) {
-      setError("Failed to generate token")
       console.error(err)
+      setError("Failed to generate token")
     } finally {
       setGenerating(false)
     }
   }
 
-  const copyToken = () => {
-    if (token) {
-      navigator.clipboard.writeText(token)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    }
-  }
-
-  const copyTrackingCode = () => {
-    const code = `"""
+  // ========== UNIFIED CODE GENERATOR ==========
+  const generateTrackingCode = (token: string, projectSlug: string) => `"""
 Universal CrekAI Verification Cell
 Copy this into your Colab notebook - it auto-captures all variables!
 """
@@ -156,6 +150,8 @@ try:
         print("✅ SUCCESS! Assignment Verified!")
         print("=" * 60)
         print(f"\\n{data.get('message', '')}")
+        if data.get('already_completed'):
+            print("\\n✅ Step already completed — re-verified successfully!")
         if data.get('next_step'):
             print(f"\\n🚀 Step {data['next_step']} unlocked!")
         print("\\n👉 Return to CrekAI")
@@ -164,15 +160,29 @@ try:
         print("❌ Validation Failed")
         error_data = response.json()
         print(f"\\n{error_data.get('message', 'Check your code')}")
-        
+
 except Exception as e:
     print(f"❌ Error: {e}")
 `
+
+  // ========== COPY CODE ==========
+  const copyTrackingCode = () => {
+    if (!token) return
+    const code = generateTrackingCode(token, projectSlug)
     navigator.clipboard.writeText(code)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const copyToken = () => {
+    if (token) {
+      navigator.clipboard.writeText(token)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  // ========== RENDER ==========
   if (loading) {
     return (
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -183,7 +193,7 @@ except Exception as e:
 
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg mb-6 overflow-hidden">
-      {/* Header - Always Visible */}
+      {/* HEADER */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full px-6 py-4 flex items-center justify-between hover:bg-blue-100 transition-colors"
@@ -200,13 +210,13 @@ except Exception as e:
           </div>
         </div>
         {isExpanded ? (
-          <ChevronUp className="w-5 h-5 text-blue-700 flex-shrink-0" />
+          <ChevronUp className="w-5 h-5 text-blue-700" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-blue-700 flex-shrink-0" />
+          <ChevronDown className="w-5 h-5 text-blue-700" />
         )}
       </button>
 
-      {/* Expandable Content */}
+      {/* BODY */}
       {isExpanded && (
         <div className="px-6 pb-6 pt-2 border-t border-blue-200">
           {error && (
@@ -216,122 +226,89 @@ except Exception as e:
           )}
 
           {!token ? (
-        <div className="space-y-3">
-          <p className="text-sm text-blue-800">
-            Generate your unique token to start tracking your Colab assignments
-          </p>
-          <button
-            onClick={generateToken}
-            disabled={generating}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition text-sm font-medium flex items-center gap-2"
-          >
-            <RefreshCw className={`w-4 h-4 ${generating ? "animate-spin" : ""}`} />
-            {generating ? "Generating..." : "Generate Token"}
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-blue-900 mb-2 block">
-              Your Token:
-            </label>
-            <div className="flex items-center gap-2">
-              <div className="flex-1 bg-white border border-blue-300 rounded-lg p-3 font-mono text-sm break-all">
-                {showToken ? token : "•".repeat(32)}
+            <div className="space-y-3">
+              <p className="text-sm text-blue-800">
+                Generate your unique token to start tracking your Colab assignments.
+              </p>
+              <button
+                onClick={generateToken}
+                disabled={generating}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition text-sm font-medium flex items-center gap-2"
+              >
+                <RefreshCw className={`w-4 h-4 ${generating ? "animate-spin" : ""}`} />
+                {generating ? "Generating..." : "Generate Token"}
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* TOKEN DISPLAY */}
+              <div>
+                <label className="text-sm font-medium text-blue-900 mb-2 block">
+                  Your Token:
+                </label>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 bg-white border border-blue-300 rounded-lg p-3 font-mono text-sm break-all">
+                    {showToken ? token : "•".repeat(32)}
+                  </div>
+                  <button
+                    onClick={() => setShowToken(!showToken)}
+                    className="p-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition"
+                    title={showToken ? "Hide token" : "Show token"}
+                  >
+                    {showToken ? (
+                      <EyeOff className="w-5 h-5 text-blue-700" />
+                    ) : (
+                      <Eye className="w-5 h-5 text-blue-700" />
+                    )}
+                  </button>
+                  <button
+                    onClick={copyToken}
+                    className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                    title="Copy token"
+                  >
+                    <Copy className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
-              <button
-                onClick={() => setShowToken(!showToken)}
-                className="p-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition"
-                title={showToken ? "Hide token" : "Show token"}
-              >
-                {showToken ? <EyeOff className="w-5 h-5 text-blue-700" /> : <Eye className="w-5 h-5 text-blue-700" />}
-              </button>
-              <button
-                onClick={copyToken}
-                className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                title="Copy token"
-              >
-                <Copy className="w-5 h-5" />
-              </button>
+
+              {/* TRACKING CODE DISPLAY */}
+              <div className="border-t border-blue-200 pt-4">
+                <p className="text-sm text-blue-800 mb-3 font-medium">
+                  📋 Universal Verification Code (Auto-captures all variables):
+                </p>
+                <div className="bg-gray-900 rounded-lg p-4 text-sm font-mono text-green-400 relative overflow-x-auto max-h-96 overflow-y-auto">
+                  <pre className="whitespace-pre-wrap break-all text-xs">
+                    {generateTrackingCode(token, projectSlug)}
+                  </pre>
+                </div>
+                <button
+                  onClick={copyTrackingCode}
+                  className="mt-3 px-4 py-2 bg-white border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 transition text-sm font-medium flex items-center gap-2"
+                >
+                  <Copy className="w-4 h-4" />
+                  {copied ? "Copied!" : "Copy Full Code"}
+                </button>
+                <p className="text-xs text-blue-600 mt-2">
+                  ℹ️ Code auto-captures ALL variables - no manual list needed! Just update STEP number.
+                </p>
+              </div>
+
+              {/* REGENERATE TOKEN */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={generateToken}
+                  disabled={generating}
+                  className="px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 disabled:opacity-50 transition text-sm flex items-center gap-2"
+                >
+                  <RefreshCw className={`w-3 h-3 ${generating ? "animate-spin" : ""}`} />
+                  {generating ? "Regenerating..." : "Regenerate Token"}
+                </button>
+                <span className="text-xs text-blue-600">
+                  Regenerating will invalidate your old token
+                </span>
+              </div>
             </div>
-          </div>
-
-          <div className="border-t border-blue-200 pt-4">
-            <p className="text-sm text-blue-800 mb-3 font-medium">
-              📋 Universal Verification Code (Auto-captures all variables):
-            </p>
-            <div className="bg-gray-900 rounded-lg p-4 text-sm font-mono text-green-400 relative overflow-x-auto max-h-96 overflow-y-auto">
-              <pre className="whitespace-pre-wrap break-all text-xs">
-{`import requests, json
-
-USER_TOKEN = "${token.slice(0, 12)}..."
-PROJECT_ID = "${projectSlug}"
-STEP = 1  # Update for each step
-
-# Auto-capture variables
-def capture(name, val):
-    info = {"type": None, "value": None, "shape": None, "min": None, "max": None}
-    try:
-        import numpy as np
-        if isinstance(val, np.ndarray):
-            info.update({"type": "numpy.ndarray", "shape": list(val.shape), 
-                        "min": float(val.min()), "max": float(val.max())})
-    except: pass
-    if isinstance(val, (int, float)):
-        info.update({"type": "float" if isinstance(val, float) else "int", 
-                    "value": float(val)})
-    return info
-
-variables = {}
-for n, v in globals().items():
-    if not n.startswith('_') and n not in ['In','Out','exit']:
-        try:
-            info = capture(n, v)
-            if info["type"]: variables[n] = info
-        except: pass
-
-# Submit
-r = requests.post("YOUR_DOMAIN/api/track-execution",
-    json={"token": USER_TOKEN, "project_id": PROJECT_ID, 
-          "step": STEP, "code": "executed", 
-          "output": {"variables": variables}})
-
-if r.ok:
-    data = r.json()
-    print(f"✅ {data.get('message', 'Success!')}")
-    if data.get('already_completed'):
-        print("   (Step was already complete - re-verified)")
-else:
-    print(f"❌ Failed: {r.json().get('message', 'Error')}")`}
-              </pre>
-            </div>
-            <button
-              onClick={copyTrackingCode}
-              className="mt-3 px-4 py-2 bg-white border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 transition text-sm font-medium flex items-center gap-2"
-            >
-              <Copy className="w-4 h-4" />
-              {copied ? "Copied!" : "Copy Full Code"}
-            </button>
-            <p className="text-xs text-blue-600 mt-2">
-              ℹ️ Code auto-captures ALL variables - no manual list needed! Just update STEP number.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={generateToken}
-              disabled={generating}
-              className="px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 disabled:opacity-50 transition text-sm flex items-center gap-2"
-            >
-              <RefreshCw className={`w-3 h-3 ${generating ? "animate-spin" : ""}`} />
-              {generating ? "Regenerating..." : "Regenerate Token"}
-            </button>
-            <span className="text-xs text-blue-600">
-              Regenerating will invalidate your old token
-            </span>
-          </div>
-        </div>
-      )}
+          )}
         </div>
       )}
     </div>
