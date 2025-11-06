@@ -86,26 +86,62 @@ export async function POST(request: NextRequest) {
     let { token, project_id, step, code, output } = body
     token = token?.trim()
 
-    // If no token or project, reject
     if (!token || !project_id || !step) {
       return NextResponse.json({ error: "Missing required fields: token, project_id, step" }, { status: 400 })
     }
 
-    // Load config.json for validation
+    const supabase = await createClient()
+
+    // ===== 1️⃣ Validate Token =====
+    const { data: profile, error: profileError } = await supabase
+      .from("user_profiles")
+      .select("id")
+      .eq("colab_token", token)
+      .single()
+
+    if (profileError || !profile) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 })
+    }
+
+    const userId = profile.id
+
+    // ===== 2️⃣ Validate Project =====
+    const { data: project, error: projectError } = await supabase
+      .from("projects")
+      .select("id, total_steps")
+      .eq("slug", project_id)
+      .single()
+
+    if (projectError || !project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 })
+    }
+
+    const stepNumber = parseInt(step)
     const config = await loadProjectConfig(project_id)
     if (!config) {
       return NextResponse.json({ error: "Missing config.json for this project" }, { status: 500 })
     }
 
-    const stepNumber = parseInt(step)
     const stepConfig = config.steps?.find((s: any) => s.step === stepNumber)
 
-    // Detect reverification mode — student already completed step
-    const alreadyCompleted = !!output?.variables?.already_completed
+    // ===== 3️⃣ Check progress in DB =====
+    const { data: existingProgress } = await supabase
+      .from("user_progress")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("project_id", project.id)
+      .maybeSingle()
 
-    // ===== PURE CONFIG VALIDATION MODE =====
-    if (alreadyCompleted) {
-      console.log(`🔁 Re-verification for project=${project_id}, step=${stepNumber}`)
+    const completedSteps = existingProgress?.completed_steps || []
+    const alreadyCompletedInDB = completedSteps.includes(stepNumber)
+    const explicitlyReverify = !!output?.variables?.already_completed
+
+    const isReverification = alreadyCompletedInDB || explicitlyReverify
+
+    // ===== 4️⃣ Reverification Mode =====
+    if (isReverification) {
+      console.log(`🔁 Re-verifying project=${project_id}, step=${stepNumber}`)
+
       if (!stepConfig?.validation) {
         return NextResponse.json({ success: true, message: "No validation configured." })
       }
@@ -122,41 +158,12 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: `Step ${stepNumber} re-verified successfully via config!`,
+        message: `Step ${stepNumber} re-verified successfully!`,
         already_completed: true,
       })
     }
 
-    // ===== NORMAL VERIFICATION (FIRST ATTEMPT) =====
-    console.log("🧠 Normal verification (first-time grading)")
-
-    const supabase = await createClient()
-
-    // 1️⃣ Validate token
-    const { data: profile, error: profileError } = await supabase
-      .from("user_profiles")
-      .select("id")
-      .eq("colab_token", token)
-      .single()
-
-    if (profileError || !profile) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 })
-    }
-
-    const userId = profile.id
-
-    // 2️⃣ Get project
-    const { data: project, error: projectError } = await supabase
-      .from("projects")
-      .select("id, total_steps")
-      .eq("slug", project_id)
-      .single()
-
-    if (projectError || !project) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 })
-    }
-
-    // 3️⃣ Validate step result using config.json
+    // ===== 5️⃣ First-time Verification =====
     if (stepConfig?.has_assignment && stepConfig.validation) {
       const validation = validateOutput(output, stepConfig.validation)
       if (!validation.valid) {
@@ -168,18 +175,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 4️⃣ Update DB progress (normal path)
     const nextStep = stepNumber + 1
     const hasNextStep = nextStep <= project.total_steps
 
-    const { data: existingProgress } = await supabase
-      .from("user_progress")
-      .select("*")
-      .eq("user_id", userId)
-      .eq("project_id", project.id)
-      .maybeSingle()
-
-    const completedSteps = existingProgress?.completed_steps || []
     const newSteps = Array.from(new Set([...completedSteps, stepNumber]))
 
     if (existingProgress) {
@@ -203,11 +201,11 @@ export async function POST(request: NextRequest) {
         })
     }
 
-    // 5️⃣ Done
     return NextResponse.json({
       success: true,
       message: `Step ${stepNumber} completed successfully!`,
       next_step: hasNextStep ? nextStep : null,
+      already_completed: false,
     })
   } catch (err) {
     console.error("Track execution error:", err)
