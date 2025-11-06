@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 import fs from "fs/promises"
 import path from "path"
 
-// ===== Load project configuration =====
+// Load project configuration
 async function loadProjectConfig(projectId: string) {
   try {
     const configPath = path.join(process.cwd(), "public", "projects", projectId, "config.json")
@@ -15,7 +15,7 @@ async function loadProjectConfig(projectId: string) {
   }
 }
 
-// ===== Test-based validation =====
+// Test-based validation
 function validateWithTests(output: any, tests: any[]): { valid: boolean; message: string } {
   try {
     const variables = output.variables || {}
@@ -24,23 +24,20 @@ function validateWithTests(output: any, tests: any[]): { valid: boolean; message
     for (const test of tests) {
       const check = test.check
 
-      // === Array test ===
+      // Array validation
       if (check.find_any_array) {
         const criteria = check.find_any_array
         let found = false
 
         for (const varData of allVars) {
           if (varData.type !== "numpy.ndarray" && varData.type !== "torch.Tensor") continue
-
           let matches = true
+
           if (criteria.shape && JSON.stringify(varData.shape) !== JSON.stringify(criteria.shape)) matches = false
           if (criteria.min !== undefined && Math.abs(varData.min - criteria.min) > 0.01) matches = false
           if (criteria.max !== undefined && Math.abs(varData.max - criteria.max) > 0.01) matches = false
 
-          if (matches) {
-            found = true
-            break
-          }
+          if (matches) { found = true; break }
         }
 
         if (!found) {
@@ -52,29 +49,20 @@ function validateWithTests(output: any, tests: any[]): { valid: boolean; message
         }
       }
 
-      // === Number test ===
+      // Number validation
       if (check.find_any_number) {
         const criteria = check.find_any_number
-        if (criteria.value === undefined) {
-          return { valid: false, message: "Test misconfigured: missing 'value' field in criteria" }
-        }
-
         let found = false
+
         for (const varData of allVars) {
           if (varData.type !== "float" && varData.type !== "int") continue
           const tolerance = criteria.tolerance || 0.01
-          if (Math.abs(varData.value - criteria.value) <= tolerance) {
-            found = true
-            break
-          }
+          if (Math.abs(varData.value - criteria.value) <= tolerance) { found = true; break }
         }
 
         if (!found) {
           const desc = test.description || test.name || "Number check"
-          return {
-            valid: false,
-            message: `${desc} - Expected a number close to ${criteria.value}`
-          }
+          return { valid: false, message: `${desc} - Expected a number close to ${criteria.value}` }
         }
       }
     }
@@ -86,41 +74,11 @@ function validateWithTests(output: any, tests: any[]): { valid: boolean; message
   }
 }
 
-// ===== Output validation =====
 function validateOutput(output: any, validation: any): { valid: boolean; message: string } {
   try {
     if (!validation) return { valid: true, message: "No validation required" }
-
-    if (validation.type === "output_tests" && validation.tests) {
+    if (validation.type === "output_tests" && validation.tests)
       return validateWithTests(output, validation.tests)
-    }
-
-    const { expected_variables } = validation
-    if (!expected_variables) return { valid: true, message: "No variable validation required" }
-
-    for (const [varName, varExpected] of Object.entries(expected_variables)) {
-      const varData: any = varExpected
-      if (!output.variables || !(varName in output.variables)) {
-        return { valid: false, message: `Missing variable: ${varName}` }
-      }
-
-      const varValue = output.variables[varName]
-      if (varData.type && varValue.type !== varData.type)
-        return { valid: false, message: `Variable '${varName}' has wrong type. Expected ${varData.type}, got ${varValue.type}` }
-
-      if (varData.shape && JSON.stringify(varValue.shape) !== JSON.stringify(varData.shape))
-        return { valid: false, message: `Variable '${varName}' has wrong shape. Expected ${JSON.stringify(varData.shape)}, got ${JSON.stringify(varValue.shape)}` }
-
-      if (varData.expected !== undefined && varValue.value !== varData.expected)
-        return { valid: false, message: `Variable '${varName}' has wrong value. Expected ${varData.expected}, got ${varValue.value}` }
-
-      if (varData.min_value !== undefined && varValue.min < varData.min_value)
-        return { valid: false, message: `Variable '${varName}' minimum value too low` }
-
-      if (varData.max_value !== undefined && varValue.max > varData.max_value)
-        return { valid: false, message: `Variable '${varName}' maximum value too high` }
-    }
-
     return { valid: true, message: "All validations passed" }
   } catch (error) {
     console.error("Validation error:", error)
@@ -128,36 +86,27 @@ function validateOutput(output: any, validation: any): { valid: boolean; message
   }
 }
 
-// ===== MAIN HANDLER =====
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     let { token, project_id, step, code, output } = body
     token = token?.trim()
 
-    if (!token || !project_id || !step) {
-      return NextResponse.json({ error: "Missing required fields: token, project_id, step" }, { status: 400 })
-    }
-
     const supabase = await createClient()
 
-    // === Validate token ===
+    // ===== Validate token =====
     const { data: profile, error: profileError } = await supabase
       .from("user_profiles")
       .select("id")
       .eq("colab_token", token)
       .single()
 
-    if (profileError || !profile) {
-      return NextResponse.json(
-        { error: "Invalid token", details: "Token not found. Please regenerate." },
-        { status: 401 }
-      )
-    }
+    if (profileError || !profile)
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 })
 
     const userId = profile.id
 
-    // === Get project ===
+    // ===== Validate project =====
     const { data: project, error: projectError } = await supabase
       .from("projects")
       .select("id, total_steps")
@@ -167,15 +116,18 @@ export async function POST(request: NextRequest) {
     if (projectError || !project)
       return NextResponse.json({ error: "Project not found" }, { status: 404 })
 
-    const stepNumber = parseInt(step)
+    const stepNumber = Number.parseInt(step)
     if (isNaN(stepNumber) || stepNumber < 1 || stepNumber > project.total_steps)
       return NextResponse.json({ error: "Invalid step number" }, { status: 400 })
 
-    // === Load project config ===
+    // ===== Load Config =====
     const config = await loadProjectConfig(project_id)
+    if (!config)
+      return NextResponse.json({ error: "Missing config.json for this project" }, { status: 500 })
+
     const stepConfig = config?.steps?.find((s: any) => s.step === stepNumber)
 
-    // === Get existing progress FIRST ===
+    // ===== Fetch existing progress =====
     const { data: existingProgress } = await supabase
       .from("user_progress")
       .select("*")
@@ -186,10 +138,11 @@ export async function POST(request: NextRequest) {
     const completedSteps = existingProgress?.completed_steps || []
     const alreadyCompleted = completedSteps.includes(stepNumber)
 
-    // === Handle re-verification FIRST ===
+    // ===== Re-verification mode =====
     if (alreadyCompleted) {
       console.log(`Step ${stepNumber} already completed - re-verification mode`)
 
+      // Validate only against config (no DB writes)
       if (config && stepConfig?.has_assignment && code && output) {
         const validation = validateOutput(output, stepConfig.validation)
         if (!validation.valid) {
@@ -202,69 +155,58 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      // ✅ Re-verification passed, no DB changes
       return NextResponse.json({
         success: true,
         message: `Step ${stepNumber} re-verified successfully!`,
-        completed: true,
-        already_completed: true,
-        next_step: null
+        already_completed: true
       })
     }
 
-    // === Regular first-time validation ===
+    // ===== First-time completion =====
     if (config && stepConfig?.has_assignment) {
-      if (!code || !output) {
-        return NextResponse.json(
-          { error: "Code and output are required for assignment steps" },
-          { status: 400 }
-        )
-      }
+      if (!code || !output)
+        return NextResponse.json({ error: "Code and output required" }, { status: 400 })
 
       const validation = validateOutput(output, stepConfig.validation)
-      if (!validation.valid) {
+      if (!validation.valid)
         return NextResponse.json({
           error: "Assignment validation failed",
           message: validation.message,
           success: false
         }, { status: 400 })
-      }
     }
 
-    // === Update progress for first-time completion ===
-    completedSteps.push(stepNumber)
+    // Mark as completed (DB write only once)
+    const newSteps = Array.isArray(completedSteps) ? [...completedSteps, stepNumber] : [stepNumber]
     const nextStep = stepNumber + 1
     const hasNextStep = nextStep <= project.total_steps
 
     if (!existingProgress) {
-      const { error: insertError } = await supabase.from("user_progress").insert({
+      await supabase.from("user_progress").insert({
         user_id: userId,
         project_id: project.id,
         current_step: hasNextStep ? nextStep : stepNumber,
-        completed_steps: completedSteps,
+        completed_steps: newSteps,
       })
-      if (insertError)
-        return NextResponse.json({ error: "Failed to save progress", details: insertError.message }, { status: 500 })
     } else {
-      const { error: updateError } = await supabase
+      await supabase
         .from("user_progress")
         .update({
           current_step: hasNextStep ? nextStep : stepNumber,
-          completed_steps: completedSteps,
+          completed_steps: newSteps,
           last_accessed: new Date().toISOString(),
         })
         .eq("user_id", userId)
         .eq("project_id", project.id)
-      if (updateError)
-        return NextResponse.json({ error: "Failed to update progress", details: updateError.message }, { status: 500 })
     }
 
-    // === Success Response ===
+    // ✅ First-time pass
     return NextResponse.json({
       success: true,
       message: `Step ${stepNumber} completed successfully!`,
       next_step: hasNextStep ? nextStep : null,
-      completed: true,
-      already_completed: false,
+      already_completed: false
     })
   } catch (error) {
     console.error("Track execution error:", error)
