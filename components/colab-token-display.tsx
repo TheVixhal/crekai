@@ -63,7 +63,7 @@ import json
 USER_TOKEN = "${token}"
 PROJECT_ID = "${projectSlug}"
 STEP = 1  # Update this for each step
-API_BASE_URL = "https://your-domain.com/api"
+API_BASE_URL = "https://www.crekai.com/api"
 # =========================
 
 print("🔍 CrekAI Verification\\n")
