@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
         })
       }
 
-      // Redirect to projects page after successful authentication
+      // Redirect to projects page after successful authentication.
       return NextResponse.redirect(`${origin}/projects`)
     }
   }
