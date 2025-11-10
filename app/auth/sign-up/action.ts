@@ -29,7 +29,7 @@ export async function signUpAction(email: string, password: string, username: st
     email,
     password,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"}/projects`,
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://crekai.com"}/auth/callback`,
       data: {
         username,
         full_name: fullName,
@@ -95,13 +95,13 @@ export async function signInWithGoogleAction() {
     },
   )
 
-  // const redirectUrl = process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || 
-  //   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+  // Use consistent redirect URL
+  const redirectUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://crekai.com"}/auth/callback`
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `https://www.crekai.com/auth/callback`,
+      redirectTo: redirectUrl,
       queryParams: {
         access_type: "offline",
         prompt: "consent",
