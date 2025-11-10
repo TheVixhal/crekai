@@ -95,13 +95,13 @@ export async function signInWithGoogleAction() {
     },
   )
 
-  const redirectUrl = process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || 
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+  // const redirectUrl = process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || 
+  //   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${redirectUrl}/auth/callback`,
+      redirectTo: `https://www.crekai.com/auth/callback`,
       queryParams: {
         access_type: "offline",
         prompt: "consent",
