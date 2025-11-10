@@ -39,13 +39,13 @@ export async function GET(request: NextRequest) {
       // Successfully authenticated
       // Profile will be created automatically by database trigger
       
-      // Redirect to projects page
+      // Redirect to projects page - FIXED: proper template literal
       return NextResponse.redirect(`${origin}/projects`)
     } else {
       console.error("Auth exchange error:", exchangeError)
     }
   }
 
-  // If there's an error or no code, redirect to error page
+  // If there's an error or no code, redirect to error page - FIXED: proper template literal
   return NextResponse.redirect(`${origin}/auth/auth-error`)
 }
