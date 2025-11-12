@@ -160,7 +160,7 @@ export default async function Home() {
                 <div className="relative w-full rounded overflow-hidden border-2 border-black" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     className="absolute top-0 left-0 w-full h-full"
-                    src="https://youtu.be/Lo-GqSHRyLc"
+                    src="https://www.youtube.com/embed/Lo-GqSHRyLc?si=yYAmEoaRKcXO-Z_o"
                     title="CrekAI Project Demo"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
