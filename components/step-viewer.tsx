@@ -59,7 +59,7 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('focus', handleFocus)
     }
-  }, [currentStep, completed])
+  }, [currentStep])
 
   const loadProjectConfig = async () => {
     try {
@@ -91,8 +91,10 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
       const content = await response.text()
       setStepContent(content)
 
+      // Only set completed state on initial load, don't override if already completed
       const completedSteps = progress?.completed_steps || []
-      setCompleted(completedSteps.includes(currentStep))
+      const isCompleted = completedSteps.includes(currentStep)
+      setCompleted(isCompleted)
     } catch (err) {
       setError("Failed to load step content")
       console.error(err)
