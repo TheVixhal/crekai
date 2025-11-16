@@ -39,6 +39,44 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
     loadProjectConfig()
   }, [currentStep])
 
+  // Use Supabase Realtime to listen for progress updates via trigger
+  useEffect(() => {
+    if (completed || (stepConfig !== null && stepConfig?.has_assignment === false)) {
+      return // Don't subscribe if already completed or no assignment
+    }
+
+    // Subscribe to realtime changes on user_progress table
+    const channel = supabase
+      .channel(`progress:${userId}:${project.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'user_progress',
+          filter: `user_id=eq.${userId}`,
+        },
+        (payload) => {
+          const newData = payload.new as any
+          
+          // Check if this update is for the current project
+          if (newData.project_id === project.id) {
+            const completedSteps = newData.completed_steps || []
+            const isNowCompleted = completedSteps.includes(currentStep)
+            
+            if (isNowCompleted && !completed) {
+              setCompleted(true)
+            }
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [completed, currentStep, project.id, userId, supabase, stepConfig])
+
   const loadProjectConfig = async () => {
     try {
       const response = await fetch(`/api/project-config/${project.slug}`)
@@ -79,51 +117,44 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
     }
   }
 
-const handleManualComplete = async () => {
-  // Only for steps without assignments
-  try {
-    const completedSteps = progress?.completed_steps || []
+  const handleManualComplete = async () => {
+    // Only for steps without assignments
+    try {
+      const completedSteps = progress?.completed_steps || []
 
-    if (!completedSteps.includes(currentStep)) {
-      completedSteps.push(currentStep)
-    }
+      if (!completedSteps.includes(currentStep)) {
+        completedSteps.push(currentStep)
+      }
 
-    const nextStep = currentStep + 1
-    const hasNextStep = nextStep <= project.total_steps
-
-    if (!progress) {
-      const { error } = await supabase.from("user_progress").insert({
-        user_id: userId,
-        project_id: project.id,
-        current_step: hasNextStep ? nextStep : currentStep,
-        completed_steps: completedSteps,
-      })
-      if (error) throw error
-    } else {
-      const { error } = await supabase
-        .from("user_progress")
-        .update({
-          current_step: hasNextStep ? nextStep : currentStep,
+      if (!progress) {
+        const { error } = await supabase.from("user_progress").insert({
+          user_id: userId,
+          project_id: project.id,
+          current_step: currentStep, // Don't auto-advance
           completed_steps: completedSteps,
-          last_accessed: new Date().toISOString(),
         })
-        .eq("user_id", userId)
-        .eq("project_id", project.id)
-      if (error) throw error
-    }
+        if (error) throw error
+      } else {
+        const { error } = await supabase
+          .from("user_progress")
+          .update({
+            completed_steps: completedSteps,
+            last_accessed: new Date().toISOString(),
+          })
+          .eq("user_id", userId)
+          .eq("project_id", project.id)
+        if (error) throw error
+      }
 
-    setCompleted(true)
-    if (hasNextStep) {
-      router.refresh()
+      setCompleted(true)
+    } catch (err) {
+      setError("Failed to save progress")
+      console.error(err)
     }
-  } catch (err) {
-    setError("Failed to save progress")
-    console.error(err)
   }
-}
 
   const handleNextStep = () => {
-    if (currentStep < project.total_steps) {
+    if (currentStep < project.total_steps && completed) {
       router.push(`/projects/${project.slug}?step=${currentStep + 1}`)
     }
   }
@@ -373,7 +404,7 @@ const handleManualComplete = async () => {
 
             {/* Show different middle button based on step type */}
             {(stepConfig === null || stepConfig?.has_assignment !== false) ? (
-              <div className={`px-8 py-3 font-medium rounded-lg flex items-center gap-2 ${
+              <div className={`px-8 py-3 font-medium rounded-lg flex items-center gap-2 transition-all ${
                 completed 
                   ? "bg-green-100 text-green-700 border border-green-300" 
                   : "bg-gray-100 text-gray-500 border border-gray-200"
@@ -388,7 +419,7 @@ const handleManualComplete = async () => {
                   </>
                 ) : (
                   <>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-pulse">
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="12" y1="8" x2="12" y2="12"></line>
                       <line x1="12" y1="16" x2="12.01" y2="16"></line>
