@@ -52,6 +52,7 @@ export default function ColabTokenDisplay({ projectSlug }: { projectSlug: string
 
   // ========== UNIFIED CODE GENERATOR ==========
   const generateTrackingCode = (token: string, projectSlug: string) => `
+!pip install crekai-verify
 from crekai_verify import verify
 
 # ===== CONFIGURATION =====
