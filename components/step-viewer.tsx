@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
+import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { createClient } from "@/lib/supabase/client"
@@ -233,6 +234,7 @@ const handleManualComplete = async () => {
           ) : (
             <div className="prose prose-gray max-w-none">
               <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
                 components={{
                   h1: ({ node, ...props }) => (
                     <h1 className="text-3xl font-semibold text-gray-900 mb-6 mt-0" {...props} />
@@ -254,6 +256,32 @@ const handleManualComplete = async () => {
                   ),
                   li: ({ node, ...props }) => (
                     <li className="text-gray-700" {...props} />
+                  ),
+                  table: ({ node, ...props }) => (
+                    <div className="my-6 overflow-x-auto">
+                      <table className="min-w-full divide-y divide-gray-300 border border-gray-300" {...props} />
+                    </div>
+                  ),
+                  thead: ({ node, ...props }) => (
+                    <thead className="bg-gray-50" {...props} />
+                  ),
+                  tbody: ({ node, ...props }) => (
+                    <tbody className="divide-y divide-gray-200 bg-white" {...props} />
+                  ),
+                  tr: ({ node, ...props }) => (
+                    <tr {...props} />
+                  ),
+                  th: ({ node, ...props }) => (
+                    <th 
+                      className="px-4 py-3 text-left text-sm font-semibold text-gray-900 border-r border-gray-300 last:border-r-0" 
+                      {...props} 
+                    />
+                  ),
+                  td: ({ node, ...props }) => (
+                    <td 
+                      className="px-4 py-3 text-sm text-gray-700 border-r border-gray-200 last:border-r-0" 
+                      {...props} 
+                    />
                   ),
                   code: ({ node, inline, className, children, ...props }: any) => {
                     const match = /language-(\w+)/.exec(className || '')
