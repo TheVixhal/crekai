@@ -37,7 +37,29 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
   useEffect(() => {
     loadStep()
     loadProjectConfig()
-  }, [currentStep])
+    
+    // Check progress when tab becomes visible
+    const handleVisibilityChange = () => {
+      if (!document.hidden && !completed) {
+        checkProgress()
+      }
+    }
+    
+    // Check progress on window focus
+    const handleFocus = () => {
+      if (!completed) {
+        checkProgress()
+      }
+    }
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [currentStep, completed])
 
   const loadProjectConfig = async () => {
     try {
@@ -79,6 +101,26 @@ export default function StepViewer({ project, progress, currentStep, userId }: S
     }
   }
 
+  const checkProgress = async () => {
+    try {
+      const { data: updatedProgress, error } = await supabase
+        .from("user_progress")
+        .select("completed_steps")
+        .eq("user_id", userId)
+        .eq("project_id", project.id)
+        .maybeSingle()
+
+      if (!error && updatedProgress) {
+        const completedSteps = updatedProgress.completed_steps || []
+        if (completedSteps.includes(currentStep)) {
+          setCompleted(true)
+        }
+      }
+    } catch (err) {
+      console.error("Progress check error:", err)
+    }
+  }
+
 const handleManualComplete = async () => {
   // Only for steps without assignments
   try {
@@ -113,9 +155,7 @@ const handleManualComplete = async () => {
     }
 
     setCompleted(true)
-    if (hasNextStep) {
-      router.refresh()
-    }
+    // No auto-navigation - just unlock the next step button
   } catch (err) {
     setError("Failed to save progress")
     console.error(err)
