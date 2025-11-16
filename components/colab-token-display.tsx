@@ -51,123 +51,15 @@ export default function ColabTokenDisplay({ projectSlug }: { projectSlug: string
   }
 
   // ========== UNIFIED CODE GENERATOR ==========
-  const generateTrackingCode = (token: string, projectSlug: string) => `"""
-Universal CrekAI Verification Cell
-Copy this into your Colab notebook - it auto-captures all variables!
-"""
-
-import requests
-import json
+  const generateTrackingCode = (token: string, projectSlug: string) => `
+from crekai_verify import verify
 
 # ===== CONFIGURATION =====
 USER_TOKEN = "${token}"
 PROJECT_ID = "${projectSlug}"
 STEP = 1  # Update this for each step
-API_BASE_URL = "https://www.crekai.com/api"
-# =========================
 
-print("🔍 CrekAI Verification\\n")
-
-# ===== AUTO-CAPTURE ALL VARIABLES =====
-def capture_variable_info(var_name, var_value):
-    info = {"name": var_name, "type": None, "value": None, "shape": None, "min": None, "max": None}
-    
-    try:
-        import numpy as np
-        if isinstance(var_value, np.ndarray):
-            info["type"] = "numpy.ndarray"
-            info["shape"] = list(var_value.shape)
-            info["min"] = float(var_value.min())
-            info["max"] = float(var_value.max())
-            return info
-    except: pass
-    
-    try:
-        import torch
-        if isinstance(var_value, torch.Tensor):
-            info["type"] = "torch.Tensor"
-            info["shape"] = list(var_value.shape)
-            info["min"] = float(var_value.min().item())
-            info["max"] = float(var_value.max().item())
-            return info
-    except: pass
-
-    if isinstance(var_value, (int, float)):
-        info["type"] = "float" if isinstance(var_value, float) else "int"
-        info["value"] = float(var_value)
-        return info
-    
-    return info
-
-# ===== CAPTURE ALL VARIABLES =====
-print("📊 Capturing variables...")
-variables = {}
-for var_name, var_value in list(globals().items()):
-    if var_name.startswith('_'): continue
-    if var_name in ['In', 'Out', 'get_ipython', 'exit', 'quit', 'requests', 'json', 'np', 'torch']: continue
-    if callable(var_value) and not hasattr(var_value, 'shape'): continue
-    try:
-        info = capture_variable_info(var_name, var_value)
-        if info["type"]:
-            variables[var_name] = info
-            print(f"   ✓ {var_name}")
-    except: pass
-
-# ===== SUBMIT =====
-print("\\n🚀 Submitting...\\n")
-
-try:
-    response = requests.post(
-        f"{API_BASE_URL}/track-execution",
-        json={
-            "token": USER_TOKEN,
-            "project_id": PROJECT_ID,
-            "step": STEP,
-            "code": "executed",
-            "output": {"variables": variables}
-        },
-        timeout=10
-    )
-
-    data = {}
-    try:
-        data = response.json()
-    except:
-        pass
-
-    if response.status_code == 200:
-        print("=" * 60)
-        print("✅ SUCCESS! Assignment Verified!")
-        print("=" * 60)
-        print(f"\\n{data.get('message', '')}")
-
-        if data.get('already_completed'):
-            print("\\n🔁 Step already completed — re-verified successfully!")
-
-        if data.get('next_step'):
-            print(f"\\n🚀 Step {data['next_step']} unlocked!")
-
-        print("\\n👉 Return to CrekAI")
-        print("=" * 60)
-
-    elif response.status_code == 400:
-        message = data.get("message", "")
-        if "Re-verification failed" in message:
-            print("⚠️ Re-verification failed")
-            print("\\nYou already passed earlier, but your new code's output doesn't match the correct one.")
-        else:
-            print("❌ Validation Failed")
-            print(f"\\n{message or 'Check your code carefully'}")
-
-    elif response.status_code == 401:
-        print("❌ Invalid Token - Please regenerate your token in CrekAI.")
-
-    else:
-        print(f"❌ Unexpected Error ({response.status_code})")
-        print(data.get("error", "Something went wrong."))
-
-except Exception as e:
-    print(f"❌ Error: {e}")
+verify(user_token=USER_TOKEN, project_id=PROJECT_ID, step=STEP)
 `
 
   // ========== COPY CODE ==========
